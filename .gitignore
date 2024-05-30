@@ -1,24 +1,7 @@
-# General
-.DS_Store
-Thumbs.db
+.coverage
+dist
 
-# IDEs and editors
-.idea/
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# Visual Studio Code
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.history/*
-
-# Node
-node_modules
-npm-debug.log
+## Dev Environments
+Session.vim
+#flake.nix
+#flake.lock
