@@ -20,8 +20,8 @@ $DEPS
 ]
 
 [project.urls]
-Homepage = "https://github.com/bitwarden/gh-actions/tree/main/lint-workflow-v2"
-Issues = "https://github.com/bitwarden/gh-actions/issues"
+Homepage = "https://github.com/bitwarden/workflow-linter"
+Issues = "https://github.com/bitwarden/workflow-linter/issues"
 
 [project.scripts]
 bwwl = "bitwarden_workflow_linter.cli:main"
