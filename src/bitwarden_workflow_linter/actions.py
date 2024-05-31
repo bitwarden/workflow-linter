@@ -7,7 +7,7 @@ import os
 import urllib3 as urllib
 
 from dataclasses import asdict
-from typing import Optional, Tuple, Union
+from typing import Optional, Union
 
 from .utils import Colors, Settings, Action
 
@@ -152,8 +152,9 @@ class ActionsCmd:
                 sha = json.loads(response.data)["object"]["sha"]
         except KeyError as err:
             raise GitHubApiSchemaError(
-                f"Error with the GitHub API Response Schema for either /releases or /tags: {err}"
-            )
+                f"Error with the GitHub API Response Schema for either /releases or"
+                f"/tags: {err}"
+            ) from err
 
         return Action(name=action.name, version=tag_name, sha=sha)
 

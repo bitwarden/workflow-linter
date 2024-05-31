@@ -1,10 +1,8 @@
 """A Rule to enforce pinning runners to a specific OS version."""
 
-from typing import List, Optional, Tuple, Union
+from typing import Optional, Tuple
 
 from ..models.job import Job
-from ..models.step import Step
-from ..models.workflow import Workflow
 from ..rule import Rule
 from ..utils import LintLevels, Settings
 

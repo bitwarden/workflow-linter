@@ -19,7 +19,7 @@
   },
   "lint-staged": {
     "*.md": "prettier --cache --write --ignore-unknown",
-    "*.py": ["black", "pipenv run pylint --rcfile pylintrc"]
+    "*.py": ["pipenv run black", "pipenv run pylint --rcfile pylintrc"]
   },
   "scripts": {
     "prepare": "husky"
