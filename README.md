@@ -12,11 +12,13 @@ To see an example of Workflow Linter in practice in GitHub Action, see the
 ## Installation
 
 ## From GitHub Release
+
 ```
 Not yet implemented
 ```
 
 ### Locally
+
 ```
 git clone git@github.com:bitwarden/workflow-linter.git
 cd workflow-linter
@@ -25,6 +27,7 @@ pip install -e .
 ```
 
 ## Usage
+
 ### Setup settings.yaml
 
 If a non-default configuration is desired (different than `src/bitwarden_workflow_linter/default_settings.yaml`), copy
@@ -32,15 +35,14 @@ the below and create a `settings.yaml` in the directory that `bwwl` will be runn
 
 ```yaml
 enabled_rules:
-  - bitwarden_workflow_linter.rules.name_exists.RuleNameExists
-  - bitwarden_workflow_linter.rules.name_capitalized.RuleNameCapitalized
-  - bitwarden_workflow_linter.rules.pinned_job_runner.RuleJobRunnerVersionPinned
-  - bitwarden_workflow_linter.rules.job_environment_prefix.RuleJobEnvironmentPrefix
-  - bitwarden_workflow_linter.rules.step_pinned.RuleStepUsesPinned
+    - bitwarden_workflow_linter.rules.name_exists.RuleNameExists
+    - bitwarden_workflow_linter.rules.name_capitalized.RuleNameCapitalized
+    - bitwarden_workflow_linter.rules.pinned_job_runner.RuleJobRunnerVersionPinned
+    - bitwarden_workflow_linter.rules.job_environment_prefix.RuleJobEnvironmentPrefix
+    - bitwarden_workflow_linter.rules.step_pinned.RuleStepUsesPinned
 
 approved_actions_path: default_actions.json
 ```
-
 
 ```
 usage: bwwl [-h] [-v] {lint,actions} ...
@@ -56,10 +58,11 @@ options:
 ```
 
 ## Development
+
 ### Requirements
 
-- Python 3.11
-- pipenv
+-   Python 3.11
+-   pipenv
 
 ### Setup
 
@@ -135,21 +138,19 @@ class RuleJobNameExists(Rule):
 
 By default, a new Rule needs five things:
 
-- `self.message`: The message to return to the user on a lint failure
-- `self.on_fail`: The level of failure on a lint failure (NONE, WARNING, ERROR).
-  NONE and WARNING will exit with a code of 0 (unless using `strict` mode for WARNING).
-  ERROR will exit with a non-zero exit code
-- `self.compatibility`: The list of objects this rule is compatible with. This is used to create separate instances of
-  the Rule for each object in the Rules collection.
-- `self.settings`: In general, this should default to what is shown here, but allows for overrides
-- `self.fn`: The function doing the actual work to check the object and enforce the standard.
+-   `self.message`: The message to return to the user on a lint failure
+-   `self.on_fail`: The level of failure on a lint failure (NONE, WARNING, ERROR).
+    NONE and WARNING will exit with a code of 0 (unless using `strict` mode for WARNING).
+    ERROR will exit with a non-zero exit code
+-   `self.compatibility`: The list of objects this rule is compatible with. This is used to create separate instances of
+    the Rule for each object in the Rules collection.
+-   `self.settings`: In general, this should default to what is shown here, but allows for overrides
+-   `self.fn`: The function doing the actual work to check the object and enforce the standard.
 
 `fn` can be as simple or as complex as it needs to be to run a check on a _single_ object. This linter currently does
 not support Rules that check against multiple objects at a time OR file level formatting (one empty between each step or
 two empty lines between each job)
 
-
 ### ToDo
 
-- [ ] Add Rule to assert correct format for single line run
-
+-   [ ] Add Rule to assert correct format for single line run

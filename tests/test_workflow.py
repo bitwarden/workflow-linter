@@ -3,10 +3,7 @@
 import pytest
 
 from ruamel.yaml import YAML
-from ruamel.yaml.comments import CommentedMap
 
-from src.bitwarden_workflow_linter.models.job import Job
-from src.bitwarden_workflow_linter.models.step import Step
 from src.bitwarden_workflow_linter.models.workflow import Workflow
 
 
