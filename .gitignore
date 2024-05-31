@@ -29,5 +29,4 @@ dist
 
 ## Dev Environments
 Session.vim
-flake.nix
-flake.lock
+flake.*
