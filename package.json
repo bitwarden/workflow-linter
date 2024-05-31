@@ -18,7 +18,7 @@
     "prettier": "3.2.5"
   },
   "lint-staged": {
-    "*.md": "prettier --cache --write --ignore-unknown",
+    "!(*.py)": "prettier --cache --write --ignore-unknown",
     "*.py": [
       "pipenv run black",
       "pipenv run pylint --rcfile pylintrc"
