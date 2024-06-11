@@ -22,3 +22,11 @@ Thumbs.db
 # Node
 node_modules
 npm-debug.log
+
+# Project Specific
+.coverage
+dist
+
+## Dev Environments
+Session.vim
+flake.*
