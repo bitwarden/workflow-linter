@@ -1,0 +1,64 @@
+---
+name: CD
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/**"
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Release type'
+        required: true
+        default: 'Dry Run'
+        options:
+          - 'Dry Run'
+          - 'Release'
+
+jobs:
+  release:
+    name: CD workflow-linter (v2)
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Set up Python
+        uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5.0.0
+        with:
+          python-version-file: ".python-version"
+
+      - name: Install hatch
+        run: pip install hatch
+
+      - name: Login to Azure
+        uses: Azure/login@e15b166166a8746d1a47596803bd8c1b595455cf # v1.6.0
+        with:
+          creds: ${{ secrets.AZURE_KV_CI_SERVICE_PRINCIPAL }}
+
+      - name: Retrieve pypi api token
+        id: retrieve-secret
+        uses: bitwarden/gh-actions/get-keyvault-secrets@main
+        with:
+          keyvault: "bitwarden-ci"
+          secrets: "pypi-api-token,
+            pypi-test-api-token"
+
+      - name: Build
+        run: hatch build
+
+      - name: Publish
+        if: ${{ github.event_name == 'push' }} || ${{ inputs.release_type != 'Dry Run' }}
+        env:
+          HATCH_INDEX_USER: __token__
+          HATCH_INDEX_AUTH: ${{ steps.retrieve-secret.outputs.pypi-api-token }}
+        run: hatch publish
+
+      - name: Dry Run - Publish
+        if: ${{ github.event_name == 'workflow_dispatch' }} && ${{ inputs.release_type == 'Dry Run' }}
+        env:
+          HATCH_INDEX_USER: __token__
+          HATCH_INDEX_AUTH: ${{ steps.retrieve-secret.outputs.pypi-test-api-token }}
+        run: twine upload -r test
