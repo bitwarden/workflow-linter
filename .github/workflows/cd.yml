@@ -61,4 +61,4 @@ jobs:
         env:
           HATCH_INDEX_USER: __token__
           HATCH_INDEX_AUTH: ${{ steps.retrieve-secret.outputs.pypi-test-api-token }}
-        run: twine upload -r test
+        run: hatch publish -r test
