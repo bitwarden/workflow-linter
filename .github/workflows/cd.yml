@@ -80,8 +80,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           draft: false
 
-  cd:
-    name: CD workflow-linter (v2)
+  deploy:
+    name: Deploy workflow-linter (v2)
     runs-on: ubuntu-22.04
     needs: version-bump
     steps:
