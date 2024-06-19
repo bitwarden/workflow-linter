@@ -18,9 +18,72 @@ on:
           - 'Release'
 
 jobs:
+  version-type:
+    uses: ./.github/workflows/_version_type.yml
+
+  version-bump:
+    name: Version bump
+    runs-on: ubuntu-22.04
+    needs: version-type
+    outputs:
+      version: ${{ steps.get-version.outputs.version }}
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Set up Python
+        uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5.0.0
+        with:
+          python-version-file: ".python-version"
+
+      - name: Install hatch
+        run: pip install hatch
+
+      - name: Get current version
+        run: echo "OLD_VERSION=$(hatch version)" >> $GITHUB_ENV
+
+      - name: Bump version
+        run: hatch bump ${{ needs.version-type.outputs.type }}
+
+      - name: Get bumped version
+        id: get-version
+        run: |
+          VERSION=$(hatch version)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Commit version bump
+        env:
+          OLD_VERSION: ${{ env.OLD_VERSION }}
+          VERSION: ${{ steps.get-version.outputs.version }}
+        if: ${{ github.event_name == 'push' }} || ${{ inputs.release_type != 'Dry Run' }}
+        run: |
+          git commit -am "Bump version from $OLD_VERSION to $VERSION"
+          git tag $VERSION
+          git push
+          git push --tags
+
   release:
+    name: GitHub release
+    runs-on: ubuntu-22.04
+    needs: version-bump
+    if: ${{ github.event_name == 'push' }} || ${{ inputs.release_type != 'Dry Run' }}
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Create GitHub release
+        uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
+        with:
+          commit: ${{ github.sha }}
+          tag: v${{ steps.version-bump.outputs.version }}
+          name: Version version-bump
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: false
+
+  cd:
     name: CD workflow-linter (v2)
     runs-on: ubuntu-22.04
+    needs: version-bump
     steps:
       - name: Check out repo
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
