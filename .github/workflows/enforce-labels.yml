@@ -6,8 +6,4 @@ on:
     types: [labeled, unlabeled, opened, reopened, synchronize]
 jobs:
   enforce-labels:
-    name: Enforce labels
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Enforce labels
-        uses: bitwarden/gh-actions/.github/workflows/_enforce-labels.yml@main
+    uses: bitwarden/gh-actions/.github/workflows/_enforce-labels.yml@main
