@@ -29,7 +29,8 @@ jobs:
               https://api.github.com/repos/${{ github.repository }}/commits/${{ github.sha }} | \
             jq -r ".commit.message"
           )
-          ID=$(echo "$commit_message" | head -1 | grep -o "(#.*)" | grep -o "[0-9]*")
+          # ID=$(echo "$commit_message" | head -1 | grep -o "(#.*)" | grep -o "[0-9]*")
+          ID="0.0.3"
           echo "id=$ID" >> $GITHUB_OUTPUT
 
       - name: Get version bump type
