@@ -45,7 +45,7 @@ jobs:
         run: echo "OLD_VERSION=$(hatch version)" >> $GITHUB_ENV
 
       - name: Bump version
-        run: hatch bump ${{ needs.version-type.outputs.version_bump_type }}
+        run: hatch version ${{ needs.version-type.outputs.version_bump_type }}
 
       - name: Get bumped version
         id: get-version
