@@ -12,6 +12,7 @@ on:
       release_type:
         description: 'Release type'
         required: true
+        type: choice
         default: 'Dry Run'
         options:
           - 'Dry Run'
@@ -43,7 +44,7 @@ jobs:
         run: echo "OLD_VERSION=$(hatch version)" >> $GITHUB_ENV
 
       - name: Bump version
-        run: hatch bump ${{ needs.version-type.outputs.version }}
+        run: hatch bump ${{ needs.version-type.outputs.version_bump_type }}
 
       - name: Get bumped version
         id: get-version
