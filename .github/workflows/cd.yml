@@ -84,30 +84,30 @@ jobs:
         env:
           OLD_VERSION: ${{ env.OLD_VERSION }}
           VERSION: ${{ steps.get-version.outputs.version }}
-        if: ${{ github.event_name == 'push' }} || ${{ inputs.release_type != 'Dry Run' }}
+        if: ${{ github.event_name == 'push' }} || ( ${{ github.event_name == 'workflow_dispatch' }} && ${{ inputs.release_type != 'Dry Run' }} )
         run: |
           git commit -am "Bump version from $OLD_VERSION to $VERSION"
           git tag $VERSION
-          git push
-          git push --tags
+          # git push
+          # git push --tags
 
   release:
     name: GitHub release
     runs-on: ubuntu-22.04
     needs: version-bump
-    if: ${{ github.event_name == 'push' }} || ${{ inputs.release_type != 'Dry Run' }}
+    if: ${{ github.event_name == 'push' }} || ( ${{ github.event_name == 'workflow_dispatch' }} && ${{ inputs.release_type != 'Dry Run' }} )
     steps:
       - name: Check out repo
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
-      - name: Create GitHub release
-        uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
-        with:
-          commit: ${{ github.sha }}
-          tag: v${{ steps.version-bump.outputs.version }}
-          name: Version version-bump
-          token: ${{ secrets.GITHUB_TOKEN }}
-          draft: false
+      # - name: Create GitHub release
+      #   uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
+      #   with:
+      #     commit: ${{ github.sha }}
+      #     tag: v${{ steps.version-bump.outputs.version }}
+      #     name: Version version-bump
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     draft: false
 
   deploy:
     name: Deploy workflow-linter (v2)
@@ -142,11 +142,11 @@ jobs:
         run: hatch build
 
       - name: Publish
-        if: ${{ github.event_name == 'push' }} || ${{ inputs.release_type != 'Dry Run' }}
+        if: ${{ github.event_name == 'push' }} || ( ${{ github.event_name == 'workflow_dispatch' }} && ${{ inputs.release_type != 'Dry Run' }} )
         env:
           HATCH_INDEX_USER: __token__
           HATCH_INDEX_AUTH: ${{ steps.retrieve-secret.outputs.pypi-api-token }}
-        run: hatch publish
+        run: echo "publish" # hatch publish
 
       - name: Dry Run - Publish
         if: ${{ github.event_name == 'workflow_dispatch' }} && ${{ inputs.release_type == 'Dry Run' }}
