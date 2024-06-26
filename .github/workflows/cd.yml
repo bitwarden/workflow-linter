@@ -1,5 +1,6 @@
 ---
 name: CD
+run-name: CD ${{ inputs.release_type }}
 
 on:
   push:
