@@ -5,7 +5,7 @@ run-name: Get version type
 on:
   workflow_call:
     outputs:
-      version:
+      version_bump_type:
         description: "version to be built"
         value: ${{ jobs.version.outputs.bump_type }}
 
@@ -33,7 +33,6 @@ jobs:
           echo "id=$ID" >> $GITHUB_OUTPUT
 
       - name: Get version bump type
-        if: ${{ inputs.is-release }}
         id: bump-type
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
