@@ -8,14 +8,6 @@ on:
     paths:
       - "src/**"
   workflow_dispatch:
-    inputs:
-      release_type:
-        description: 'Release type'
-        required: true
-        default: 'Dry Run'
-        options:
-          - 'Dry Run'
-          - 'Release'
 
 jobs:
   version-type:
@@ -43,7 +35,7 @@ jobs:
         run: echo "OLD_VERSION=$(hatch version)" >> $GITHUB_ENV
 
       - name: Bump version
-        run: hatch bump ${{ needs.version-type.outputs.version }}
+        run: hatch version ${{ needs.version-type.outputs.version_bump_type }}
 
       - name: Get bumped version
         id: get-version
@@ -82,10 +74,9 @@ jobs:
         env:
           OLD_VERSION: ${{ env.OLD_VERSION }}
           VERSION: ${{ steps.get-version.outputs.version }}
-        if: ${{ github.event_name == 'push' }} || ${{ inputs.release_type != 'Dry Run' }}
         run: |
           git commit -am "Bump version from $OLD_VERSION to $VERSION"
-          git tag $VERSION
+          git tag v$VERSION
           git push
           git push --tags
 
@@ -93,7 +84,6 @@ jobs:
     name: GitHub release
     runs-on: ubuntu-22.04
     needs: version-bump
-    if: ${{ github.event_name == 'push' }} || ${{ inputs.release_type != 'Dry Run' }}
     steps:
       - name: Check out repo
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
@@ -102,8 +92,8 @@ jobs:
         uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
         with:
           commit: ${{ github.sha }}
-          tag: v${{ steps.version-bump.outputs.version }}
-          name: Version version-bump
+          tag: v${{ steps.get-version.outputs.version }}
+          name: v${{ steps.get-version.outputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
           draft: false
 
@@ -133,22 +123,13 @@ jobs:
         uses: bitwarden/gh-actions/get-keyvault-secrets@main
         with:
           keyvault: "bitwarden-ci"
-          secrets: "pypi-api-token,
-            pypi-test-api-token"
+          secrets: "pypi-api-token"
 
       - name: Build
         run: hatch build
 
       - name: Publish
-        if: ${{ github.event_name == 'push' }} || ${{ inputs.release_type != 'Dry Run' }}
         env:
           HATCH_INDEX_USER: __token__
           HATCH_INDEX_AUTH: ${{ steps.retrieve-secret.outputs.pypi-api-token }}
         run: hatch publish
-
-      - name: Dry Run - Publish
-        if: ${{ github.event_name == 'workflow_dispatch' }} && ${{ inputs.release_type == 'Dry Run' }}
-        env:
-          HATCH_INDEX_USER: __token__
-          HATCH_INDEX_AUTH: ${{ steps.retrieve-secret.outputs.pypi-test-api-token }}
-        run: hatch publish -r test
