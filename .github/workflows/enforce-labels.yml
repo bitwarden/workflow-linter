@@ -16,7 +16,6 @@ jobs:
     steps:
       - name: Check for label
         run: |
-          echo "${{ github.event.pull_request.labels }}"
           echo "PR without the version label cannot be merged."
           echo "### :x: PR without the version label cannot be merged" >> $GITHUB_STEP_SUMMARY
           exit 1
