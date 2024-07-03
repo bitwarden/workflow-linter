@@ -10,9 +10,9 @@ jobs:
 
   enforce-version-label:
     if: |
-      ${{ !contains(github.event.*.labels.*.name, 'version:major') }} ||
-      ${{ !contains(github.event.*.labels.*.name, 'version:minor') }} ||
-      ${{ !contains(github.event.*.labels.*.name, 'version:patch') }}
+      ${{ contains(github.event.*.labels.*.name, 'version:major') == false }} ||
+      ${{ contains(github.event.*.labels.*.name, 'version:minor') == false }} ||
+      ${{ contains(github.event.*.labels.*.name, 'version:patch') == false }}
     name: Enforce version label
     runs-on: ubuntu-22.04
 
