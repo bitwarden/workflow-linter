@@ -9,7 +9,10 @@ jobs:
     uses: bitwarden/gh-actions/.github/workflows/_enforce-labels.yml@main
 
   enforce-version-label:
-    if: ${{ !contains(github.event.*.labels.*.name, 'version') }}
+    if: |
+      ${{ !contains(github.event.*.labels.*.name, 'version:major') }} ||
+      ${{ !contains(github.event.*.labels.*.name, 'version:minor') }} ||
+      ${{ !contains(github.event.*.labels.*.name, 'version:patch') }}
     name: Enforce version label
     runs-on: ubuntu-22.04
 
