@@ -8,7 +8,7 @@ from ..models.step import Step
 from ..utils import LintLevels, Settings
 
 
-class RuleUnderscoreOutputs():
+class RuleUnderscoreOutputs:
     """Rule to enforce all GitHub 'outputs' more than one words contain an underscore.
 
     A simple standard to ensure uniformity in naming.
@@ -43,7 +43,7 @@ class RuleUnderscoreOutputs():
 
         if isinstance(obj, Step):
             if obj.run:
-                outputs.extend(re.findall(r'\b([a-zA-Z0-9_-]+)\s*=\s*[^=]*>>', obj.run))
+                outputs.extend(re.findall(r"\b([a-zA-Z0-9_-]+)\s*=\s*[^=]*>>", obj.run))
 
         for key in outputs:
             if "-" in key:
