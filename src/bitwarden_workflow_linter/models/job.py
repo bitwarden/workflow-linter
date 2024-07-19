@@ -30,6 +30,7 @@ class Job:
     uses_with: Optional[CommentedMap] = field(
         metadata=config(field_name="with"), default=None
     )
+    outputs: Optional[CommentedMap] = None
 
     @classmethod
     def init(cls: Self, key: str, data: CommentedMap) -> Self:
@@ -39,6 +40,7 @@ class Job:
             "name": data["name"] if "name" in data else None,
             "runs-on": data["runs-on"] if "runs-on" in data else None,
             "env": data["env"] if "env" in data else None,
+            "outputs": data["outputs"] if "outputs" in data else None,
         }
 
         new_job = cls.from_dict(init_data)
