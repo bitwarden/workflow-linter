@@ -1,6 +1,6 @@
 import re
 
-from typing import Union, Tuple
+from typing import Optional, Union, Tuple
 
 from ..models.job import Job
 from ..models.workflow import Workflow
@@ -14,7 +14,7 @@ class RuleUnderscoreOutputs:
     A simple standard to ensure uniformity in naming.
     """
 
-    def __init__(self, settings: Settings = None) -> None:
+    def __init__(self, settings: Optional[Settings] = None) -> None:
         """Constructor for RuleUnderscoreOutputs to override the Rule class.
 
         Args:
