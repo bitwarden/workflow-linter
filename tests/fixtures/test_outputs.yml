@@ -1,0 +1,54 @@
+---
+name: Test Outputs
+on:
+  workflow_dispatch:
+    outputs:
+      registry:
+        value: 'Test Value'
+      some_registry:
+        value: 'Test Value'
+  workflow_call:
+    outputs:
+      registry:
+        value: 'Test Value'
+      some_registry:
+        value: 'Test Value'
+  push: {}
+
+jobs:
+  job-key:
+    name: Test Correct Job
+    runs-on: ubuntu-22.04
+    outputs:
+      test_key_job: ${{ steps.test_output_1.outputs.test_key }}
+    steps:
+      - name: Test output in one-line run step
+        id: test_output_1
+        run: echo "test_key_1=Test-Value1" >> $GITHUB_OUTPUT
+
+      - name: Test output in multi-line run step
+        id: test_output_2
+        run: |
+          echo
+          fake-command=Test-Value2
+          echo "test_key_2=$REF" >> $GITHUB_OUTPUT
+          echo "deployed_ref=$DEPLOYED_REF" >> $GITHUB_OUTPUT
+
+      - name: Test step with one-line run and no Output
+        id: test_output_3
+        run: echo "test_key_3"
+
+      - name: Test step with multi-line run and no Output
+        id: test_output_4
+        run: |
+          echo
+          fake-command=Test-Value4
+          echo "test_key_4"
+          echo "deployed_ref"
+
+      - name: Test step with no run
+        id: test_output_5
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0

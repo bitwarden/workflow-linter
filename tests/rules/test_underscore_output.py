@@ -13,6 +13,8 @@ yaml = YAML()
 @pytest.fixture(name="correct_workflow")
 def fixture_correct_workflow():
     workflow = """\
+---
+name: Test Correct Workflow
 on:
   workflow_dispatch:
     outputs:
@@ -26,8 +28,11 @@ on:
         value: 'Test Value'
       some_registry:
         value: 'Test Value'
+  push: {}
+
 jobs:
   job-key:
+    name: Test Correct Job
     runs-on: ubuntu-22.04
     outputs:
       test_key_job: ${{ steps.test_output_1.outputs.test_key }}
@@ -44,8 +49,20 @@ jobs:
           echo "test_key_2=$REF" >> $GITHUB_OUTPUT
           echo "deployed_ref=$DEPLOYED_REF" >> $GITHUB_OUTPUT
 
-      - name: Test step with no run
+      - name: Test step with one-line run and no Output
         id: test_output_3
+        run: echo "test_key_3"
+
+      - name: Test step with multi-line run and no Output
+        id: test_output_4
+        run: |
+          echo
+          fake-command=Test-Value4
+          echo "test_key_4"
+          echo "deployed_ref"
+
+      - name: Test step with no run
+        id: test_output_5
         uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
@@ -58,17 +75,23 @@ jobs:
 def fixture_incorrect_workflow():
     workflow = """\
 ---
+name: Test Incorrect Workflow
 on:
   workflow_dispatch:
     outputs:
       registry-1:
         value: 'Test Value'
+      some_registry-1:
+        value: 'Test Value'
   workflow_call:
     outputs:
       registry-2:
         value: 'Test Value'
+  push: {}
+
 jobs:
   job-key:
+    name: Test Incorrect Job
     runs-on: ubuntu-22.04
     outputs:
       test-key-1: ${{ steps.test_output_1.outputs.test_key }}
@@ -84,6 +107,18 @@ jobs:
           fake-command
           echo "test-key-2=$REF" >> $GITHUB_OUTPUT
           echo "deployed-ref=$DEPLOYED_REF" >> $GITHUB_OUTPUT
+
+      - name: Test step with one-line run and no Output
+        id: test_output_3
+        run: echo "test-key-3"
+
+      - name: Test step with multi-line run and no Output
+        id: test_output_4
+        run: |
+          echo
+          fake-command=Test-Value4
+          echo "test-key-4"
+          echo "deployed-ref"
 """
     return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
 
@@ -123,6 +158,12 @@ def test_rule_on_correct_step(rule, correct_workflow):
     result, _ = rule.fn(correct_workflow.jobs["job-key"].steps[2])
     assert result is True
 
+    result, _ = rule.fn(correct_workflow.jobs["job-key"].steps[3])
+    assert result is True
+
+    result, _ = rule.fn(correct_workflow.jobs["job-key"].steps[4])
+    assert result is True
+
 
 def test_rule_on_incorrect_step(rule, incorrect_workflow):
     result, _ = rule.fn(incorrect_workflow.jobs["job-key"].steps[0])
@@ -130,3 +171,9 @@ def test_rule_on_incorrect_step(rule, incorrect_workflow):
 
     result, _ = rule.fn(incorrect_workflow.jobs["job-key"].steps[1])
     assert result is False
+
+    result, _ = rule.fn(incorrect_workflow.jobs["job-key"].steps[2])
+    assert result is True
+
+    result, _ = rule.fn(incorrect_workflow.jobs["job-key"].steps[3])
+    assert result is True

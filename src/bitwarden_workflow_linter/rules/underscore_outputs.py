@@ -99,8 +99,11 @@ class RuleUnderscoreOutputs:
             if obj.run:
                 outputs.extend(re.findall(r"\b([a-zA-Z0-9_-]+)\s*=\s*[^=]*>>", obj.run))
 
-        for key in outputs:
-            if "-" in key:
-                return False, self.message
+        for output_name in outputs:
+            if "-" in output_name:
+                return False, (
+                    f"Output name: '{output_name}' in {obj.__class__.__name__} '{obj.name}'\n"
+                    "contains a hyphen. Please replace it with an underscore."
+                )
 
         return True, ""
