@@ -40,6 +40,7 @@ enabled_rules:
     - bitwarden_workflow_linter.rules.pinned_job_runner.RuleJobRunnerVersionPinned
     - bitwarden_workflow_linter.rules.job_environment_prefix.RuleJobEnvironmentPrefix
     - bitwarden_workflow_linter.rules.step_pinned.RuleStepUsesPinned
+    - bitwarden_workflow_linter.rules.underscore_outputs.RuleUnderscoreOutputs
 
 approved_actions_path: default_actions.json
 ```
@@ -150,6 +151,9 @@ By default, a new Rule needs five things:
 `fn` can be as simple or as complex as it needs to be to run a check on a _single_ object. This linter currently does
 not support Rules that check against multiple objects at a time OR file level formatting (one empty between each step or
 two empty lines between each job)
+
+To activate a rule after implementing it, add it to `settings.yaml` in the project's base folder
+and `src/bitwarden_workflow_linter/default_settings.yaml` to make the rule default
 
 ### ToDo
 
