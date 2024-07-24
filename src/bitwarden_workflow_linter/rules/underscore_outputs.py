@@ -3,12 +3,13 @@ import re
 from typing import Optional, Union, Tuple
 
 from ..models.job import Job
+from ..rule import Rule
 from ..models.workflow import Workflow
 from ..models.step import Step
 from ..utils import LintLevels, Settings
 
 
-class RuleUnderscoreOutputs:
+class RuleUnderscoreOutputs(Rule):
     """Rule to enforce all GitHub 'outputs' more than one words contain an underscore.
 
     A simple standard to ensure uniformity in naming.
@@ -86,10 +87,11 @@ class RuleUnderscoreOutputs:
 
         if isinstance(obj, Workflow):
             if obj.on.get("workflow_dispatch"):
+                breakpoint()
                 outputs.extend(obj.on["workflow_dispatch"]["outputs"].keys())
 
-            if obj.on.get("workflow_call"):
-                outputs.extend(obj.on["workflow_call"]["outputs"].keys())
+            # if obj.on.get("workflow_call"):
+            #     outputs.extend(obj.on["workflow_call"]["outputs"].keys())
 
         if isinstance(obj, Job):
             if obj.outputs:
@@ -102,7 +104,7 @@ class RuleUnderscoreOutputs:
         for output_name in outputs:
             if "-" in output_name:
                 return False, (
-                    f"Output name: '{output_name}' in {obj.__class__.__name__} '{obj.name}'\n"
+                    f"Output name: '{output_name}' in {obj.__class__.__name__}: '{obj.name}'\n"
                     "contains a hyphen. Please replace it with an underscore."
                 )
 
