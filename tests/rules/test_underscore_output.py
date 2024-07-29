@@ -152,8 +152,6 @@ on:
 jobs:
   job-key:
     runs-on: ubuntu-22.04
-    outputs:
-      test-key-1: ${{ steps.test_output_1.outputs.test_key }}
     steps:
       - name: Test Step
         run: |
