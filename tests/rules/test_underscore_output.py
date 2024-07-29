@@ -123,6 +123,51 @@ jobs:
     return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
 
 
+@pytest.fixture(name="push_only_workflow")
+def fixture_push_only_workflow():
+    workflow = """\
+---
+name: Push Only
+on:
+  push: {}
+
+jobs:
+  job-key:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo test
+
+"""
+    return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
+
+@pytest.fixture(name="misc_workflow")
+def fixture_misc_workflow():
+    workflow = """\
+---
+name: Misc Workflow
+on:
+  push: {}
+
+jobs:
+  job-key:
+    runs-on: ubuntu-22.04
+    outputs:
+      test-key-1: ${{ steps.test_output_1.outputs.test_key }}
+    steps:
+      - name: Test Step
+        run: |
+          echo "test_value=$does_it_break" >> /tmp/test
+
+      - name: Test Step 2
+        run: |
+          TEST_FILE=/tmp/test2
+          echo "test_value=$does_it_break" >> $TEST_FILE
+"""
+    return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
+
+
+
 @pytest.fixture(name="rule")
 def fixture_rule():
     return RuleUnderscoreOutputs()
@@ -169,11 +214,25 @@ def test_rule_on_incorrect_step(rule, incorrect_workflow):
     result, _ = rule.fn(incorrect_workflow.jobs["job-key"].steps[0])
     assert result is False
 
-    result, _ = rule.fn(incorrect_workflow.jobs["job-key"].steps[1])
+    result, message = rule.fn(incorrect_workflow.jobs["job-key"].steps[1])
     assert result is False
+    assert message == "Hyphen found in Step output: test-key-2"
 
     result, _ = rule.fn(incorrect_workflow.jobs["job-key"].steps[2])
     assert result is True
 
     result, _ = rule.fn(incorrect_workflow.jobs["job-key"].steps[3])
+    assert result is True
+
+
+def test_rule_on_push_only_workflow(rule, push_only_workflow):
+    result, _ = rule.fn(push_only_workflow)
+    assert result is True
+
+
+def test_rule_on_misc_workflow(rule, misc_workflow):
+    result, _ = rule.fn(misc_workflow.jobs["job-key"].steps[0])
+    assert result is True
+
+    result, _ = rule.fn(misc_workflow.jobs["job-key"].steps[1])
     assert result is True
