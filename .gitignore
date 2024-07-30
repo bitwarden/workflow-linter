@@ -30,3 +30,8 @@ dist
 ## Dev Environments
 Session.vim
 flake.*
+
+
+# Python
+**/__pycache__/**
+*.pyc

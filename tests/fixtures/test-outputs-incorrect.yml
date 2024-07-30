@@ -1,0 +1,45 @@
+---
+name: Test Incorrect Workflow
+on:
+  workflow_dispatch:
+    outputs:
+      registry-1:
+        value: 'Test Value'
+      some_registry-1:
+        value: 'Test Value'
+  workflow-call:
+    outputs:
+      registry-2:
+        value: 'Test Value'
+  push: {}
+
+jobs:
+  job-key:
+    name: Test Incorrect Job
+    runs-on: ubuntu-22.04
+    outputs:
+      test-key-1: ${{ steps.test_output_1.outputs.test_key }}
+    steps:
+      - name: Test output in one-line run step
+        id: test_output_1
+        run: echo "test-key-1=Test-Value1" >> $GITHUB_OUTPUT
+
+      - name: Test output in multi-line run step
+        id: test_output_2
+        run: |
+          echo
+          fake-command
+          echo "test-key-2=$REF" >> $GITHUB_OUTPUT
+          echo "deployed-ref=$DEPLOYED_REF" >> $GITHUB_OUTPUT
+
+      - name: Test step with one-line run and no Output
+        id: test_output_3
+        run: echo "test-key-3"
+
+      - name: Test step with multi-line run and no Output
+        id: test_output_4
+        run: |
+          echo
+          fake-command=Test-Value4
+          echo "test-key-4"
+          echo "deployed-ref"
