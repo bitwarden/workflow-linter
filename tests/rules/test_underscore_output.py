@@ -164,6 +164,24 @@ jobs:
 """
     return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
 
+@pytest.fixture(name="no_output_workflow")
+def fixture_no_output_workflow():
+    workflow = """\
+---
+name: No Output Workflow
+on:
+  workflow_dispatch: {}
+  workflow_call: {}
+
+jobs:
+  job-key:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo test
+"""
+    return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
+
 
 
 @pytest.fixture(name="rule")
@@ -233,4 +251,9 @@ def test_rule_on_misc_workflow(rule, misc_workflow):
     assert result is True
 
     result, _ = rule.fn(misc_workflow.jobs["job-key"].steps[1])
+    assert result is True
+
+
+def test_rule_on_no_output_workflow(rule, no_output_workflow):
+    result, _ = rule.fn(no_output_workflow)
     assert result is True
