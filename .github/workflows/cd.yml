@@ -77,7 +77,6 @@ jobs:
         env:
           OLD_VERSION: ${{ env.OLD_VERSION }}
           VERSION: ${{ steps.get-version.outputs.version }}
-          GH_TOKEN: ${{ steps.retrieve-secrets.outputs.github-pat-bitwarden-devops-bot-repo-scope }}
         run: |
           git commit -am "Bump version from $OLD_VERSION to $VERSION"
           git tag v$VERSION
