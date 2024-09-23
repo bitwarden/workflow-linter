@@ -2,19 +2,23 @@
 name: CD
 
 on:
-  push:
+  pull_request:
+    types:
+      - closed
     branches:
       - main
     paths:
       - "src/**"
-  workflow_dispatch:
 
 jobs:
   version-type:
+    name: Get version type
+    if: github.event.pull_request.merged == true
     uses: ./.github/workflows/_version_type.yml
 
   version-bump:
     name: Version bump
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-22.04
     needs: version-type
     outputs:
@@ -85,6 +89,7 @@ jobs:
 
   release:
     name: GitHub release
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-22.04
     needs: version-bump
     steps:
@@ -102,6 +107,7 @@ jobs:
 
   deploy:
     name: Deploy workflow-linter (v2)
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-22.04
     needs: version-bump
     steps:
