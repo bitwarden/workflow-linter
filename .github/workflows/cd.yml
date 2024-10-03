@@ -19,7 +19,7 @@ jobs:
   version-bump:
     name: Version bump
     if: github.event.pull_request.merged == true
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: version-type
     outputs:
       version: ${{ steps.get-version.outputs.version }}
@@ -90,7 +90,7 @@ jobs:
   release:
     name: GitHub release
     if: github.event.pull_request.merged == true
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: version-bump
     steps:
       - name: Check out repo
@@ -108,7 +108,7 @@ jobs:
   deploy:
     name: Deploy workflow-linter (v2)
     if: github.event.pull_request.merged == true
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: version-bump
     steps:
       - name: Check out repo
