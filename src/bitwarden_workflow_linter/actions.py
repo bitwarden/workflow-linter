@@ -11,12 +11,10 @@ from typing import Optional, Union
 
 from .utils import Colors, Settings, Action
 
-
 class GitHubApiSchemaError(Exception):
     """A generic Exception to catch redefinitions of GitHub Api Schema changes."""
 
     pass
-
 
 class ActionsCmd:
     """Command to manage the pre-approved list of Actions

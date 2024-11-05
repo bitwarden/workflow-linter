@@ -9,9 +9,7 @@ from .actions import ActionsCmd
 from .lint import LinterCmd
 from .utils import Settings
 
-
 local_settings = Settings.factory()
-
 
 def main(input_args: Optional[List[str]] = None) -> int:
     """CLI utility to lint GitHub Action Workflows.
@@ -49,7 +47,6 @@ def main(input_args: Optional[List[str]] = None) -> int:
             return actions_cmd.update(args.output)
 
     return -1
-
 
 if __name__ == "__main__":
     sys.exit(main())

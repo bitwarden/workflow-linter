@@ -7,12 +7,10 @@ from .models.job import Job
 from .models.step import Step
 from .utils import LintFinding, LintLevels, Settings
 
-
 class RuleExecutionException(Exception):
     """Exception for the Base Rule class."""
 
     pass
-
 
 class Rule:
     """Base class of a Rule to extend to create a linting Rule."""
