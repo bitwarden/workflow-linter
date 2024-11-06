@@ -6,7 +6,6 @@ from typing import Optional, Self
 from dataclasses_json import config, dataclass_json, Undefined
 from ruamel.yaml.comments import CommentedMap
 
-
 @dataclass_json(undefined=Undefined.EXCLUDE)
 @dataclass
 class Step:
