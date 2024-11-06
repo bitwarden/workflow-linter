@@ -99,8 +99,8 @@ jobs:
         uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
         with:
           commit: ${{ github.sha }}
-          tag: v${{ steps.version-bump.outputs.version }}
-          name: v${{ steps.version-bump.outputs.version }}
+          tag: v${{ needs.version-bump.outputs.version }}
+          name: v${{ needs.version-bump.outputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
           draft: false
 
