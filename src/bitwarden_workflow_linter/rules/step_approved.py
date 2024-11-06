@@ -6,7 +6,6 @@ from ..models.step import Step
 from ..rule import Rule
 from ..utils import LintLevels, Settings
 
-
 class RuleStepUsesApproved(Rule):
     """Rule to enforce that all Actions have been pre-approved.
 

@@ -8,7 +8,6 @@ from ..models.workflow import Workflow
 from ..models.step import Step
 from ..utils import LintLevels, Settings
 
-
 class RuleUnderscoreOutputs(Rule):
     """Rule to enforce all GitHub 'outputs' more than one words contain an underscore.
 

@@ -8,7 +8,6 @@ from ..models.workflow import Workflow
 from ..rule import Rule
 from ..utils import LintLevels, Settings
 
-
 class RuleNameCapitalized(Rule):
     """Rule to enforce all 'name' values start with a capital letter.
 
