@@ -6,7 +6,6 @@ from ..models.step import Step
 from ..rule import Rule
 from ..utils import LintLevels, Settings
 
-
 class RuleStepUsesPinned(Rule):
     """Rule to contain the enforcement logic for pinning Actions versions.
 

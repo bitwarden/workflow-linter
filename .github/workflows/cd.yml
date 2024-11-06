@@ -1,23 +1,23 @@
 name: CD
 
 on:
-  pull_request:
-    types:
-      - closed
+  push:
     branches:
       - main
     paths:
       - "src/**"
+  workflow_dispatch:
+
 
 jobs:
   version-type:
     name: Get version type
-    if: github.event.pull_request.merged == true
+    if: github.actor != 'bitwarden-devops-bot'
     uses: ./.github/workflows/_version_type.yml
 
   version-bump:
     name: Version bump
-    if: github.event.pull_request.merged == true
+    if: github.actor != 'bitwarden-devops-bot'
     runs-on: ubuntu-22.04
     needs: version-type
     outputs:
@@ -88,7 +88,7 @@ jobs:
 
   release:
     name: GitHub release
-    if: github.event.pull_request.merged == true
+    if: github.actor != 'bitwarden-devops-bot'
     runs-on: ubuntu-22.04
     needs: version-bump
     steps:
@@ -99,14 +99,14 @@ jobs:
         uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
         with:
           commit: ${{ github.sha }}
-          tag: v${{ steps.get-version.outputs.version }}
-          name: v${{ steps.get-version.outputs.version }}
+          tag: v${{ steps.version-bump.outputs.version }}
+          name: v${{ steps.version-bump.outputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
           draft: false
 
   deploy:
     name: Deploy workflow-linter (v2)
-    if: github.event.pull_request.merged == true
+    if: github.actor != 'bitwarden-devops-bot'
     runs-on: ubuntu-22.04
     needs: version-bump
     steps:
