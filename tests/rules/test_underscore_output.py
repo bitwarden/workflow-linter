@@ -170,7 +170,8 @@ def fixture_no_output_workflow():
 ---
 name: No Output Workflow
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs: {}
   workflow_call: {}
 
 jobs:
