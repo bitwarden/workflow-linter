@@ -8,6 +8,7 @@ from ruamel.yaml.comments import CommentedMap
 
 from .step import Step
 
+
 @dataclass_json(undefined=Undefined.EXCLUDE)
 @dataclass
 class Job:

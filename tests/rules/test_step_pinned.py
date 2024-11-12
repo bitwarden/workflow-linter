@@ -47,6 +47,9 @@ jobs:
   job-key:
     runs-on: ubuntu-22.04
     steps:
+      - name: Test 3rd Party Action without version pinned
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+
       - name: Test External Branch
         uses: actions/checkout@main
 
@@ -78,20 +81,26 @@ def test_rule_on_correct_workflow(rule, correct_workflow):
     assert result is True
 
 
-def test_rule_on_incorrect_workflow_external_branch(rule, incorrect_workflow):
+def test_rule_on_incorrect_workflow_version_comment(rule, incorrect_workflow):
     result, message = rule.fn(incorrect_workflow.jobs["job-key"].steps[0])
+    assert result is False
+    assert "the version of the action commit sha" in message
+
+
+def test_rule_on_incorrect_workflow_external_branch(rule, incorrect_workflow):
+    result, message = rule.fn(incorrect_workflow.jobs["job-key"].steps[1])
     assert result is False
     assert "Please pin the action" in message
 
 
 def test_rule_on_incorrect_workflow_hex(rule, incorrect_workflow):
-    result, message = rule.fn(incorrect_workflow.jobs["job-key"].steps[1])
+    result, message = rule.fn(incorrect_workflow.jobs["job-key"].steps[2])
     assert result is False
     assert "Please use the full commit sha" in message
 
 
 def test_rule_on_incorrect_workflow_internal_commit(rule, incorrect_workflow):
-    result, message = rule.fn(incorrect_workflow.jobs["job-key"].steps[2])
+    result, message = rule.fn(incorrect_workflow.jobs["job-key"].steps[3])
     assert result is False
     assert "Please pin to main" in message
 

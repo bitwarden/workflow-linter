@@ -141,6 +141,7 @@ jobs:
 """
     return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
 
+
 @pytest.fixture(name="misc_workflow")
 def fixture_misc_workflow():
     workflow = """\
@@ -164,6 +165,7 @@ jobs:
 """
     return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
 
+
 @pytest.fixture(name="no_output_workflow")
 def fixture_no_output_workflow():
     workflow = """\
@@ -182,7 +184,6 @@ jobs:
       - run: echo test
 """
     return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
-
 
 
 @pytest.fixture(name="rule")

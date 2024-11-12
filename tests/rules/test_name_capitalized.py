@@ -49,6 +49,25 @@ jobs:
     return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
 
 
+@pytest.fixture(name="underscore_name_workflow")
+def fixture_underscore_name_workflow():
+    workflow = """\
+---
+name: _test
+on:
+  workflow_dispatch:
+
+jobs:
+  job-key:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: test
+        run: echo test
+"""
+    return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
+
+
 @pytest.fixture(name="missing_name_workflow")
 def fixture_missing_name_workflow():
     workflow = """\
@@ -84,6 +103,11 @@ def test_rule_on_correct_workflow(rule, correct_workflow):
 def test_rule_on_incorrect_workflow_name(rule, incorrect_workflow):
     result, _ = rule.fn(incorrect_workflow)
     assert result is False
+
+
+def test_rule_on_underscore_name_workflow(rule, underscore_name_workflow):
+    result, _ = rule.fn(underscore_name_workflow)
+    assert result is True
 
 
 def test_rule_on_incorrect_job_name(rule, incorrect_workflow):

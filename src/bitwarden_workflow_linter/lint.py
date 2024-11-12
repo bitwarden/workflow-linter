@@ -10,6 +10,7 @@ from typing import Optional
 from .load import WorkflowBuilder, Rules
 from .utils import LintFinding, Settings
 
+
 class LinterCmd:
     """Command to lint GitHub Action Workflow files
 

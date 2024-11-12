@@ -15,10 +15,12 @@ from .utils import Settings
 
 yaml = YAML()
 
+
 class WorkflowBuilderError(Exception):
     """Exception to indicate an error with the WorkflowBuilder."""
 
     pass
+
 
 class WorkflowBuilder:
     """Collection of methods to build Workflow objects."""
@@ -82,10 +84,12 @@ class WorkflowBuilder:
             "The workflow must either be built from a file or from a CommentedMap"
         )
 
+
 class LoadRulesError(Exception):
     """Exception to indicate an error with loading rules."""
 
     pass
+
 
 class Rules:
     """A collection of all of the types of rules.

@@ -1,3 +1,5 @@
+""" Rule to enforce all GitHub outputs with more than one words use an underscore."""
+
 import re
 
 from typing import Optional, Union, Tuple
@@ -8,8 +10,9 @@ from ..models.workflow import Workflow
 from ..models.step import Step
 from ..utils import LintLevels, Settings
 
+
 class RuleUnderscoreOutputs(Rule):
-    """Rule to enforce all GitHub 'outputs' more than one words contain an underscore.
+    """Rule to enforce all GitHub outputs with more than one words use an underscore.
 
     A simple standard to ensure uniformity in naming.
     """
@@ -98,9 +101,11 @@ class RuleUnderscoreOutputs(Rule):
 
         if isinstance(obj, Step):
             if obj.run:
-                outputs.extend(re.findall(
-                    r"\b([a-zA-Z0-9_-]+)\s*=\s*[^=]*>>\s*\$GITHUB_OUTPUT",
-                    obj.run))
+                outputs.extend(
+                    re.findall(
+                        r"\b([a-zA-Z0-9_-]+)\s*=\s*[^=]*>>\s*\$GITHUB_OUTPUT", obj.run
+                    )
+                )
 
         for output_name in outputs:
             if "-" in output_name:

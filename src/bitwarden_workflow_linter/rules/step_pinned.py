@@ -6,6 +6,7 @@ from ..models.step import Step
 from ..rule import Rule
 from ..utils import LintLevels, Settings
 
+
 class RuleStepUsesPinned(Rule):
     """Rule to contain the enforcement logic for pinning Actions versions.
 
@@ -93,5 +94,8 @@ class RuleStepUsesPinned(Rule):
 
         if len(ref) != 40:
             return False, "Please use the full commit sha to pin the action"
+
+        if not obj.uses_comment:
+            return False, "Please comment the version of the action commit sha"
 
         return True, ""

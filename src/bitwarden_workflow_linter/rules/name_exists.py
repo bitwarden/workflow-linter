@@ -8,6 +8,7 @@ from ..models.step import Step
 from ..rule import Rule
 from ..utils import LintLevels, Settings
 
+
 class RuleNameExists(Rule):
     """Rule to enforce a 'name' key exists for every object in GitHub Actions.
 

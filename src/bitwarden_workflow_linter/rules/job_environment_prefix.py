@@ -6,6 +6,7 @@ from ..models.job import Job
 from ..rule import Rule
 from ..utils import LintLevels, Settings
 
+
 class RuleJobEnvironmentPrefix(Rule):
     """Rule to enforce specific prefixes for environment variables.
 
