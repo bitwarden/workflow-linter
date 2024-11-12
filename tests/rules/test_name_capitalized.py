@@ -52,7 +52,6 @@ jobs:
 @pytest.fixture(name="underscore_name_workflow")
 def fixture_underscore_name_workflow():
     workflow = """\
----
 name: _test
 on:
   workflow_dispatch:
