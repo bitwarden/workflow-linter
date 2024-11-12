@@ -12,7 +12,7 @@ from ..utils import LintLevels, Settings
 
 
 class RuleUnderscoreOutputs(Rule):
-    """Rule to enforce all GitHub outputs with more than one words use an underscore.
+    """Rule to enforce all GitHub outputs with more than one word use an underscore.
 
     A simple standard to ensure uniformity in naming.
     """
