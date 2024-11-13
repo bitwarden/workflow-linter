@@ -6,6 +6,7 @@ from ..models.job import Job
 from ..rule import Rule
 from ..utils import LintLevels, Settings
 
+
 class RuleJobRunnerVersionPinned(Rule):
     """Rule to enforce pinned Runner OS versions.
 

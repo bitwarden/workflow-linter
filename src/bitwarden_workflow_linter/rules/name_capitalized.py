@@ -8,6 +8,7 @@ from ..models.workflow import Workflow
 from ..rule import Rule
 from ..utils import LintLevels, Settings
 
+
 class RuleNameCapitalized(Rule):
     """Rule to enforce all 'name' values start with a capital letter.
 
@@ -50,6 +51,12 @@ class RuleNameCapitalized(Rule):
         capitalized names. This Rule DOES NOT enforce that the name exists.
         It only enforces capitalization IF it does.
         """
-        if obj.name:
-            return obj.name[0].isupper(), self.message
-        return True, ""  # Force passing if obj.name doesn't exist
+        if isinstance(obj, Workflow):
+            if obj.name:
+                if obj.name[0] != "_":
+                    return obj.name[0].isupper(), self.message
+        else:
+            if obj.name:
+                return obj.name[0].isupper(), self.message
+
+        return True, ""  # Force passing

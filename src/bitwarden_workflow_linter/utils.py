@@ -12,6 +12,7 @@ from ruamel.yaml import YAML
 
 yaml = YAML()
 
+
 @dataclass
 class Colors:
     """Class containing color codes for printing strings to output."""
@@ -25,6 +26,7 @@ class Colors:
     cyan = "36m"
     white = "37m"
 
+
 @dataclass
 class LintLevel:
     """Class to contain the numeric level and color of linting."""
@@ -32,12 +34,14 @@ class LintLevel:
     code: int
     color: Colors
 
+
 class LintLevels(LintLevel, Enum):
     """Collection of the different types of LintLevels available."""
 
     NONE = 0, Colors.white
     WARNING = 1, Colors.yellow
     ERROR = 2, Colors.red
+
 
 class LintFinding:
     """Represents a problem detected by linting."""
@@ -56,6 +60,7 @@ class LintFinding:
             f"\033[{self.level.color}{self.level.name.lower()}\033[0m "
             f"{self.description}"
         )
+
 
 @dataclass
 class Action:
@@ -93,12 +98,15 @@ class Action:
         """
         return not self.__eq__(other)
 
+
 class SettingsError(Exception):
     """Custom Exception to indicate an error with loading Settings."""
 
     pass
 
+
 SettingsFromFactory = TypeVar("SettingsFromFactory", bound="Settings")
+
 
 class Settings:
     """Class that contains configuration-as-code for any portion of the app."""
