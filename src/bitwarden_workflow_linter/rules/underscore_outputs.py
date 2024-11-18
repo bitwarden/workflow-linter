@@ -93,7 +93,8 @@ class RuleUnderscoreOutputs(Rule):
                     outputs.extend(obj.on["workflow_dispatch"]["outputs"].keys())
 
             if obj.on.get("workflow_call"):
-                outputs.extend(obj.on["workflow_call"]["outputs"].keys())
+                if obj.on["workflow_call"].get("outputs"):
+                    outputs.extend(obj.on["workflow_call"]["outputs"].keys())
 
         if isinstance(obj, Job):
             if obj.outputs:
