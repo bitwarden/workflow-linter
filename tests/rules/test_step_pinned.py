@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Test Internal Action
-        uses: bitwarden/gh-actions/get-keyvault-secrets@main
+        uses: bitwarden/ios/.github/actions/dispatch-and-download@main
 
       - name: Test Local Action
         uses: ./actions/test-action

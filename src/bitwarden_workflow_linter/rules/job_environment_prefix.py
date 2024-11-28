@@ -58,11 +58,12 @@ class RuleJobEnvironmentPrefix(Rule):
         incorrectly named environment variables.
         """
         correct = True
+        allowed_envs = {"NODE_OPTION", "NUGET_PACKAGES", "MINT_PATH", "MINT_LINK_PATH"}
 
         if obj.env:
             offending_keys = []
             for key in obj.env.keys():
-                if key[0] != "_":
+                if key not in allowed_envs and key[0] != "_":
                     offending_keys.append(key)
                     correct = False
 
