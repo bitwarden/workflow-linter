@@ -93,7 +93,6 @@ class RuleUnderscoreOutputs(Rule):
                     for output, _ in obj.on["workflow_dispatch"]["outputs"].items():
                         outputs.append(output)
 
-
             if obj.on.get("workflow_call"):
                 if obj.on["workflow_call"].get("outputs"):
                     for output, _ in obj.on["workflow_call"]["outputs"].items():
@@ -123,4 +122,7 @@ class RuleUnderscoreOutputs(Rule):
         if correct:
             return True, ""
 
-        return correct, f"{obj.__class__.__name__} {self.message}: ({' ,'.join(offending_keys)})"
+        return (
+            False,
+            f"{obj.__class__.__name__} {self.message}: ({' ,'.join(offending_keys)})",
+        )
