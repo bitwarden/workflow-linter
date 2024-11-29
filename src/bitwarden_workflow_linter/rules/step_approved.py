@@ -41,8 +41,8 @@ class RuleStepUsesApproved(Rule):
         if "@" not in obj.uses:
             return True
 
-        ## Force pass for any bitwarden/gh-actions
-        if obj.uses.startswith("bitwarden/gh-actions"):
+        ## Force pass for any bitwarden/
+        if obj.uses.startswith("bitwarden/"):
             return True
 
         return False

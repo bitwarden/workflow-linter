@@ -82,7 +82,7 @@ class RuleStepUsesPinned(Rule):
 
         path, ref = obj.uses.split("@")
 
-        if path.startswith("bitwarden/gh-actions"):
+        if path.startswith("bitwarden/"):
             if ref == "main":
                 return True, ""
             return False, "Please pin to main"

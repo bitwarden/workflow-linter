@@ -54,6 +54,7 @@ class LinterCmd:
         )
         parser_lint.add_argument("-f", "--files", action="append", help="files to lint")
         parser_lint.add_argument(
+            "-o",
             "--output",
             action="store",
             help="output format: [stdout|json|md]",
@@ -137,9 +138,10 @@ class LinterCmd:
             if os.path.isfile(path):
                 workflow_files.append(path)
             elif os.path.isdir(path):
-                for subdir, _, files in os.walk(path):
-                    for filename in files:
-                        filepath = subdir + os.sep + filename
+                for dirpath, dirnames, filenames in os.walk(path):
+                    dirnames[:] = []
+                    for file in filenames:
+                        filepath = dirpath + os.sep + file
                         if filepath.endswith((".yml", ".yaml")):
                             workflow_files.append(filepath)
 

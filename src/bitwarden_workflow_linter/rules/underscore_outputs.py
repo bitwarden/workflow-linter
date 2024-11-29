@@ -25,7 +25,7 @@ class RuleUnderscoreOutputs(Rule):
             A Settings object that contains any default, overridden, or custom settings
             required anywhere in the application.
         """
-        self.message = "outputs with more than one word must use an underscore"
+        self.message = "outputs with more than one word should use an underscore"
         self.on_fail = LintLevels.WARNING
         self.compatibility = [Workflow, Job, Step]
         self.settings = settings
@@ -90,15 +90,18 @@ class RuleUnderscoreOutputs(Rule):
         if isinstance(obj, Workflow):
             if obj.on.get("workflow_dispatch"):
                 if obj.on["workflow_dispatch"].get("outputs"):
-                    outputs.extend(obj.on["workflow_dispatch"]["outputs"].keys())
+                    for output, _ in obj.on["workflow_dispatch"]["outputs"].items():
+                        outputs.append(output)
 
             if obj.on.get("workflow_call"):
                 if obj.on["workflow_call"].get("outputs"):
-                    outputs.extend(obj.on["workflow_call"]["outputs"].keys())
+                    for output, _ in obj.on["workflow_call"]["outputs"].items():
+                        outputs.append(output)
 
         if isinstance(obj, Job):
             if obj.outputs:
-                outputs.extend(obj.outputs.keys())
+                for output in obj.outputs.keys():
+                    outputs.append(output)
 
         if isinstance(obj, Step):
             if obj.run:
@@ -108,10 +111,18 @@ class RuleUnderscoreOutputs(Rule):
                     )
                 )
 
-        for output_name in outputs:
-            if "-" in output_name:
-                return False, (
-                    f"Hyphen found in {obj.__class__.__name__} output: {output_name}"
-                )
+        correct = True
+        offending_keys = []
 
-        return True, ""
+        for name in outputs:
+            if "-" in name:
+                offending_keys.append(name)
+                correct = False
+
+        if correct:
+            return True, ""
+
+        return (
+            False,
+            f"{obj.__class__.__name__} {self.message}: ({' ,'.join(offending_keys)})",
+        )

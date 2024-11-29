@@ -234,7 +234,7 @@ def test_rule_on_incorrect_step(rule, incorrect_workflow):
 
     result, message = rule.fn(incorrect_workflow.jobs["job-key"].steps[1])
     assert result is False
-    assert message == "Hyphen found in Step output: test-key-2"
+    assert "outputs with more than one word should use an underscore" in message
 
     result, _ = rule.fn(incorrect_workflow.jobs["job-key"].steps[2])
     assert result is True
