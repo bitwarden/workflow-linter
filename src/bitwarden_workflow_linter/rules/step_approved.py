@@ -82,7 +82,7 @@ class RuleStepUsesApproved(Rule):
         if self.skip(obj):
             return True, ""
 
-        # Actions in bitwarden/gh-actions are auto-approved
+        # Actions in bitwarden/ are auto-approved
         if obj.uses and not obj.uses_path in self.settings.approved_actions:
             return False, (
                 f"New Action detected: {obj.uses_path}\nFor security purposes, "
