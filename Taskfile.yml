@@ -59,7 +59,7 @@ tasks:
 
   test:e2e:lint:single:
     cmds:
-      - pipenv run bwwl lint --files tests/fixtures/test_a.yml
+      - pipenv run bwwl lint --files tests/fixtures/test.yml
 
   test:e2e:actions:add:
     cmds:

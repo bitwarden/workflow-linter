@@ -209,6 +209,11 @@
     "sha": "445c42390d790569d938f9068d01af39ca030feb",
     "version": "v1.0.0"
   },
+  "maxim-lobanov/setup-xcode" : {
+    "name": "maxim-lobanov/setup-xcode",
+    "sha": "60606e260d2fc5762a71e64e74b2174e8ea3c8bd",
+    "version": "v1.6.0"
+  },
   "microsoft/setup-msbuild": {
     "name": "microsoft/setup-msbuild",
     "sha": "1ff57057b5cfdc39105cd07a01d78e9b0ea0c14c",

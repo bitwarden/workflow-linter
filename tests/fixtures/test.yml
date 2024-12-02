@@ -15,11 +15,10 @@ jobs:
       _CROWDIN_PROJECT_ID: "308189"
     steps:
       - name: Checkout repo
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v2.3.4
-
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Log in to Azure - CI subscription
-        uses: Azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2 # v1.4.7
+        uses: Azure/login@de95379fe4dadc2defb305917eaa7e5dde727294 # v1.5.1
         with:
           creds: ${{ secrets.AZURE_KV_CI_SERVICE_PRINCIPAL }}
 
@@ -30,7 +29,7 @@ jobs:
           keyvault: "bitwarden-ci"
           secrets: "crowdin-api-token"
 
-      - uses: crowdin/github-action@e39093fd75daae7859c68eded4b43d42ec78d8ea # v1.3.2
+      - uses: crowdin/github-action@fdc55cdc519e86e32c22a07528d649277f1127f2 # v1.16.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CROWDIN_API_TOKEN: ${{ steps.retrieve-secrets.outputs.crowdin-api-token }}
@@ -47,3 +46,8 @@ jobs:
           create_pull_request: true
           pull_request_title: "Autosync Crowdin Translations"
           pull_request_body: "Autosync the updated translations"
+
+      - name: Set Xcode version
+        uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
+        with:
+          xcode-version: ${{ env._XCODE_VERSION || env.DEFAULT_XCODE_VERSION }}
