@@ -61,26 +61,17 @@ class ActionsCmd:
             required=True, dest="actions_command"
         )
         parser_actions_update = subparsers_actions.add_parser(
-            "update",
-            help="update action versions"
+            "update", help="update action versions"
         )
         parser_actions_update.add_argument(
-            "-o",
-            "--output",
-            action="store",
-            default="actions.json",
-            help="output file"
+            "-o", "--output", action="store", default="actions.json", help="output file"
         )
         parser_actions_add = subparsers_actions.add_parser(
             "add", help="add action to approved list"
         )
         parser_actions_add.add_argument("name", help="action name [git owner/repo]")
         parser_actions_add.add_argument(
-            "-o",
-            "--output",
-            action="store",
-            default="actions.json",
-            help="output file"
+            "-o", "--output", action="store", default="actions.json", help="output file"
         )
 
         return subparsers

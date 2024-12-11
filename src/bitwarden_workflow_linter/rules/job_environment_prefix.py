@@ -58,7 +58,13 @@ class RuleJobEnvironmentPrefix(Rule):
         incorrectly named environment variables.
         """
         correct = True
-        allowed_envs = {"NODE_OPTIONS", "NUGET_PACKAGES", "MINT_PATH", "MINT_LINK_PATH", "HUSKY"}
+        allowed_envs = {
+            "NODE_OPTIONS",
+            "NUGET_PACKAGES",
+            "MINT_PATH",
+            "MINT_LINK_PATH",
+            "HUSKY",
+        }
 
         if obj.env:
             offending_keys = []

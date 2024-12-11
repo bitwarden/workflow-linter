@@ -84,7 +84,7 @@ class RuleStepUsesApproved(Rule):
 
         obj_path = obj.uses_path
 
-         # Remove the action directory if the action is in a multi-actions repo
+        # Remove the action directory if the action is in a multi-actions repo
         if len(obj.uses_path.split("/")) > 2:
             obj_path = "/".join(obj.uses_path.split("/")[:-1])
 
