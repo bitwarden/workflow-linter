@@ -32,6 +32,9 @@ jobs:
 
       - name: Test Run Action
         run: echo "test"
+
+      - name: Test Bitwarden Action
+        uses: bitwarden/sm-action@92d1d6a4f26a89a8191c83ab531a53544578f182 # v2.0.0
 """
     return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
 
@@ -78,6 +81,9 @@ def test_rule_on_correct_workflow(rule, correct_workflow):
     assert result is True
 
     result, _ = rule.fn(correct_workflow.jobs["job-key"].steps[3])
+    assert result is True
+
+    result, _ = rule.fn(correct_workflow.jobs["job-key"].steps[4])
     assert result is True
 
 

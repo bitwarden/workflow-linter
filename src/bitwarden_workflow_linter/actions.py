@@ -57,17 +57,31 @@ class ActionsCmd:
         parser_actions = subparsers.add_parser(
             "actions", help="!!BETA!!\nAdd or Update Actions in the pre-approved list."
         )
-        parser_actions.add_argument(
-            "-o", "--output", action="store", default="actions.json"
-        )
         subparsers_actions = parser_actions.add_subparsers(
             required=True, dest="actions_command"
         )
-        subparsers_actions.add_parser("update", help="update action versions")
+        parser_actions_update = subparsers_actions.add_parser(
+            "update",
+            help="update action versions"
+        )
+        parser_actions_update.add_argument(
+            "-o",
+            "--output",
+            action="store",
+            default="actions.json",
+            help="output file"
+        )
         parser_actions_add = subparsers_actions.add_parser(
             "add", help="add action to approved list"
         )
         parser_actions_add.add_argument("name", help="action name [git owner/repo]")
+        parser_actions_add.add_argument(
+            "-o",
+            "--output",
+            action="store",
+            default="actions.json",
+            help="output file"
+        )
 
         return subparsers
 
@@ -127,29 +141,40 @@ class ActionsCmd:
                 f"https://api.github.com/repos/{action.name}/releases/latest",
                 action.name,
             )
-            if not response:
-                return None
+            if response.status != 404:
+                tag_name = json.loads(response.data)["tag_name"]
 
-            tag_name = json.loads(response.data)["tag_name"]
+                # Get the URL to the commit for the tag
+                response = self.get_github_api_response(
+                    f"https://api.github.com/repos/{action.name}/git/ref/tags/{tag_name}",
+                    action.name,
+                )
 
-            # Get the URL to the commit for the tag
-            response = self.get_github_api_response(
-                f"https://api.github.com/repos/{action.name}/git/ref/tags/{tag_name}",
-                action.name,
-            )
-            if not response:
-                return None
-
-            if json.loads(response.data)["object"]["type"] == "commit":
-                sha = json.loads(response.data)["object"]["sha"]
-            else:
-                url = json.loads(response.data)["object"]["url"]
-                # Follow the URL and get the commit sha for tags
-                response = self.get_github_api_response(url, action.name)
-                if not response:
+                if response.status != 200:
                     return None
 
+                if json.loads(response.data)["object"]["type"] == "commit":
+                    sha = json.loads(response.data)["object"]["sha"]
+                else:
+                    url = json.loads(response.data)["object"]["url"]
+                    # Follow the URL and get the commit sha for tags
+                    response = self.get_github_api_response(url, action.name)
+                    if not response:
+                        return None
+
                 sha = json.loads(response.data)["object"]["sha"]
+            else:
+                # Get tag from latest tag
+                response = self.get_github_api_response(
+                    f"https://api.github.com/repos/{action.name}/tags",
+                    action.name,
+                )
+
+                if response.status != 200:
+                    return None
+
+                sha = json.loads(response.data)[0]["commit"]["sha"]
+                tag_name = json.loads(response.data)[0]["name"]
         except KeyError as err:
             raise GitHubApiSchemaError(
                 f"Error with the GitHub API Response Schema for either /releases or"
@@ -182,10 +207,20 @@ class ActionsCmd:
         updated_actions = self.settings.approved_actions
         proposed_action = Action(name=new_action_name)
 
+        # Remove the action directory if the action is in a multi-actions repo
+        if len(new_action_name.split("/")) > 2:
+            modified_action = "/".join(new_action_name.split("/")[:-1])
+            print(
+                f" - {new_action_name} \033[{Colors.yellow}modified\033[0m to {modified_action}"
+            )
+            proposed_action = Action(name=modified_action)
+
         if self.exists(proposed_action):
             latest = self.get_latest_version(proposed_action)
             if latest:
                 updated_actions[latest.name] = latest
+        else:
+            print(f" - {new_action_name} \033[{Colors.red}not found\033[0m")
 
         self.save_actions(updated_actions, filename)
         return 0

@@ -23,7 +23,7 @@ class RuleStepUsesApproved(Rule):
             A Settings object that contains any default, overridden, or custom settings
             required anywhere in the application.
         """
-        self.on_fail = LintLevels.WARNING
+        self.on_fail = LintLevels.ERROR
         self.compatibility = [Step]
         self.settings = settings
 
@@ -82,20 +82,17 @@ class RuleStepUsesApproved(Rule):
         if self.skip(obj):
             return True, ""
 
+        obj_path = obj.uses_path
+
+         # Remove the action directory if the action is in a multi-actions repo
+        if len(obj.uses_path.split("/")) > 2:
+            obj_path = "/".join(obj.uses_path.split("/")[:-1])
+
         # Actions in bitwarden/ are auto-approved
-        if obj.uses and not obj.uses_path in self.settings.approved_actions:
+        if obj.uses and not obj_path in self.settings.approved_actions:
             return False, (
                 f"New Action detected: {obj.uses_path}\nFor security purposes, "
                 "actions must be reviewed and be on the pre-approved list"
-            )
-
-        action = self.settings.approved_actions[obj.uses_path]
-
-        if obj.uses_version != action.version or obj.uses_ref != action.sha:
-            return False, (
-                "Action is out of date. Please update to:\n"
-                f"  commit: {action.version}"
-                f"  version: {action.sha}"
             )
 
         return True, ""

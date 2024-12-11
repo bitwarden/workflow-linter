@@ -56,7 +56,7 @@ class RuleNameCapitalized(Rule):
                 if obj.name[0] != "_":
                     return obj.name[0].isupper(), self.message
         else:
-            if obj.name:
+            if obj.name and "matrix" not in obj.name:
                 return obj.name[0].isupper(), self.message
 
         return True, ""  # Force passing
