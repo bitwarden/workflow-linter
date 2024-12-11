@@ -144,9 +144,7 @@ class ActionsCmd:
                 if response is None or response.status != 200:
                     return None
 
-                if json.loads(response.data)["object"]["type"] == "commit":
-                    sha = json.loads(response.data)["object"]["sha"]
-                else:
+                if json.loads(response.data)["object"]["type"] != "commit":
                     url = json.loads(response.data)["object"]["url"]
                     # Follow the URL and get the commit sha for tags
                     response = self.get_github_api_response(url, action.name)
