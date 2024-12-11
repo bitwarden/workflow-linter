@@ -103,14 +103,6 @@ class RuleUnderscoreOutputs(Rule):
                 for output in obj.outputs.keys():
                     outputs.append(output)
 
-        if isinstance(obj, Step):
-            if obj.run:
-                outputs.extend(
-                    re.findall(
-                        r"\b([a-zA-Z0-9_-]+)\s*=\s*[^=]*>>\s*\$GITHUB_OUTPUT", obj.run
-                    )
-                )
-
         correct = True
         offending_keys = []
 
@@ -124,5 +116,5 @@ class RuleUnderscoreOutputs(Rule):
 
         return (
             False,
-            f"{obj.__class__.__name__} {self.message}: ({' ,'.join(offending_keys)})",
+            f"{obj.__class__.__name__} {self.message}: ({', '.join(offending_keys)})",
         )

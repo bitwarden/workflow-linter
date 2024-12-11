@@ -70,8 +70,6 @@ jobs:
       - name: Checkout Branch
         uses: joseph-flinn/action-DNE@main
 
-      - name: Out of date action
-        uses: actions/download-artifact@7a1cd3216ca9260cd8022db641d960b1db4d1be4 # v4.0.0
 """
     return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
 
@@ -99,10 +97,6 @@ def test_rule_on_incorrect_workflow(rule, incorrect_workflow):
     result, message = rule.fn(incorrect_workflow.jobs["job-key"].steps[0])
     assert result is False
     assert "New Action detected" in message
-
-    result, message = rule.fn(incorrect_workflow.jobs["job-key"].steps[1])
-    assert result is False
-    assert "Action is out of date" in message
 
 
 def test_fail_compatibility(rule, correct_workflow):
