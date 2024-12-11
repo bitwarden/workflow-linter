@@ -132,7 +132,7 @@ class ActionsCmd:
                 f"https://api.github.com/repos/{action.name}/releases/latest",
                 action.name,
             )
-            if response.status != 404:
+            if response is not None and response.status != 404:
                 tag_name = json.loads(response.data)["tag_name"]
 
                 # Get the URL to the commit for the tag
@@ -141,7 +141,7 @@ class ActionsCmd:
                     action.name,
                 )
 
-                if response.status != 200:
+                if response is None or response.status != 200:
                     return None
 
                 if json.loads(response.data)["object"]["type"] == "commit":
@@ -161,7 +161,7 @@ class ActionsCmd:
                     action.name,
                 )
 
-                if response.status != 200:
+                if response is None or response.status != 200:
                     return None
 
                 sha = json.loads(response.data)[0]["commit"]["sha"]
