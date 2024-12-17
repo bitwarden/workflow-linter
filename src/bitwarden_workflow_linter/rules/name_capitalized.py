@@ -1,5 +1,6 @@
 """A Rule to enforce all 'name' values start with a capital letter."""
 
+import re
 from typing import Optional, Tuple, Union
 
 from ..models.job import Job
@@ -56,7 +57,7 @@ class RuleNameCapitalized(Rule):
                 if obj.name[0] != "_":
                     return obj.name[0].isupper(), self.message
         else:
-            if obj.name:
+            if obj.name and not re.match(r"^\s*\${{\s*matrix\..*}}.*", obj.name):
                 return obj.name[0].isupper(), self.message
 
         return True, ""  # Force passing

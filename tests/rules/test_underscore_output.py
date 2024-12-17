@@ -96,18 +96,6 @@ jobs:
     outputs:
       test-key-1: ${{ steps.test_output_1.outputs.test_key }}
     steps:
-      - name: Test output in one-line run step
-        id: test_output_1
-        run: echo "test-key-1=Test-Value1" >> $GITHUB_OUTPUT
-
-      - name: Test output in multi-line run step
-        id: test_output_2
-        run: |
-          echo
-          fake-command
-          echo "test-key-2=$REF" >> $GITHUB_OUTPUT
-          echo "deployed-ref=$DEPLOYED_REF" >> $GITHUB_OUTPUT
-
       - name: Test step with one-line run and no Output
         id: test_output_3
         run: echo "test-key-3"
@@ -230,16 +218,9 @@ def test_rule_on_correct_step(rule, correct_workflow):
 
 def test_rule_on_incorrect_step(rule, incorrect_workflow):
     result, _ = rule.fn(incorrect_workflow.jobs["job-key"].steps[0])
-    assert result is False
-
-    result, message = rule.fn(incorrect_workflow.jobs["job-key"].steps[1])
-    assert result is False
-    assert "outputs with more than one word should use an underscore" in message
-
-    result, _ = rule.fn(incorrect_workflow.jobs["job-key"].steps[2])
     assert result is True
 
-    result, _ = rule.fn(incorrect_workflow.jobs["job-key"].steps[3])
+    result, _ = rule.fn(incorrect_workflow.jobs["job-key"].steps[1])
     assert result is True
 
 

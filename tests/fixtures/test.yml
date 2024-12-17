@@ -1,5 +1,5 @@
 ---
-name: crowdin Pull
+name: Crowdin Pull
 
 on:
   workflow_dispatch:
@@ -47,7 +47,7 @@ jobs:
           pull_request_title: "Autosync Crowdin Translations"
           pull_request_body: "Autosync the updated translations"
 
-      - name: Set Xcode version
+      - name: ${{ matrix.name }}
         uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
         with:
           xcode-version: ${{ env._XCODE_VERSION || env.DEFAULT_XCODE_VERSION }}
