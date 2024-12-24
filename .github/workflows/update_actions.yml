@@ -116,20 +116,3 @@ jobs:
         run: |
           gh pr review $PR_NUMBER --approve
           gh pr merge $PR_NUMBER --squash --auto --delete-branch
-
-
-
-
-
-
-
-
-
-
-
-
-# - check out
-# - run bwwl update
-# - commit changes
-# - create PR
-# - merge PR
