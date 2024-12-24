@@ -1,0 +1,118 @@
+name: Update Approved Actions
+
+on:
+  schedule:
+  - cron: '0 0 */14 * *'
+
+jobs:
+  actions-update:
+    name: "Update Approved Actions"
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Login to Azure - CI Subscription
+        uses: Azure/login@e15b166166a8746d1a47596803bd8c1b595455cf # v1.6.0
+        with:
+          creds: ${{ secrets.AZURE_KV_CI_SERVICE_PRINCIPAL }}
+
+      - name: Retrieve secrets
+        id: retrieve-secrets
+        uses: bitwarden/gh-actions/get-keyvault-secrets@main
+        with:
+          keyvault: "bitwarden-ci"
+          secrets: "github-gpg-private-key,
+            github-gpg-private-key-passphrase"
+
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@cb9bde2e2525e640591a934b1fd28eef1dcaf5e5 # v6.2.0
+        with:
+          gpg_private_key: ${{ steps.retrieve-secrets.outputs.github-gpg-private-key }}
+          passphrase: ${{ steps.retrieve-secrets.outputs.github-gpg-private-key-passphrase }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+
+      - name: Setup git
+        run: |
+          git config --local user.email "106330231+bitwarden-devops-bot@users.noreply.github.com"
+          git config --local user.name "bitwarden-devops-bot"
+
+      - name: Checkout Branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        with:
+          python-version: "3.11"
+
+      - name: Install bwwl binary
+        run: python -m pip install --upgrade bitwarden_workflow_linter
+
+      - name: Create Branch
+        id: create-branch
+        run: |
+          NAME="update-actions-$(date +'%Y%m%d-%H%M%S')"
+          git switch -c $NAME
+          echo "name=$NAME" >> $GITHUB_OUTPUT
+
+      - name: Run bwwl update
+        run: bwwl actions update -o src/bitwarden_workflow_linter/default_actions.json
+
+      - name: Check if there are changes to commit
+        id: new-changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "new_changes=TRUE" >> $GITHUB_OUTPUT
+          else
+            echo "new_changes=FALSE" >> $GITHUB_OUTPUT
+            echo "No changes to commit!";
+          fi
+
+      - name: Commit changes
+        if: steps.new-changes.outputs.new_changes == 'TRUE'
+        env:
+          PR_BRANCH: ${{ steps.create-branch.outputs.name }}
+        run: |
+          git commit -m "Update approved actions" -a
+          git push origin $PR_BRANCH
+
+      - name: Generate GH App token
+        if: steps.new-changes.outputs.new_changes == 'TRUE'
+        uses: actions/create-github-app-token@5d869da34e18e7287c1daad50e0b8ea0f506ce69 # v1.11.0
+        id: app-token
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_KEY }}
+          owner: ${{ github.repository_owner }}
+
+      - name: Create PR
+        if: steps.new-changes.outputs.new_changes == 'TRUE'
+        id: create-pr
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          PR_BRANCH: ${{ steps.create-branch.outputs.name }}
+          TITLE: "Update bwwl Approved Actions"
+        run: |
+          PR_URL=$(gh pr create --title "$TITLE" \
+            --base "main" \
+            --head "$PR_BRANCH" \
+            --label "version:patch" \
+            --label "automated pr" \
+            --body "
+              ## Type of change
+              - [ ] Bug fix
+              - [ ] New feature development
+              - [X] Tech debt (refactoring, code cleanup, dependency upgrades, etc)
+              - [ ] Build/deploy pipeline (DevOps)
+              - [ ] Other
+
+              ## Description
+              - This PR updates the approved actions for the Bitwarden Workflow Linter.")
+          echo "pr_number=${PR_URL##*/}" >> $GITHUB_OUTPUT
+
+      - name: Approve and Merge PR
+        if: ${{ steps.create-pr.outcome == 'success' }}
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          PR_NUMBER: ${{ steps.create-pr.outputs.pr_number }}
+        run: |
+          gh pr review $PR_NUMBER --approve
+          gh pr merge $PR_NUMBER --squash --auto --delete-branch
