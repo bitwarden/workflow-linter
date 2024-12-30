@@ -19,21 +19,21 @@ def check_actionlint():
     except subprocess.CalledProcessError:
         return False
     except FileNotFoundError:
-        if Platform.startswith('linux'):
+        if Platform.startswith('Linux'):
             try:
                 subprocess.run(['sudo', 'apt-get', 'install', '-y', 'actionlint'], check=True)
                 return True
             except subprocess.CalledProcessError:
                 print(f"Failed to install Actionlint. Please check your package manager or manually install it.")
                 return False
-        elif Platform == 'darwin':
+        elif Platform == 'Darwin':
             try:
                 subprocess.run(['brew', 'install', 'actionlint'], check=True)
                 return True
             except subprocess.CalledProcessError:
                 print(f"Failed to install Actionlint. Please check your Homebrew installation or manually install it.")
                 return False
-        elif Platform == 'win32':
+        elif Platform == 'Win32':
             try:
                 subprocess.run(['choco', 'install', 'actionlint', '-y'], check=True)
                 return True
@@ -58,7 +58,6 @@ class RunActionlint(Rule):
                 return False, result.stderr
             return True, ""
         else:
-            check_actionlint()
             print(f"Actionlint could not be installed.")
             return False, ""
     
