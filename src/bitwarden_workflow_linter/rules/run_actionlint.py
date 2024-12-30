@@ -60,4 +60,3 @@ class RunActionlint(Rule):
         else:
             print(f"Actionlint could not be installed.")
             return False, ""
-    
