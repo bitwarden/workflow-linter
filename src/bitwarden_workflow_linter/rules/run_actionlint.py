@@ -45,7 +45,7 @@ class RunActionlint(Rule):
     def __init__(self, settings: Settings = None) -> None:
         self.message = "Actionlint must pass without errors"
         self.on_fail: LintLevels = LintLevels.WARNING
-        self.compatibility = [Workflow]
+        self.compatibility = [Workflow, Job, Step]
         self.settings: Settings = settings
 
     def fn(self, obj: Job) -> Tuple[bool, str]:
