@@ -1,3 +1,5 @@
+"""A Rule to run actionlint on workflows."""
+
 from typing import Optional, Tuple
 import subprocess
 import platform
@@ -9,7 +11,11 @@ from ..utils import LintLevels, Settings
 
 
 def check_actionlint():
-    """Check if the actionlint is in the system's PATH."""
+    """Check if the actionlint is in the system's PATH.
+    
+    If actionlint is not installed, detects OS platform 
+    and installs actionlint
+    """
     Platform = platform.system()
     try:
         subprocess.run(["actionlint", '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
@@ -40,6 +46,9 @@ def check_actionlint():
                 return False
             
 class RunActionlint(Rule):
+    """Rule to run actionlint as part of workflow linter V2.
+    """
+    
     def __init__(self, settings: Optional[Settings] = None) -> None:
         self.message = "Actionlint must pass without errors"
         self.on_fail = LintLevels.WARNING
