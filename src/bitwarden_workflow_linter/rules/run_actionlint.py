@@ -1,12 +1,10 @@
-from typing import Union, Tuple
+from typing import Optional, Tuple
 import subprocess
 import platform
-import shutil
 
 from ..rule import Rule
 from ..models.job import Job
 from ..models.workflow import Workflow
-from ..models.step import Step
 from ..utils import LintLevels, Settings
 
 
@@ -42,7 +40,7 @@ def check_actionlint():
                 return False
             
 class RunActionlint(Rule):
-    def __init__(self, settings: Settings = None) -> None:
+    def __init__(self, settings: Optional[Settings] = None) -> None:
         self.message = "Actionlint must pass without errors"
         self.on_fail = LintLevels.WARNING
         self.compatibility = [Workflow]
