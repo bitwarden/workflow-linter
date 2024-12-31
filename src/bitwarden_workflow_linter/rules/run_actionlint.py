@@ -5,7 +5,6 @@ import subprocess
 import platform
 
 from ..rule import Rule
-from ..models.job import Job
 from ..models.workflow import Workflow
 from ..utils import LintLevels, Settings
 
@@ -16,40 +15,54 @@ def check_actionlint():
     If actionlint is not installed, detects OS platform
     and installs actionlint
     """
-    Platform = platform.system()
-    error = f"An unknown error occurred on platform {Platform}"
+    platform_system = platform.system()
+    error = f"An unknown error occurred on platform {platform_system}"
     try:
-        subprocess.run(["actionlint", '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
+        subprocess.run(
+            ["actionlint", "--version"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=True,
+        )
         return True, ""
     except subprocess.CalledProcessError:
-        return False, "Failed to install Actionlint, please check your package installer or manually install it"
+        return (
+            False,
+            "Failed to install Actionlint, \
+please check your package installer or manually install it",
+        )
     except FileNotFoundError:
-        if Platform.startswith('Linux'):
+        if platform_system.startswith("Linux"):
             try:
-                subprocess.run(['sudo', 'apt-get', 'install', '-y', 'actionlint'], check=True)
+                subprocess.run(
+                    ["sudo", "apt-get", "install", "-y", "actionlint"], check=True
+                )
                 return True, ""
             except (FileNotFoundError, subprocess.CalledProcessError):
-                error = "Failed to install Actionlint. Please check your package manager or manually install it."
+                error = "Failed to install Actionlint. \
+Please check your package manager or manually install it."
                 return False, error
-        elif Platform == 'Darwin':
+        elif platform_system == "Darwin":
             try:
-                subprocess.run(['brew', 'install', 'actionlint'], check=True)
+                subprocess.run(["brew", "install", "actionlint"], check=True)
                 return True, ""
             except (FileNotFoundError, subprocess.CalledProcessError):
-                error = "Failed to install Actionlint. Please check your Homebrew installation or manually install it."
+                error = "Failed to install Actionlint. \
+Please check your Homebrew installation or manually install it."
                 return False, error
-        elif Platform.startswith('Win'):
+        elif platform_system.startswith("Win"):
             try:
-                subprocess.run(['choco', 'install', 'actionlint', '-y'], check=True)
+                subprocess.run(["choco", "install", "actionlint", "-y"], check=True)
                 return True, ""
             except (FileNotFoundError, subprocess.CalledProcessError):
-                error = "Failed to install Actionlint. Please check your Chocolatey installation or manually install it."
+                error = "Failed to install Actionlint. \
+Please check your Chocolatey installation or manually install it."
                 return False, error
     return False, error
 
+
 class RunActionlint(Rule):
-    """Rule to run actionlint as part of workflow linter V2.
-    """
+    """Rule to run actionlint as part of workflow linter V2."""
 
     def __init__(self, settings: Optional[Settings] = None) -> None:
         self.message = "Actionlint must pass without errors"
@@ -57,10 +70,27 @@ class RunActionlint(Rule):
         self.compatibility = [Workflow]
         self.settings = settings
 
-    def fn(self, obj: Job) -> Tuple[bool, str]:
+    def fn(self, obj: Workflow) -> Tuple[bool, str]:
         installed, install_error = check_actionlint()
         if installed:
-            result = subprocess.run(["actionlint"], capture_output=True, text=True)
+            print(obj.on)
+            if obj.filename:
+                result = subprocess.run(
+                    ["actionlint", obj.filename],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+            else:
+                # Need to update this to use the YAML string from the workflow
+                # yaml.dump(obj.on)
+                result = subprocess.run(
+                    ["actionlint", "-"],
+                    input="",
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
             if result.returncode == 1:
                 print(result.stdout)
                 return False, self.message

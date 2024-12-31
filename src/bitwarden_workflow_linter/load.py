@@ -42,7 +42,7 @@ class WorkflowBuilder:
             return yaml.load(file)
 
     @classmethod
-    def __build_workflow(cls, loaded_yaml: CommentedMap) -> Workflow:
+    def __build_workflow(cls, filename: str, loaded_yaml: CommentedMap) -> Workflow:
         """Parse the YAML and build out the workflow to run Rules against.
 
         Args:
@@ -52,7 +52,7 @@ class WorkflowBuilder:
         Returns
           A Workflow to run linting Rules against
         """
-        return Workflow.init("", loaded_yaml)
+        return Workflow.init("", filename, loaded_yaml)
 
     @classmethod
     def build(
@@ -76,9 +76,11 @@ class WorkflowBuilder:
             be loaded from disk
         """
         if from_file and filename is not None:
-            return cls.__build_workflow(cls.__load_workflow_from_file(filename))
+            return cls.__build_workflow(
+                filename, cls.__load_workflow_from_file(filename)
+            )
         elif not from_file and workflow is not None:
-            return cls.__build_workflow(workflow)
+            return cls.__build_workflow(None, workflow)
 
         raise WorkflowBuilderError(
             "The workflow must either be built from a file or from a CommentedMap"
