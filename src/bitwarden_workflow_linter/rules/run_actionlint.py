@@ -38,7 +38,7 @@ def check_actionlint():
             except subprocess.CalledProcessError:
                 error = "Failed to install Actionlint. Please check your Homebrew installation or manually install it."
                 return False, error
-        elif Platform == 'Windows':
+        elif Platform.startswith('Win'):
             try:
                 subprocess.run(['choco', 'install', 'actionlint', '-y'], check=True)
                 return True, ""
