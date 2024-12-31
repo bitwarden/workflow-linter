@@ -73,7 +73,6 @@ class RunActionlint(Rule):
     def fn(self, obj: Workflow) -> Tuple[bool, str]:
         installed, install_error = check_actionlint()
         if installed:
-            print(obj.on)
             if obj.filename:
                 result = subprocess.run(
                     ["actionlint", obj.filename],
