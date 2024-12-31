@@ -10,7 +10,7 @@ from ..models.workflow import Workflow
 from ..utils import LintLevels, Settings
 
 
-def check_actionlint() -> Tuple[bool, str]:
+def check_actionlint():
     """Check if the actionlint is in the system's PATH.
     
     If actionlint is not installed, detects OS platform 
@@ -19,31 +19,31 @@ def check_actionlint() -> Tuple[bool, str]:
     Platform = platform.system()
     try:
         subprocess.run(["actionlint", '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
-        return True
+        return True, ""
     except subprocess.CalledProcessError:
-        return False
+        return False, "Failed to install Actionlint, please check your package installer or manually install it"
     except FileNotFoundError:
         if Platform.startswith('Linux'):
             try:
                 subprocess.run(['sudo', 'apt-get', 'install', '-y', 'actionlint'], check=True)
-                return [True, ""]
+                return True, ""
             except subprocess.CalledProcessError:
                 error = "Failed to install Actionlint. Please check your package manager or manually install it."
-                return [False, error]
+                return False, error
         elif Platform == 'Darwin':
             try:
                 subprocess.run(['brew', 'install', 'actionlint'], check=True)
-                return [True, ""]
+                return True, ""
             except subprocess.CalledProcessError:
                 error = "Failed to install Actionlint. Please check your Homebrew installation or manually install it."
-                return [False, error]
+                return False, error
         elif Platform == 'Win32':
             try:
                 subprocess.run(['choco', 'install', 'actionlint', '-y'], check=True)
-                return [True, ""]
+                return True, ""
             except subprocess.CalledProcessError:
                 error = "Failed to install Actionlint. Please check your Chocolatey installation or manually install it."
-                return [False, error]
+                return False, error
             
 class RunActionlint(Rule):
     """Rule to run actionlint as part of workflow linter V2.
