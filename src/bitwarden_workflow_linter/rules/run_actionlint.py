@@ -17,6 +17,7 @@ def check_actionlint():
     and installs actionlint
     """
     Platform = platform.system()
+    error = f"An unknown error occurred on platform {Platform}"
     try:
         subprocess.run(["actionlint", '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
         return True, ""
@@ -44,7 +45,7 @@ def check_actionlint():
             except subprocess.CalledProcessError:
                 error = "Failed to install Actionlint. Please check your Chocolatey installation or manually install it."
                 return False, error
-    return False, "An unknown error occurred on platform {Platform}"
+    return False, error
             
 class RunActionlint(Rule):
     """Rule to run actionlint as part of workflow linter V2.
