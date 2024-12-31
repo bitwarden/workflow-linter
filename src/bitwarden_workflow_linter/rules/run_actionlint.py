@@ -12,8 +12,8 @@ from ..utils import LintLevels, Settings
 
 def check_actionlint():
     """Check if the actionlint is in the system's PATH.
-    
-    If actionlint is not installed, detects OS platform 
+
+    If actionlint is not installed, detects OS platform
     and installs actionlint
     """
     Platform = platform.system()
@@ -28,25 +28,25 @@ def check_actionlint():
             try:
                 subprocess.run(['sudo', 'apt-get', 'install', '-y', 'actionlint'], check=True)
                 return True, ""
-            except subprocess.CalledProcessError:
+            except (FileNotFoundError, subprocess.CalledProcessError):
                 error = "Failed to install Actionlint. Please check your package manager or manually install it."
                 return False, error
         elif Platform == 'Darwin':
             try:
                 subprocess.run(['brew', 'install', 'actionlint'], check=True)
                 return True, ""
-            except subprocess.CalledProcessError:
+            except (FileNotFoundError, subprocess.CalledProcessError):
                 error = "Failed to install Actionlint. Please check your Homebrew installation or manually install it."
                 return False, error
         elif Platform.startswith('Win'):
             try:
                 subprocess.run(['choco', 'install', 'actionlint', '-y'], check=True)
                 return True, ""
-            except subprocess.CalledProcessError:
+            except (FileNotFoundError, subprocess.CalledProcessError):
                 error = "Failed to install Actionlint. Please check your Chocolatey installation or manually install it."
                 return False, error
     return False, error
-            
+
 class RunActionlint(Rule):
     """Rule to run actionlint as part of workflow linter V2.
     """
