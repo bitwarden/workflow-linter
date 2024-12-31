@@ -72,7 +72,7 @@ jobs:
 
 
 def test_simple_workflow(simple_workflow_yaml):
-    workflow = Workflow.init("", simple_workflow_yaml)
+    workflow = Workflow.init("", None, simple_workflow_yaml)
 
     assert workflow.name == "test"
     assert len(workflow.on.keys()) == 1
@@ -80,7 +80,7 @@ def test_simple_workflow(simple_workflow_yaml):
 
 
 def test_complex_workflow(complex_workflow_yaml):
-    workflow = Workflow.init("", complex_workflow_yaml)
+    workflow = Workflow.init("", None, complex_workflow_yaml)
 
     assert workflow.name == "test"
     assert len(workflow.on.keys()) == 2
@@ -91,7 +91,7 @@ def test_workflow_extra_kwargs(simple_workflow_yaml):
     extra_data_workflow = simple_workflow_yaml
     extra_data_workflow["extra"] = "This should not exist"
 
-    workflow = Workflow.init("", extra_data_workflow)
+    workflow = Workflow.init("", None, extra_data_workflow)
 
     with pytest.raises(Exception):
         assert workflow.extra == "test"
