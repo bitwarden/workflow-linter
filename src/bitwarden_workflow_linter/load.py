@@ -46,6 +46,8 @@ class WorkflowBuilder:
         """Parse the YAML and build out the workflow to run Rules against.
 
         Args:
+          filename:
+            The name of the file that the YAML was loaded from
           loaded_yaml:
             YAML that was loaded from either code or a file
 
