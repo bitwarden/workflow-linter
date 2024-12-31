@@ -68,4 +68,5 @@ class RunActionlint(Rule):
                 return False, result.stderr
             return True, ""
         else:
+            print(install_error)
             return False, install_error
