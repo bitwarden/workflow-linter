@@ -10,7 +10,7 @@ from ..models.workflow import Workflow
 from ..utils import LintLevels, Settings
 
 
-def check_actionlint():
+def check_actionlint() -> Tuple[bool, str]:
     """Check if the actionlint is in the system's PATH.
     
     If actionlint is not installed, detects OS platform 
@@ -26,29 +26,29 @@ def check_actionlint():
         if Platform.startswith('Linux'):
             try:
                 subprocess.run(['sudo', 'apt-get', 'install', '-y', 'actionlint'], check=True)
-                return True
+                return [True, ""]
             except subprocess.CalledProcessError:
-                print(f"Failed to install Actionlint. Please check your package manager or manually install it.")
-                return False
+                error = "Failed to install Actionlint. Please check your package manager or manually install it."
+                return [False, error]
         elif Platform == 'Darwin':
             try:
                 subprocess.run(['brew', 'install', 'actionlint'], check=True)
-                return True
+                return [True, ""]
             except subprocess.CalledProcessError:
-                print(f"Failed to install Actionlint. Please check your Homebrew installation or manually install it.")
-                return False
+                error = "Failed to install Actionlint. Please check your Homebrew installation or manually install it."
+                return [False, error]
         elif Platform == 'Win32':
             try:
                 subprocess.run(['choco', 'install', 'actionlint', '-y'], check=True)
-                return True
+                return [True, ""]
             except subprocess.CalledProcessError:
-                print(f"Failed to install Actionlint. Please check your Chocolatey installation or manually install it.")
-                return False
+                error = "Failed to install Actionlint. Please check your Chocolatey installation or manually install it."
+                return [False, error]
             
 class RunActionlint(Rule):
     """Rule to run actionlint as part of workflow linter V2.
     """
-    
+
     def __init__(self, settings: Optional[Settings] = None) -> None:
         self.message = "Actionlint must pass without errors"
         self.on_fail = LintLevels.WARNING
@@ -56,7 +56,8 @@ class RunActionlint(Rule):
         self.settings = settings
 
     def fn(self, obj: Job) -> Tuple[bool, str]:
-        if check_actionlint():
+        installed, install_error = check_actionlint()
+        if installed:
             result = subprocess.run(["actionlint"], capture_output=True, text=True)
             if result.returncode == 1:
                 print(result.stdout)
@@ -65,5 +66,5 @@ class RunActionlint(Rule):
                 return False, result.stderr
             return True, ""
         else:
-            print(f"Actionlint could not be installed.")
+            print(install_error)
             return False, ""
