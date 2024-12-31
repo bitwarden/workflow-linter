@@ -44,7 +44,7 @@ def check_actionlint():
             except subprocess.CalledProcessError:
                 error = "Failed to install Actionlint. Please check your Chocolatey installation or manually install it."
                 return False, error
-    return False, "An unknown error occurred"
+    return False, "An unknown error occurred on platform {Platform}"
             
 class RunActionlint(Rule):
     """Rule to run actionlint as part of workflow linter V2.
