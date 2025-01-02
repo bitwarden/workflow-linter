@@ -82,7 +82,7 @@ class WorkflowBuilder:
                 filename, cls.__load_workflow_from_file(filename)
             )
         elif not from_file and workflow is not None:
-            return cls.__build_workflow(None, workflow)
+            return cls.__build_workflow("", workflow)
 
         raise WorkflowBuilderError(
             "The workflow must either be built from a file or from a CommentedMap"
