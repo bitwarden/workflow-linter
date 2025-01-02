@@ -69,6 +69,11 @@
     "sha": "e5bc658cc4c965c472efe991f8beea3981499c55",
     "version": "v5.0.0"
   },
+  "actions/deploy-pages": {
+    "name": "actions/deploy-pages",
+    "sha": "d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e",
+    "version": "v4.0.5"
+  },
   "actions/download-artifact": {
     "name": "actions/download-artifact",
     "sha": "fa0a91b85d4f404e444e00e005971372dc801d16",
@@ -319,6 +324,11 @@
     "sha": "485a9d42d3a73031f12ec201c457e2162c45d02d",
     "version": "v2.0.0"
   },
+  "sigstore/cosign-installer": {
+    "name": "sigstore/cosign-installer",
+    "sha": "dc72c7d5c4d10cd6bcb8cf6e3fd625a9e5e537da",
+    "version": "v3.7.0"
+  },
   "snapcore/action-build": {
     "name": "snapcore/action-build",
     "sha": "3bdaa03e1ba6bf59a65f84a751d943d549a54e79",
@@ -333,6 +343,11 @@
     "name": "sonarsource/sonarcloud-github-action",
     "sha": "02ef91109b2d589e757aefcfb2854c2783fd7b19",
     "version": "v4.0.0"
+  },
+  "sonarsource/sonarqube-scan-action": {
+    "name": "sonarsource/sonarqube-scan-action",
+    "sha": "bfd4e558cda28cda6b5defafb9232d191be8c203",
+    "version": "v4.2.1"
   },
   "stackrox/kube-linter-action": {
     "name": "stackrox/kube-linter-action",
