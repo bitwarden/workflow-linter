@@ -83,9 +83,10 @@ class RunActionlint(Rule):
             else:
                 # Need to update this to use the YAML string from the workflow
                 # yaml.dump(obj.on)
+                
                 result = subprocess.run(
                     ["actionlint", "-"],
-                    input="",
+                    input="../gh-actions/.github/workflows",
                     capture_output=True,
                     text=True,
                     check=False,
