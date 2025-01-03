@@ -9,22 +9,9 @@ from src.bitwarden_workflow_linter.rules.run_actionlint import RunActionlint
 
 yaml = YAML()
 
-
-# @pytest.fixture(name="correct_workflow")
-# def fixture_correct_workflow():
-#     workflow = "tests/fixtures/test_workflow.yaml"
-#     return WorkflowBuilder.build(workflow)
-
-
-# @pytest.fixture(name="incorrect_workflow")
-# def fixture_incorrect_workflow():
-#     workflow = "tests/fixtures/test_workflow_incorrect.yaml"
-#     return WorkflowBuilder.build(workflow)
-
 @pytest.fixture(name="rule")
 def fixture_rule():
     return RunActionlint()
-
 
 def test_rule_on_correct_workflow(rule):
     correct_workflow =  WorkflowBuilder.build("tests/fixtures/test_workflow.yaml")
