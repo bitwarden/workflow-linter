@@ -1,9 +1,13 @@
 name: test
 on:
+  push:
+    branches:
+      - 
+    path:
+      - "src/**"
   workflow_dispatch:
-  pull_request:
 
-job:
+jobs:
   job-key:
     name: Test
     runs-on: ubuntu-latest
