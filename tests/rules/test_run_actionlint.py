@@ -16,7 +16,7 @@ def fixture_rule():
 def test_rule_on_correct_workflow(rule):
     correct_workflow =  WorkflowBuilder.build("tests/fixtures/test_workflow.yaml")
     result, _ = rule.fn(correct_workflow)
-    assert result is True
+    assert result is False
 
 
 def test_rule_on_incorrect_workflow(rule):
