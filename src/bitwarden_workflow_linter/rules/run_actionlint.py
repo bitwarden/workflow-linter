@@ -3,7 +3,6 @@
 from typing import Optional, Tuple
 import subprocess
 import platform
-import pprint
 
 from ..rule import Rule
 from ..models.workflow import Workflow
