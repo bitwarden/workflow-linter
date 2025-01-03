@@ -3,6 +3,7 @@
 from typing import Optional, Tuple
 import subprocess
 import platform
+import pprint
 
 from ..rule import Rule
 from ..models.workflow import Workflow
@@ -73,24 +74,12 @@ class RunActionlint(Rule):
     def fn(self, obj: Workflow) -> Tuple[bool, str]:
         installed, install_error = check_actionlint()
         if installed:
-            if obj.filename:
-                result = subprocess.run(
-                    ["actionlint", obj.filename],
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                )
-            else:
-                # Need to update this to use the YAML string from the workflow
-                # yaml.dump(obj.on)
-                
-                result = subprocess.run(
-                    ["actionlint", "-"],
-                    input="../gh-actions/.github/workflows",
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                )
+            result = subprocess.run(
+                ["actionlint", obj.filename],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
             if result.returncode == 1:
                 print(result.stdout)
                 return False, self.message
