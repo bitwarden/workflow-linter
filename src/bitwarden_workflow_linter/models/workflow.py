@@ -23,14 +23,16 @@ class Workflow:
     """
 
     key: str = ""
+    filename: Optional[str] = None
     name: Optional[str] = None
     on: Optional[CommentedMap] = None
     jobs: Optional[Dict[str, Job]] = None
 
     @classmethod
-    def init(cls: Self, key: str, data: CommentedMap) -> Self:
+    def init(cls: Self, key: str, filename: str, data: CommentedMap) -> Self:
         init_data = {
             "key": key,
+            "filename": filename,
             "name": data["name"] if "name" in data else None,
             "on": data["on"] if "on" in data else None,
         }
