@@ -37,11 +37,11 @@ please check your package installer or manually install it",
             version = '1.6.17'
             request = urllib.request.urlopen(url)
             with open('download-actionlint.bash', 'wb+') as fp:
-                # fp.write(request.read())
-                print(request.read())
+                fp.write(request.read())
+                # print(request.read)
             try:
                 subprocess.run(
-                    ['bash', ['install-actionlint.bash', version]], check=True)
+                    ['install-actionlint.bash', version], check=True)
                 return True, ""
             except (FileNotFoundError, subprocess.CalledProcessError):
                 error = "Failed to install Actionlint. \
