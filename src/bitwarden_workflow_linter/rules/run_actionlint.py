@@ -41,7 +41,8 @@ please check your package installer or manually install it",
                 # print(request.read)
             try:
                 subprocess.run(
-                    ['install-actionlint.bash', version], check=True)
+                    ['install-actionlint.bash', version], check=True, capture_output=True,
+                text=True)
                 return True, ""
             except (FileNotFoundError, subprocess.CalledProcessError):
                 error = "Failed to install Actionlint. \
@@ -57,11 +58,12 @@ Please check your Homebrew installation or manually install it."
                 return False, error
         elif platform_system.startswith("Win"):
             try:
-                subprocess.run(["choco", "install", "actionlint", "-y"], check=True)
+                result = subprocess.run(["choco", "install", "actionlint", "-y"], check=True)
                 return True, ""
             except (FileNotFoundError, subprocess.CalledProcessError):
-                error = "Failed to install Actionlint. \
-Please check your Chocolatey installation or manually install it."
+                error = result.stdout
+                # error = "Failed to install Actionlint. \
+# Please check your Chocolatey installation or manually install it."
                 return False, error
     return False, error
 
