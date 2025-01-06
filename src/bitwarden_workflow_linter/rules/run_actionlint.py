@@ -3,6 +3,7 @@
 from typing import Optional, Tuple
 import subprocess
 import platform
+import shutil
 
 from ..rule import Rule
 from ..models.workflow import Workflow
@@ -14,11 +15,11 @@ def actionlint_download():
     download_path = "/tmp/actionlint"
 
     print("Downloading actionlint...")
-    subprocess.run(["curl", "-L", url, "-o", download_path], check=True)
+    subprocess.run(["sudo", "curl", "-L", url, "-o", download_path], check=True)
 
     # Step 2: Make the binary executable
     print("Making actionlint executable...")
-    subprocess.run(["chmod", "+x", download_path], check=True)
+    subprocess.run(["sudo", "chmod", "+x", download_path], check=True)
 
     # Step 3: Move the binary to a directory in the PATH (e.g., /usr/local/bin)
     target_path = "/usr/local/bin/actionlint"
