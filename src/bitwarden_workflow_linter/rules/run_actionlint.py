@@ -35,7 +35,7 @@ please check your package installer or manually install it",
         if platform_system.startswith("Linux"):
             try:
                 subprocess.run(
-                    ["apt", "update", "&&", "sudo", "apt-get", "install", "-y", "actionlint"], check=True
+                    ["sudo", "apt-get", "update", "&&", "sudo", "apt-get", "install", "-y", "actionlint"], check=True
                 )
                 return True, ""
             except (FileNotFoundError, subprocess.CalledProcessError):
@@ -72,15 +72,14 @@ class RunActionlint(Rule):
 
     def fn(self, obj: Workflow) -> Tuple[bool, str]:
         if not obj.filename:
-            raise NotImplementedError(
-                "Running actionlint without a filename is not currently supported"
-            )
+            raise NotImplementedError("Running actionlint without a filename is not currently supported")
         installed, install_error = check_actionlint()
         if installed:
             result = subprocess.run(
                 ["actionlint", obj.filename],
                 capture_output=True,
                 text=True,
+                check=False,
             )
             if result.returncode == 1:
                 print(result.stdout)
