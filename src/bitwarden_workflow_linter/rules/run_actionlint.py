@@ -48,7 +48,9 @@ please check your package installer or manually install it",
                     print('******')
                     return True, ""
             except (FileNotFoundError, subprocess.CalledProcessError):
+                print('******')
                 print(result.stdout)
+                print('******')
                 error = "Failed to install Actionlint1. \
 Please check your package manager or manually install it."
                 return False, error
