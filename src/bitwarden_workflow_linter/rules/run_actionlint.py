@@ -40,13 +40,13 @@ please check your package installer or manually install it",
                 with open('download-actionlint.bash', 'wb+') as fp:
                     fp.write(request.read())
                     print("got to with open")
-                result = subprocess.run(
-                    ['install-actionlint.bash', version], check=True, capture_output=True,
-                text=True,)
-                print('******')
-                print(result.stdout)
-                print('******')
-                return True, ""
+                    result = subprocess.run(
+                        ['install-actionlint.bash', version], check=True, capture_output=True,
+                    text=True,)
+                    print('******')
+                    print(result.stdout)
+                    print('******')
+                    return True, ""
             except (FileNotFoundError, subprocess.CalledProcessError):
                 error = "Failed to install Actionlint1. \
 Please check your package manager or manually install it."
