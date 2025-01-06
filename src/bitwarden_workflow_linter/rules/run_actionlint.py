@@ -8,6 +8,33 @@ from ..rule import Rule
 from ..models.workflow import Workflow
 from ..utils import LintLevels, Settings
 
+def actionlint_download():
+    # Step 1: Download the actionlint binary
+    url = "https://github.com/rhysd/actionlint/releases/download/v1.6.18/actionlint-linux-amd64"
+    download_path = "/tmp/actionlint"
+
+    print("Downloading actionlint...")
+    subprocess.run(["curl", "-L", url, "-o", download_path], check=True)
+
+    # Step 2: Make the binary executable
+    print("Making actionlint executable...")
+    subprocess.run(["chmod", "+x", download_path], check=True)
+
+    # Step 3: Move the binary to a directory in the PATH (e.g., /usr/local/bin)
+    target_path = "/usr/local/bin/actionlint"
+    print(f"Moving actionlint to {target_path}...")
+    shutil.move(download_path, target_path)
+
+    # Verify installation
+    print("Verifying installation...")
+    result = subprocess.run(["actionlint", "--version"], capture_output=True, text=True)
+    
+    if result.returncode == 0:
+        print("actionlint installed successfully!")
+        print(f"Version: {result.stdout.strip()}")
+    else:
+        print("Error occurred during installation.")
+        print(result.stderr)
 
 def check_actionlint():
     """Check if the actionlint is in the system's PATH.
@@ -34,12 +61,7 @@ please check your package installer or manually install it",
     except FileNotFoundError:
         if platform_system.startswith("Linux"):
             try:
-                subprocess.run(
-                    ["sudo", "apt-get", "update"], check=True
-                )
-                subprocess.run(
-                    ["sudo", "apt-get", "install", "-y", "actionlint"], check=True
-                )
+                actionlint_download()
                 return True, ""
             except (FileNotFoundError, subprocess.CalledProcessError):
                 error = "Failed to install Actionlint. \
