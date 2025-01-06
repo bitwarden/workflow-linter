@@ -36,7 +36,7 @@ please check your package installer or manually install it",
             url = "https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash"
             version = '1.6.17'
             request = urllib.request.urlopen(url)
-            with open('download-actionlint.bash', 'w+') as fp:
+            with open('download-actionlint.bash', 'wb+') as fp:
                 fp.write(request.read())
             try:
                 subprocess.run(
