@@ -299,6 +299,11 @@
     "sha": "2c591bcc8ecdcd2db72b97d6147f871fcd833ba5",
     "version": "v1.14.0"
   },
+  "nuget/setup-nuget": {
+    "name": "nuget/setup-nuget",
+    "sha": "a21f25cd3998bf370fde17e3f1b4c12c175172f9",
+    "version": "v2.0.0"
+  },
   "peter-evans/close-issue": {
     "name": "peter-evans/close-issue",
     "sha": "276d7966e389d888f011539a86c8920025ea0626",
