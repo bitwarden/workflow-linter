@@ -35,7 +35,10 @@ please check your package installer or manually install it",
         if platform_system.startswith("Linux"):
             try:
                 subprocess.run(
-                    ["sudo", "apt-get", "update", "&&", "sudo", "apt-get", "install", "-y", "actionlint"], check=True
+                    ["sudo", "apt-get", "update"], check=True
+                )
+                subprocess.run(
+                    ["sudo", "apt-get", "install", "-y", "actionlint"], check=True
                 )
                 return True, ""
             except (FileNotFoundError, subprocess.CalledProcessError):
