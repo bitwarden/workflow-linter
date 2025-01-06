@@ -39,10 +39,13 @@ class Step:
         new_step.key = idx
         new_step.job = job
 
-        if "uses" in data.ca.items and data.ca.items["uses"][2]:
-            new_step.uses_comment = data.ca.items["uses"][2].value.replace("\n", "")
+        if new_step.uses:
+            if "uses" in data.ca.items and data.ca.items["uses"][2]:
+                new_step.uses_comment = data.ca.items["uses"][2].value.replace("\n", "")
+                new_step.uses_version = new_step.uses_comment.split(" ")[-1]
             if "@" in new_step.uses:
                 new_step.uses_path, new_step.uses_ref = new_step.uses.split("@")
-                new_step.uses_version = new_step.uses_comment.split(" ")[-1]
+            else:
+                new_step.uses_path = new_step.uses
 
         return new_step
