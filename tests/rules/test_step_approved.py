@@ -71,7 +71,7 @@ jobs:
         uses: joseph-flinn/action-DNE@main
 
       - name: Checkout Branch with Ref
-        uses: notbitwarden/action-DNE@main
+        uses: notbitwarden/subfolder/action-DNE@main
         with:
             ref: main
 
