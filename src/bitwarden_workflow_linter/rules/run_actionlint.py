@@ -3,7 +3,7 @@
 from typing import Optional, Tuple
 import subprocess
 import platform
-import urllib
+import urllib.request
 
 from ..rule import Rule
 from ..models.workflow import Workflow
