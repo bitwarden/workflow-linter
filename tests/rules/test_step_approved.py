@@ -70,6 +70,11 @@ jobs:
       - name: Checkout Branch
         uses: joseph-flinn/action-DNE@main
 
+      - name: Checkout Branch with Ref
+        uses: notbitwarden/action-DNE@main
+        with:
+            ref: main
+
 """
     return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
 
@@ -95,6 +100,10 @@ def test_rule_on_correct_workflow(rule, correct_workflow):
 
 def test_rule_on_incorrect_workflow(rule, incorrect_workflow):
     result, message = rule.fn(incorrect_workflow.jobs["job-key"].steps[0])
+    assert result is False
+    assert "New Action detected" in message
+
+    result, message = rule.fn(incorrect_workflow.jobs["job-key"].steps[1])
     assert result is False
     assert "New Action detected" in message
 
