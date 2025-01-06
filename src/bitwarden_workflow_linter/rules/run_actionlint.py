@@ -43,7 +43,9 @@ please check your package installer or manually install it",
                 result = subprocess.run(
                     ['install-actionlint.bash', version], check=True, capture_output=True,
                 text=True,)
+                print('******')
                 print(result.stdout)
+                print('******')
                 return True, ""
             except (FileNotFoundError, subprocess.CalledProcessError):
                 error = "Failed to install Actionlint. \
