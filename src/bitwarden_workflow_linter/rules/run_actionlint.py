@@ -35,7 +35,7 @@ please check your package installer or manually install it",
         if platform_system.startswith("Linux"):
             url = "https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash"
             version = '1.6.17'
-            request = urllib.request.open(url)
+            request = urllib.request.urlopen(url)
             with open('download-actionlint.bash', 'w+') as fp:
                 fp.write(request.read())
             try:
