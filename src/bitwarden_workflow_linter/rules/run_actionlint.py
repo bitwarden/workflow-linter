@@ -38,7 +38,7 @@ please check your package installer or manually install it",
             request = urllib.request.urlopen(url)
             with open('download-actionlint.bash', 'wb+') as fp:
                 fp.write(request.read())
-                # print(request.read)
+                print("got to with open")
             try:
                 result = subprocess.run(
                     ['install-actionlint.bash', version], check=True, capture_output=True,
@@ -48,7 +48,7 @@ please check your package installer or manually install it",
                 print('******')
                 return True, ""
             except (FileNotFoundError, subprocess.CalledProcessError):
-                error = "Failed to install Actionlint. \
+                error = "Failed to install Actionlint1. \
 Please check your package manager or manually install it."
                 return False, error
         elif platform_system == "Darwin":
@@ -67,7 +67,7 @@ Please check your Homebrew installation or manually install it."
                 error = "Failed to install Actionlint. \
 Please check your Chocolatey installation or manually install it."
                 return False, error
-    return False, error
+    return False, 'whoops'
 
 
 class RunActionlint(Rule):
