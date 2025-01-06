@@ -155,6 +155,6 @@ two empty lines between each job)
 To activate a rule after implementing it, add it to `settings.yaml` in the project's base folder
 and `src/bitwarden_workflow_linter/default_settings.yaml` to make the rule default
 
-### ToDo
+### To-Do
 
 -   [ ] Add Rule to assert correct format for single line run
