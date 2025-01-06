@@ -43,11 +43,12 @@ please check your package installer or manually install it",
                 result = subprocess.run(
                     ['install-actionlint.bash', version], check=True, capture_output=True,
                 text=True,)
+                print(result.stdout)
                 return True, ""
             except (FileNotFoundError, subprocess.CalledProcessError):
                 error = "Failed to install Actionlint. \
 Please check your package manager or manually install it."
-                return False, result.stdout
+                return False, error
         elif platform_system == "Darwin":
             try:
                 subprocess.run(["brew", "install", "actionlint"], check=True)
