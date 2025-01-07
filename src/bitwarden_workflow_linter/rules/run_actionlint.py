@@ -92,21 +92,15 @@ class RunActionlint(Rule):
                 [location + "/actionlint", obj.filename],
                 capture_output=True,
                 text=True,
-                check=False,
-            )
+                check=False)
             else:
                 result = subprocess.run(
                     ["actionlint", obj.filename],
                     capture_output=True,
                     text=True,
-                    check=False,
-            )
-            if result.returncode == 1:
-                print(result.stdout)
+                    check=False)
+            if result.returncode != 0:
                 return False, self.message
-            elif result.returncode > 1:
-                return False, result.stderr
             return True, ""
         else:
-            print(result)
-            return False, result
+            return False, self.message
