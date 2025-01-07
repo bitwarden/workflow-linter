@@ -10,9 +10,30 @@ from ..rule import Rule
 from ..models.workflow import Workflow
 from ..utils import LintLevels, Settings
 
-def install_actionlint_package():
+def install_actionlint():
     """If actionlint is not installed, detects OS platform
     and installs actionlint"""
+    platform_system = platform.system()
+    error = f"An unknown error occurred on platform {platform_system}"
+
+    if platform_system.startswith("Linux"):
+        return install_actionlint_source()
+    elif platform_system == "Darwin":
+        try:
+            subprocess.run(["brew", "install", "actionlint"], check=True)
+            return True, ""
+        except (FileNotFoundError, subprocess.CalledProcessError):
+            error = "Failed to install Actionlint. \
+Please check your Homebrew installation or manually install it."
+            return False, error
+    elif platform_system.startswith("Win"):
+        try:
+            subprocess.run(["choco", "install", "actionlint", "-y"], check=True)
+            return True, ""
+        except (FileNotFoundError, subprocess.CalledProcessError):
+            error = "Failed to install Actionlint. \
+Please check your Chocolatey installation or manually install it."
+            return False, error
     
 def install_actionlint_source():
     """Install Actionlint Binary from provided script"""
@@ -24,24 +45,22 @@ def install_actionlint_source():
     try:
         subprocess.run(
             ['bash', 'download-actionlint.bash', version], check=True)
-        return True, "", os.getcwd()
+        return True, os.getcwd()
     except (FileNotFoundError, subprocess.CalledProcessError):
         error = "Failed to install Actionlint. \
 Please check your package manager or manually install it."
-        return False, error, ""
+        return False, error
 
 def check_actionlint():
     """Check if the actionlint is in the system's PATH."""
-    platform_system = platform.system()
-    error = f"An unknown error occurred on platform {platform_system}"
     try:
         subprocess.run(
             ["actionlint", "--version"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            check=True,
+            check=True
         )
-        return True, "", ""
+        return True, ""
     except subprocess.CalledProcessError:
         return (
             False,
@@ -49,26 +68,7 @@ def check_actionlint():
 please check your package installer or manually install it",
         )
     except FileNotFoundError:
-        if platform_system.startswith("Linux"):
-            return install_actionlint_source()
-        elif platform_system == "Darwin":
-            return install_actionlint_source()
-#             try:
-#                 subprocess.run(["brew", "install", "actionlint"], check=True)
-#                 return True, ""
-#             except (FileNotFoundError, subprocess.CalledProcessError):
-#                 error = "Failed to install Actionlint. \
-# Please check your Homebrew installation or manually install it."
-#                 return False, error
-        elif platform_system.startswith("Win"):
-            try:
-                subprocess.run(["choco", "install", "actionlint", "-y"], check=True)
-                return True, "", ""
-            except (FileNotFoundError, subprocess.CalledProcessError):
-                error = "Failed to install Actionlint. \
-Please check your Chocolatey installation or manually install it."
-                return False, error, ""
-    return False, error, ""
+        return install_actionlint()
 
 
 class RunActionlint(Rule):
@@ -83,12 +83,11 @@ class RunActionlint(Rule):
     def fn(self, obj: Workflow) -> Tuple[bool, str]:
         if not obj.filename:
             raise NotImplementedError("Running actionlint without a filename is not currently supported")
-        installed, install_error, location = check_actionlint()
+        installed, result = check_actionlint()
         if installed:
-            result = None
-            if location:
+            if result:
                 result = subprocess.run(
-                [location + "/actionlint", obj.filename],
+                [result + "/actionlint", obj.filename],
                 capture_output=True,
                 text=True,
                 check=False,
@@ -107,5 +106,5 @@ class RunActionlint(Rule):
                 return False, result.stderr
             return True, ""
         else:
-            print(install_error)
-            return False, install_error
+            print(result)
+            return False, result
