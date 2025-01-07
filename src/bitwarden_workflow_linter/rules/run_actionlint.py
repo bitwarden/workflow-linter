@@ -85,6 +85,7 @@ class RunActionlint(Rule):
             raise NotImplementedError("Running actionlint without a filename is not currently supported")
         installed, install_error, location = check_actionlint()
         if installed:
+            result = None
             if location:
                 result = subprocess.run(
                 [location + "/actionlint", obj.filename],
