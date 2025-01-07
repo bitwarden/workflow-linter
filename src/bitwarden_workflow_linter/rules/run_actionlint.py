@@ -81,13 +81,15 @@ class RunActionlint(Rule):
         self.settings = settings
 
     def fn(self, obj: Workflow) -> Tuple[bool, str]:
-        if not obj.filename:
+        try: 
+            filename=obj.filename
+        except AttributeError:
             raise NotImplementedError("Running actionlint without a filename is not currently supported")
-        installed, result = check_actionlint()
+        installed, location = check_actionlint()
         if installed:
-            if result:
+            if location:
                 result = subprocess.run(
-                [result + "/actionlint", obj.filename],
+                [location + "/actionlint", obj.filename],
                 capture_output=True,
                 text=True,
                 check=False,

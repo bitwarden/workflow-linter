@@ -27,3 +27,7 @@ def test_rule_on_incorrect_workflow(rule):
     )
     result, _ = rule.fn(incorrect_workflow)
     assert result is False
+
+def test_arguments(rule):
+    with pytest.raises(NotImplementedError):
+        rule.fn("./")
