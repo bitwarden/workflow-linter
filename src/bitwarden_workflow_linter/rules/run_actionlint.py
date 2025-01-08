@@ -100,7 +100,7 @@ class RunActionlint(Rule):
                     text=True,
                     check=False)
             if result.returncode == 1:
-                print(result.stdout)
+                return False, result.stdout
             if result.returncode > 1:
                 return False, result.stdout
             return True, ""
