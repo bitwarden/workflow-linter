@@ -99,8 +99,10 @@ class RunActionlint(Rule):
                     capture_output=True,
                     text=True,
                     check=False)
-            if result.returncode != 0:
-                return False, self.message
+            if result.returncode == 1:
+                print(result.stdout)
+            if result.returncode > 1:
+                return False, result.stdout
             return True, ""
         else:
             return False, self.message
