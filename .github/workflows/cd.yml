@@ -17,7 +17,7 @@ jobs:
 
   version-bump:
     name: Version bump
-    if: github.actor != 'bitwarden-devops-bot'
+    if: github.actor != 'bitwarden-devops-bot' && needs.version-type.outputs.version_bump_type != 'skip'
     runs-on: ubuntu-24.04
     needs: version-type
     outputs:
