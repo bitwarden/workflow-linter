@@ -31,6 +31,7 @@ def install_actionlint(platform_system: str) -> Tuple[bool, str]:
             return True, ""
         except (FileNotFoundError, subprocess.CalledProcessError):
             return False, f"{error} : check Choco installation"
+    return False, error
 
 
 def install_actionlint_source(error) -> Tuple[bool, str]:
