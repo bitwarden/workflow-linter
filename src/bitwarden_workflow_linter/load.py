@@ -39,7 +39,12 @@ class WorkflowBuilder:
           objects (depending on their location in the file).
         """
         with open(filename, encoding="utf8") as file:
-            return yaml.load(file)
+            if not file:
+                raise WorkflowBuilderError(f"Could not load {filename}")
+            try:
+                return yaml.load(file)
+            except Exception as e:
+                raise WorkflowBuilderError(f"Error loading YAML file {filename}: {e}")
 
     @classmethod
     def __build_workflow(cls, filename: str, loaded_yaml: CommentedMap) -> Workflow:
@@ -54,7 +59,12 @@ class WorkflowBuilder:
         Returns
           A Workflow to run linting Rules against
         """
-        return Workflow.init("", filename, loaded_yaml)
+        try:
+            if not loaded_yaml:
+                raise WorkflowBuilderError("No YAML loaded")
+            return Workflow.init("", filename, loaded_yaml)
+        except Exception as e:
+            raise WorkflowBuilderError(f"Error building workflow: {e}")
 
     @classmethod
     def build(
