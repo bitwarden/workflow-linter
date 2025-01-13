@@ -374,6 +374,11 @@
     "sha": "64c70c67f5ebc54d4c7ea09cbe3553322778afd5",
     "version": "1.1.2"
   },
+  "withastro/action": {
+    "name": "withastro/action",
+    "sha": "44cbafd43567733e3b007918c6e0711480560516",
+    "version": "v3.0.0"
+  },
   "yogevbd/enforce-label-action": {
     "name": "yogevbd/enforce-label-action",
     "sha": "a3c219da6b8fa73f6ba62b68ff09c469b3a1c024",
