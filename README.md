@@ -63,6 +63,8 @@ options:
 
 -   Python 3.11
 -   pipenv
+-   Windows systems: Chocolatey package manager
+-   Mac OS systems: Homebrew package manager
 
 ### Setup
 
