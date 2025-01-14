@@ -6,5 +6,6 @@ enabled_rules:
   - bitwarden_workflow_linter.rules.step_approved.RuleStepUsesApproved
   - bitwarden_workflow_linter.rules.step_pinned.RuleStepUsesPinned
   - bitwarden_workflow_linter.rules.underscore_outputs.RuleUnderscoreOutputs
+  - bitwarden_workflow_linter.rules.run_actionlint.RunActionlint
 
 approved_actions_path: default_actions.json

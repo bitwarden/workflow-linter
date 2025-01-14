@@ -12,7 +12,7 @@ Thumbs.db
 *.sublime-workspace
 
 # Visual Studio Code
-.vscode/*
+.vscode
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
@@ -35,3 +35,6 @@ flake.*
 # Python
 **/__pycache__/**
 *.pyc
+.venv/
+.pytest_cache
+.pytype
