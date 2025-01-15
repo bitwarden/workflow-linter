@@ -329,15 +329,15 @@
     "sha": "d33c176a9b784876d966f80fb1b461808edc0641",
     "version": "v2.1.1"
   },
-  "slackapi/slack-github-action": {
-    "name": "slackapi/slack-github-action",
-    "sha": "485a9d42d3a73031f12ec201c457e2162c45d02d",
-    "version": "v2.0.0"
-  },
   "sigstore/cosign-installer": {
     "name": "sigstore/cosign-installer",
     "sha": "dc72c7d5c4d10cd6bcb8cf6e3fd625a9e5e537da",
     "version": "v3.7.0"
+  },
+  "slackapi/slack-github-action": {
+    "name": "slackapi/slack-github-action",
+    "sha": "485a9d42d3a73031f12ec201c457e2162c45d02d",
+    "version": "v2.0.0"
   },
   "snapcore/action-build": {
     "name": "snapcore/action-build",
@@ -366,8 +366,8 @@
   },
   "tj-actions/changed-files": {
     "name": "tj-actions/changed-files",
-    "sha": "bab30c2299617f6615ec02a68b9a40d10bd21366",
-    "version": "v45.0.5"
+    "sha": "d6e91a2266cdb9d62096cebf1e8546899c6aa18f",
+    "version": "v45.0.6"
   },
   "tyrrrz/action-http-request": {
     "name": "tyrrrz/action-http-request",
