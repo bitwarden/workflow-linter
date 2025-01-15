@@ -244,6 +244,11 @@
     "sha": "1482605bfc5719782e1267fd0c0cc350fe7646b8",
     "version": "v1"
   },
+  "fastly/compute-actions": {
+    "name": "fastly/compute-actions",
+    "sha": "ca26cccf1fa541576c6fbdf50d62feb6db6ba181",
+    "version": "v10"
+  },
   "futureware-tech/simulator-action": {
     "name": "futureware-tech/simulator-action",
     "sha": "dab10d813144ef59b48d401cd95da151222ef8cd",
@@ -329,15 +334,15 @@
     "sha": "d33c176a9b784876d966f80fb1b461808edc0641",
     "version": "v2.1.1"
   },
-  "slackapi/slack-github-action": {
-    "name": "slackapi/slack-github-action",
-    "sha": "485a9d42d3a73031f12ec201c457e2162c45d02d",
-    "version": "v2.0.0"
-  },
   "sigstore/cosign-installer": {
     "name": "sigstore/cosign-installer",
     "sha": "dc72c7d5c4d10cd6bcb8cf6e3fd625a9e5e537da",
     "version": "v3.7.0"
+  },
+  "slackapi/slack-github-action": {
+    "name": "slackapi/slack-github-action",
+    "sha": "485a9d42d3a73031f12ec201c457e2162c45d02d",
+    "version": "v2.0.0"
   },
   "snapcore/action-build": {
     "name": "snapcore/action-build",
@@ -373,6 +378,11 @@
     "name": "tyrrrz/action-http-request",
     "sha": "64c70c67f5ebc54d4c7ea09cbe3553322778afd5",
     "version": "1.1.2"
+  },
+  "withastro/action": {
+    "name": "withastro/action",
+    "sha": "44cbafd43567733e3b007918c6e0711480560516",
+    "version": "v3.0.0"
   },
   "yogevbd/enforce-label-action": {
     "name": "yogevbd/enforce-label-action",
