@@ -244,6 +244,11 @@
     "sha": "1482605bfc5719782e1267fd0c0cc350fe7646b8",
     "version": "v1"
   },
+  "fastly/compute-actions": {
+    "name": "fastly/compute-actions",
+    "sha": "ca26cccf1fa541576c6fbdf50d62feb6db6ba181",
+    "version": "v10"
+  },
   "futureware-tech/simulator-action": {
     "name": "futureware-tech/simulator-action",
     "sha": "dab10d813144ef59b48d401cd95da151222ef8cd",
@@ -366,8 +371,8 @@
   },
   "tj-actions/changed-files": {
     "name": "tj-actions/changed-files",
-    "sha": "d6e91a2266cdb9d62096cebf1e8546899c6aa18f",
-    "version": "v45.0.6"
+    "sha": "bab30c2299617f6615ec02a68b9a40d10bd21366",
+    "version": "v45.0.5"
   },
   "tyrrrz/action-http-request": {
     "name": "tyrrrz/action-http-request",
