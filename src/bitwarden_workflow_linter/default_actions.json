@@ -224,6 +224,11 @@
     "sha": "48aba3b46d1b1fec4febb7c5d0c644b249a11355",
     "version": "v6.10.0"
   },
+  "docker/login-action": {
+    "name": "docker/login-action",
+    "sha": "9780b0c442fbb1117ed29e0efdff1e18412f7567",
+    "version": "v3.3.0"
+  },
   "docker/setup-buildx-action": {
     "name": "docker/setup-buildx-action",
     "sha": "c47758b77c9736f4b2ef4073d4d51994fabfe349",
