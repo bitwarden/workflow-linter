@@ -1,0 +1,397 @@
+{
+  "Asana/create-app-attachment-github-action": {
+    "name": "Asana/create-app-attachment-github-action",
+    "sha": "affc72d57bac733d864d4189ed69a9cbd61a9e4f",
+    "version": "v1.3"
+  },
+  "Azure/functions-action": {
+    "name": "Azure/functions-action",
+    "sha": "fd80521afbba9a2a76a99ba1acc07aff8d733d11",
+    "version": "v1.5.2"
+  },
+  "Azure/get-keyvault-secrets": {
+    "name": "Azure/get-keyvault-secrets",
+    "sha": "b5c723b9ac7870c022b8c35befe620b7009b336f",
+    "version": "v1"
+  },
+  "Azure/login": {
+    "name": "Azure/login",
+    "sha": "a65d910e8af852a8061c627c456678983e180302",
+    "version": "v2.2.0"
+  },
+  "Azure/setup-helm": {
+    "name": "Azure/setup-helm",
+    "sha": "fe7b79cd5ee1e45176fcad797de68ecaf3ca4814",
+    "version": "v4.2.0"
+  },
+  "Swatinem/rust-cache": {
+    "name": "Swatinem/rust-cache",
+    "sha": "82a92a6e8fbeee089604da2575dc567ae9ddeaab",
+    "version": "v2.7.5"
+  },
+  "SwiftDocOrg/github-wiki-publish-action": {
+    "name": "SwiftDocOrg/github-wiki-publish-action",
+    "sha": "a87db85ed06e4431be29cfdcb22b9653881305d0",
+    "version": "1.0.0"
+  },
+  "SwiftDocOrg/swift-doc": {
+    "name": "SwiftDocOrg/swift-doc",
+    "sha": "f935ebfe524a0ff27bda07dadc3662e3e45b5125",
+    "version": "1.0.0-rc.1"
+  },
+  "act10ns/slack": {
+    "name": "act10ns/slack",
+    "sha": "44541246747a30eb3102d87f7a4cc5471b0ffb7d",
+    "version": "v2.1.0"
+  },
+  "actions-cool/check-user-permission": {
+    "name": "actions-cool/check-user-permission",
+    "sha": "956b2e73cdfe3bcb819bb7225e490cb3b18fd76e",
+    "version": "v2.2.1"
+  },
+  "actions/cache": {
+    "name": "actions/cache",
+    "sha": "1bd1e32a3bdc45362d1e726936510720a7c30a57",
+    "version": "v4.2.0"
+  },
+  "actions/checkout": {
+    "name": "actions/checkout",
+    "sha": "11bd71901bbe5b1630ceea73d27597364c9af683",
+    "version": "v4.2.2"
+  },
+  "actions/create-github-app-token": {
+    "name": "actions/create-github-app-token",
+    "sha": "5d869da34e18e7287c1daad50e0b8ea0f506ce69",
+    "version": "v1.11.0"
+  },
+  "actions/delete-package-versions": {
+    "name": "actions/delete-package-versions",
+    "sha": "e5bc658cc4c965c472efe991f8beea3981499c55",
+    "version": "v5.0.0"
+  },
+  "actions/deploy-pages": {
+    "name": "actions/deploy-pages",
+    "sha": "d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e",
+    "version": "v4.0.5"
+  },
+  "actions/download-artifact": {
+    "name": "actions/download-artifact",
+    "sha": "fa0a91b85d4f404e444e00e005971372dc801d16",
+    "version": "v4.1.8"
+  },
+  "actions/github-script": {
+    "name": "actions/github-script",
+    "sha": "60a0d83039c74a4aee543508d2ffcb1c3799cdea",
+    "version": "v7.0.1"
+  },
+  "actions/labeler": {
+    "name": "actions/labeler",
+    "sha": "8558fd74291d67161a8a78ce36a881fa63b766a9",
+    "version": "v5.0.0"
+  },
+  "actions/setup-dotnet": {
+    "name": "actions/setup-dotnet",
+    "sha": "3e891b0cb619bf60e2c25674b222b8940e2c1c25",
+    "version": "v4.1.0"
+  },
+  "actions/setup-go": {
+    "name": "actions/setup-go",
+    "sha": "41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed",
+    "version": "v5.1.0"
+  },
+  "actions/setup-java": {
+    "name": "actions/setup-java",
+    "sha": "8df1039502a15bceb9433410b1a100fbe190c53b",
+    "version": "v4.5.0"
+  },
+  "actions/setup-node": {
+    "name": "actions/setup-node",
+    "sha": "39370e3970a6d050c480ffad4ff0ed4d3fdee5af",
+    "version": "v4.1.0"
+  },
+  "actions/setup-python": {
+    "name": "actions/setup-python",
+    "sha": "0b93645e9fea7318ecaed2b359559ac225c90a2b",
+    "version": "v5.3.0"
+  },
+  "actions/stale": {
+    "name": "actions/stale",
+    "sha": "28ca1036281a5e5922ead5184a1bbf96e5fc984e",
+    "version": "v9.0.0"
+  },
+  "actions/upload-artifact": {
+    "name": "actions/upload-artifact",
+    "sha": "b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882",
+    "version": "v4.4.3"
+  },
+  "actions/upload-pages-artifact": {
+    "name": "actions/upload-pages-artifact",
+    "sha": "56afc609e74202658d3ffba0e8f6dda462b719fa",
+    "version": "v3.0.1"
+  },
+  "anchore/scan-action": {
+    "name": "anchore/scan-action",
+    "sha": "869c549e657a088dc0441b08ce4fc0ecdac2bb65",
+    "version": "v5.3.0"
+  },
+  "android-actions/setup-android": {
+    "name": "android-actions/setup-android",
+    "sha": "9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407",
+    "version": "v3.2.2"
+  },
+  "andymckay/labeler": {
+    "name": "andymckay/labeler",
+    "sha": "e6c4322d0397f3240f0e7e30a33b5c5df2d39e90",
+    "version": "1.0.4"
+  },
+  "azure/webapps-deploy": {
+    "name": "azure/webapps-deploy",
+    "sha": "de617f46172a906d0617bb0e50d81e9e3aec24c8",
+    "version": "v3.0.1"
+  },
+  "bitwarden/sm-action": {
+    "name": "bitwarden/sm-action",
+    "sha": "92d1d6a4f26a89a8191c83ab531a53544578f182",
+    "version": "v2.0.0"
+  },
+  "checkmarx/ast-github-action": {
+    "name": "checkmarx/ast-github-action",
+    "sha": "b74e8d514feae4ad5ad2b43e72590935bd2daf5f",
+    "version": "2.0.39"
+  },
+  "chrnorm/deployment-action": {
+    "name": "chrnorm/deployment-action",
+    "sha": "55729fcebec3d284f60f5bcabbd8376437d696b1",
+    "version": "v2.0.7"
+  },
+  "chrnorm/deployment-status": {
+    "name": "chrnorm/deployment-status",
+    "sha": "9a72af4586197112e0491ea843682b5dc280d806",
+    "version": "v2.0.3"
+  },
+  "chromaui/action": {
+    "name": "chromaui/action",
+    "sha": "e90c5a5e3bc2eb3b8e110d606f56a0f44fa47700",
+    "version": "v1"
+  },
+  "cloudflare/pages-action": {
+    "name": "cloudflare/pages-action",
+    "sha": "f0a1cd58cd66095dee69bfa18fa5efd1dde93bca",
+    "version": "v1.5.0"
+  },
+  "codecov/codecov-action": {
+    "name": "codecov/codecov-action",
+    "sha": "7f8b4b4bde536c465e797be725718b88c5d95e0e",
+    "version": "v5.1.1"
+  },
+  "codecov/test-results-action": {
+    "name": "codecov/test-results-action",
+    "sha": "9739113ad922ea0a9abb4b2c0f8bf6a4aa8ef820",
+    "version": "v1.0.1"
+  },
+  "convictional/trigger-workflow-and-wait": {
+    "name": "convictional/trigger-workflow-and-wait",
+    "sha": "f69fa9eedd3c62a599220f4d5745230e237904be",
+    "version": "v1.6.5"
+  },
+  "crazy-max/ghaction-import-gpg": {
+    "name": "crazy-max/ghaction-import-gpg",
+    "sha": "cb9bde2e2525e640591a934b1fd28eef1dcaf5e5",
+    "version": "v6.2.0"
+  },
+  "crowdin/github-action": {
+    "name": "crowdin/github-action",
+    "sha": "a9ffb7d5ac46eca1bb1f06656bf888b39462f161",
+    "version": "v2.4.0"
+  },
+  "dawidd6/action-download-artifact": {
+    "name": "dawidd6/action-download-artifact",
+    "sha": "80620a5d27ce0ae443b965134db88467fc607b43",
+    "version": "v7"
+  },
+  "dawidd6/action-homebrew-bump-formula": {
+    "name": "dawidd6/action-homebrew-bump-formula",
+    "sha": "8d494330bce4434918392df134ad3db1167904db",
+    "version": "v4"
+  },
+  "digitalocean/action-doctl": {
+    "name": "digitalocean/action-doctl",
+    "sha": "135ac0aa0eed4437d547c6f12c364d3006b42824",
+    "version": "v2.5.1"
+  },
+  "docker/build-push-action": {
+    "name": "docker/build-push-action",
+    "sha": "48aba3b46d1b1fec4febb7c5d0c644b249a11355",
+    "version": "v6.10.0"
+  },
+  "docker/login-action": {
+    "name": "docker/login-action",
+    "sha": "9780b0c442fbb1117ed29e0efdff1e18412f7567",
+    "version": "v3.3.0"
+  },
+  "docker/setup-buildx-action": {
+    "name": "docker/setup-buildx-action",
+    "sha": "c47758b77c9736f4b2ef4073d4d51994fabfe349",
+    "version": "v3.7.1"
+  },
+  "docker/setup-qemu-action": {
+    "name": "docker/setup-qemu-action",
+    "sha": "49b3bc8e6bdd4a60e6116a5414239cba5943d3cf",
+    "version": "v3.2.0"
+  },
+  "dorny/test-reporter": {
+    "name": "dorny/test-reporter",
+    "sha": "31a54ee7ebcacc03a09ea97a7e5465a47b84aea5",
+    "version": "v1.9.1"
+  },
+  "dtolnay/rust-toolchain": {
+    "name": "dtolnay/rust-toolchain",
+    "sha": "1482605bfc5719782e1267fd0c0cc350fe7646b8",
+    "version": "v1"
+  },
+  "fastly/compute-actions": {
+    "name": "fastly/compute-actions",
+    "sha": "ca26cccf1fa541576c6fbdf50d62feb6db6ba181",
+    "version": "v10"
+  },
+  "futureware-tech/simulator-action": {
+    "name": "futureware-tech/simulator-action",
+    "sha": "dab10d813144ef59b48d401cd95da151222ef8cd",
+    "version": "v4"
+  },
+  "github/codeql-action": {
+    "name": "github/codeql-action",
+    "sha": "3096afedf9873361b2b2f65e1445b13272c83eb8",
+    "version": "codeql-bundle-v2.20.0"
+  },
+  "gradle/actions": {
+    "name": "gradle/actions",
+    "sha": "cc4fc85e6b35bafd578d5ffbc76a5518407e1af0",
+    "version": "v4.2.1"
+  },
+  "hashicorp/setup-packer": {
+    "name": "hashicorp/setup-packer",
+    "sha": "1aa358be5cf73883762b302a3a03abd66e75b232",
+    "version": "v3.1.0"
+  },
+  "helm/chart-releaser-action": {
+    "name": "helm/chart-releaser-action",
+    "sha": "a917fd15b20e8b64b94d9158ad54cd6345335584",
+    "version": "v1.6.0"
+  },
+  "helm/chart-testing-action": {
+    "name": "helm/chart-testing-action",
+    "sha": "e6669bcd63d7cb57cb4380c33043eebe5d111992",
+    "version": "v2.6.1"
+  },
+  "helm/kind-action": {
+    "name": "helm/kind-action",
+    "sha": "0025e74a8c7512023d06dc019c617aa3cf561fde",
+    "version": "v1.10.0"
+  },
+  "launchdarkly/find-code-references-in-pull-request": {
+    "name": "launchdarkly/find-code-references-in-pull-request",
+    "sha": "d008aa4f321d8cd35314d9cb095388dcfde84439",
+    "version": "v2.0.0"
+  },
+  "macauley/action-homebrew-bump-cask": {
+    "name": "macauley/action-homebrew-bump-cask",
+    "sha": "445c42390d790569d938f9068d01af39ca030feb",
+    "version": "v1.0.0"
+  },
+  "maxim-lobanov/setup-xcode": {
+    "name": "maxim-lobanov/setup-xcode",
+    "sha": "60606e260d2fc5762a71e64e74b2174e8ea3c8bd",
+    "version": "v1.6.0"
+  },
+  "microsoft/setup-msbuild": {
+    "name": "microsoft/setup-msbuild",
+    "sha": "6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce",
+    "version": "v2"
+  },
+  "ncipollo/release-action": {
+    "name": "ncipollo/release-action",
+    "sha": "2c591bcc8ecdcd2db72b97d6147f871fcd833ba5",
+    "version": "v1.14.0"
+  },
+  "nuget/setup-nuget": {
+    "name": "nuget/setup-nuget",
+    "sha": "a21f25cd3998bf370fde17e3f1b4c12c175172f9",
+    "version": "v2.0.0"
+  },
+  "peter-evans/close-issue": {
+    "name": "peter-evans/close-issue",
+    "sha": "276d7966e389d888f011539a86c8920025ea0626",
+    "version": "v3.0.1"
+  },
+  "reactivecircus/android-emulator-runner": {
+    "name": "reactivecircus/android-emulator-runner",
+    "sha": "62dbb605bba737720e10b196cb4220d374026a6d",
+    "version": "v2.33.0"
+  },
+  "ruby/setup-ruby": {
+    "name": "ruby/setup-ruby",
+    "sha": "2a18b06812b0e15bb916e1df298d3e740422c47e",
+    "version": "v1.203.0"
+  },
+  "samuelmeuli/action-snapcraft": {
+    "name": "samuelmeuli/action-snapcraft",
+    "sha": "d33c176a9b784876d966f80fb1b461808edc0641",
+    "version": "v2.1.1"
+  },
+  "sigstore/cosign-installer": {
+    "name": "sigstore/cosign-installer",
+    "sha": "dc72c7d5c4d10cd6bcb8cf6e3fd625a9e5e537da",
+    "version": "v3.7.0"
+  },
+  "slackapi/slack-github-action": {
+    "name": "slackapi/slack-github-action",
+    "sha": "485a9d42d3a73031f12ec201c457e2162c45d02d",
+    "version": "v2.0.0"
+  },
+  "snapcore/action-build": {
+    "name": "snapcore/action-build",
+    "sha": "3bdaa03e1ba6bf59a65f84a751d943d549a54e79",
+    "version": "v1.3.0"
+  },
+  "softprops/action-gh-release": {
+    "name": "softprops/action-gh-release",
+    "sha": "7b4da11513bf3f43f9999e90eabced41ab8bb048",
+    "version": "v2.2.0"
+  },
+  "sonarsource/sonarcloud-github-action": {
+    "name": "sonarsource/sonarcloud-github-action",
+    "sha": "02ef91109b2d589e757aefcfb2854c2783fd7b19",
+    "version": "v4.0.0"
+  },
+  "sonarsource/sonarqube-scan-action": {
+    "name": "sonarsource/sonarqube-scan-action",
+    "sha": "bfd4e558cda28cda6b5defafb9232d191be8c203",
+    "version": "v4.2.1"
+  },
+  "stackrox/kube-linter-action": {
+    "name": "stackrox/kube-linter-action",
+    "sha": "5792edc6a03735d592b13c08201711327a935735",
+    "version": "v1.0.5"
+  },
+  "tj-actions/changed-files": {
+    "name": "tj-actions/changed-files",
+    "sha": "bab30c2299617f6615ec02a68b9a40d10bd21366",
+    "version": "v45.0.5"
+  },
+  "tyrrrz/action-http-request": {
+    "name": "tyrrrz/action-http-request",
+    "sha": "64c70c67f5ebc54d4c7ea09cbe3553322778afd5",
+    "version": "1.1.2"
+  },
+  "withastro/action": {
+    "name": "withastro/action",
+    "sha": "44cbafd43567733e3b007918c6e0711480560516",
+    "version": "v3.0.0"
+  },
+  "yogevbd/enforce-label-action": {
+    "name": "yogevbd/enforce-label-action",
+    "sha": "a3c219da6b8fa73f6ba62b68ff09c469b3a1c024",
+    "version": "2.2.2"
+  }
+}
