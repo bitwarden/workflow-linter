@@ -269,6 +269,11 @@
     "sha": "cc4fc85e6b35bafd578d5ffbc76a5518407e1af0",
     "version": "v4.2.1"
   },
+  "gradle/wrapper-validation-action": {
+    "name": "gradle/wrapper-validation-action",
+    "sha": "f9c9c575b8b21b6485636a91ffecd10e558c62f6",
+    "version": "v3.5.0"
+  },
   "hashicorp/setup-packer": {
     "name": "hashicorp/setup-packer",
     "sha": "1aa358be5cf73883762b302a3a03abd66e75b232",
