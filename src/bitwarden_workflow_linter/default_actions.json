@@ -221,8 +221,8 @@
   },
   "docker/build-push-action": {
     "name": "docker/build-push-action",
-    "sha": "48aba3b46d1b1fec4febb7c5d0c644b249a11355",
-    "version": "v6.10.0"
+    "sha": "67a2d409c0a876cbe6b11854e3e25193efe4e62d",
+    "version": "v6.12.0"
   },
   "docker/login-action": {
     "name": "docker/login-action",
