@@ -11,15 +11,16 @@ from ..models.workflow import Workflow
 from ..utils import LintLevels, Settings
 
 
-def install_actionlint(platform_system: str) -> Tuple[bool, str]:
+def install_actionlint(platform_system: str, version: Optional[str] = None) -> Tuple[bool, str]:
     """If actionlint is not installed, detects OS platform
     and installs actionlint"""
 
     error = f"An error occurred when installing Actionlint on {platform_system}"
 
     if platform_system.startswith("Linux"):
-        return install_actionlint_source(error)
+        return install_actionlint_source(error, version)
     elif platform_system == "Darwin":
+        return install_actionlint_source(error, version)
         try:
             subprocess.run(["brew", "install", "actionlint"], check=True)
             return True, ""
@@ -34,7 +35,7 @@ def install_actionlint(platform_system: str) -> Tuple[bool, str]:
     return False, error
 
 
-def install_actionlint_source(error) -> Tuple[bool, str]:
+def install_actionlint_source(error, settings = None) -> Tuple[bool, str]:
     """Install Actionlint Binary from provided script"""
     url = "https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash"
     version = "1.6.17"
@@ -67,7 +68,6 @@ please check your package installer or manually install it",
     except FileNotFoundError:
         return install_actionlint(platform_system)
 
-
 class RunActionlint(Rule):
     """Rule to run actionlint as part of workflow linter V2."""
 
@@ -83,7 +83,7 @@ class RunActionlint(Rule):
                 "Running actionlint without a filename is not currently supported"
             )
 
-        installed, location = check_actionlint(platform.system())
+        installed, location = check_actionlint(platform.system(), settings.actionlint_version)
         if installed:
             if location:
                 result = subprocess.run(
