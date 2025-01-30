@@ -23,6 +23,7 @@ class Job:
     key: Optional[str] = None
     name: Optional[str] = None
     env: Optional[CommentedMap] = None
+    needs: Optional[List[str]] = None
     steps: Optional[List[Step]] = None
     uses: Optional[str] = None
     uses_path: Optional[str] = None
@@ -33,6 +34,12 @@ class Job:
     outputs: Optional[CommentedMap] = None
 
     @classmethod
+    def parse_needs(cls: Self, value):
+        if isinstance(value, str):
+            return [value]
+        return value
+
+    @classmethod
     def init(cls: Self, key: str, data: CommentedMap) -> Self:
         """Custom dataclass constructor to map job data to a Job."""
         init_data = {
@@ -40,6 +47,7 @@ class Job:
             "name": data["name"] if "name" in data else None,
             "runs-on": data["runs-on"] if "runs-on" in data else None,
             "env": data["env"] if "env" in data else None,
+            "needs": Job.parse_needs(data["needs"]) if "needs" in data else None,
             "outputs": data["outputs"] if "outputs" in data else None,
         }
 
