@@ -27,7 +27,7 @@ class RuleCheckPrTarget(Rule):
         changes to allow a branch to be exposed.
         """
         self.message = "A check-run job must be included as a direct job dependency when pull_request_target is used"
-        self.on_fail = LintLevels.ERROR
+        self.on_fail = LintLevels.WARNING
         self.compatibility = [Workflow]
         self.settings = settings
     
