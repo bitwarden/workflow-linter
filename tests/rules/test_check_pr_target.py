@@ -24,9 +24,15 @@ jobs:
   check-run:
     name: Check PR run
     uses: bitwarden/gh-actions/.github/workflows/check-run.yml@main
+  
+  quality:
+    name: Quality scan
+    needs: check-run
+    steps:
+      - run: echo test
+  
 """
     return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
-
 
 @pytest.fixture(name="no_check_workflow")
 def fixture_no_check_workflow():
@@ -42,6 +48,33 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - run: echo test
+"""
+    return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
+
+@pytest.fixture(name="no_needs_workflow")
+def fixture_no_needs_workflow():
+    workflow = """\
+---
+on:
+  workflow_dispatch:
+  pull_request_target:
+    types: [opened, synchronize]
+
+jobs:
+  check-run:
+    name: Check PR run
+    uses: bitwarden/gh-actions/.github/workflows/check-run.yml@main
+
+  job-key:
+    runs-on: ubuntu-22.04
+    steps:
+      - run: echo test
+  
+  quality:
+    name: Quality scan
+    steps:
+      - run: echo test
+
 """
     return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
 
@@ -64,7 +97,6 @@ jobs:
 def fixture_rule():
     return RuleCheckPrTarget()
 
-
 def test_rule_on_correct_workflow(rule, correct_workflow):
     obj = correct_workflow
 
@@ -86,3 +118,10 @@ def test_rule_on_no_target_workflow(rule, no_target_workflow):
     result, message = rule.fn(no_target_workflow)
     assert result is True
     assert message == ""
+
+def test_rule_on_jobs_without_needs(rule, no_needs_workflow):
+    obj = no_needs_workflow
+
+    result, message = rule.fn(no_needs_workflow)
+    assert result is False
+    assert message == message, "check-run is missing from the following jobs in the workflow: quality"
