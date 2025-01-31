@@ -51,10 +51,9 @@ class RuleCheckPrTarget(Rule):
         return missing_jobs
 
     def fn(self, obj: Workflow) -> Tuple[bool, str]:
-        if obj.on.get("pull_request_target"): # check if workflow is using pull_request_target
-            result, check_job = self.has_check_run(obj) # check if Workflow has a job that uses check-run
+        if obj.on.get("pull_request_target"):
+            result, check_job = self.has_check_run(obj)
             if result:
-                # print(check_job)
                 missing_jobs = self.check_run_required(obj, check_job)
                 if missing_jobs:
                     job_list = ', '.join(missing_jobs)
