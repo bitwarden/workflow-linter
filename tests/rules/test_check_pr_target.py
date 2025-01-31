@@ -30,7 +30,14 @@ jobs:
     needs: check-run
     steps:
       - run: echo test
-  
+ 
+   dependent-job:
+     name: Another Dependent Job
+     needs:
+       - quality
+       - check-run
+     steps:
+       - run: echo another dependent job
 """
     return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
 
