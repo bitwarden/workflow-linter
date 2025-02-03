@@ -19,11 +19,12 @@ def fixture_correct_workflow():
 on:
   workflow_dispatch:
   pull_request_target:
+    types: [opened, synchronize]
 
 jobs:
   check-run:
     name: Check PR run
-    uses: bitwarden
+    uses: bitwarden/gh-actions/.github/workflows/check-run.yml@main
   
   quality:
     name: Quality scan
@@ -70,7 +71,7 @@ on:
 jobs:
   check-run:
     name: Check PR run
-    uses: something/gh-actions/.github/workflows/check-run.yml@main
+    uses: bitwarden/gh-actions/.github/workflows/check-run.yml@main
 
   job-key:
     runs-on: ubuntu-22.04
@@ -100,33 +101,33 @@ jobs:
 """
     return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
 
-# @pytest.fixture(name="dependent_missing_check_workflow")
-# def dependent_missing_check_workflow():
-#     workflow = """\
-# ---
-# on:
-#   workflow_dispatch:
-#   pull_request_target:
-
-# jobs:
-#   check-run:
-#     name: Check PR run
-#     uses: bitwarden/gh-actions/.github/workflows/check-run.yml@main
+@pytest.fixture(name="dependent_missing_check_workflow")
+def dependent_missing_check_workflow():
+    workflow = """\
+---
+on:
+  workflow_dispatch:
+  pull_request_target:
+    types: [opened, synchronize]
+jobs:
+  check-run:
+    name: Check PR run
+    uses: bitwarden/gh-actions/.github/workflows/check-run.yml@main
   
-#   quality:
-#     name: Quality scan
-#     needs: check-run
-#     steps:
-#       - run: echo test
+  quality:
+    name: Quality scan
+    needs: check-run
+    steps:
+      - run: echo test
  
-#   dependent-job:
-#      name: Another Dependent Job
-#      needs:
-#        - quality
-#      steps:
-#        - run: echo another dependent job
-# """
-#     return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
+  dependent-job:
+     name: Another Dependent Job
+     needs:
+       - quality
+     steps:
+       - run: echo another dependent job
+"""
+    return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
 
 @pytest.fixture(name="rule")
 def fixture_rule():
@@ -153,7 +154,7 @@ def test_rule_on_jobs_without_needs(rule, no_needs_workflow):
     assert result is False
     assert message == message, "check-run is missing from the following jobs in the workflow: quality"
 
-# def test_rule_on_dependencies_without_check(rule, dependent_missing_check_workflow):
-#     result, message = rule.fn(dependent_missing_check_workflow)
-#     assert result is False
-#     assert message == message, "check-run is missing from the following jobs in the workflow: dependent-job"
+def test_rule_on_dependencies_without_check(rule, dependent_missing_check_workflow):
+    result, message = rule.fn(dependent_missing_check_workflow)
+    assert result is False
+    assert message == message, "check-run is missing from the following jobs in the workflow: dependent-job"
