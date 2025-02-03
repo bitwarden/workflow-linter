@@ -1,10 +1,8 @@
 """A Rule to enforce check-run is run when workflow uses pull_request_target."""
 
-from typing import Optional, Tuple, Union
+from typing import Optional, Tuple
 
-from ..models.job import Job
 from ..models.workflow import Workflow
-from ..models.step import Step
 from ..rule import Rule
 from ..utils import LintLevels, Settings
 
