@@ -30,7 +30,7 @@ class RuleCheckPrTarget(Rule):
     def has_check_run(self, obj:Workflow) -> Tuple[bool, str]:
         for name, job in obj.jobs.items():
                 if job.uses:
-                    if "bitwarden/gh-actions/.github/workflows/check-run.yml" in job.uses:
+                    if job.uses_path == "bitwarden/gh-actions/.github/workflows/check-run.yml":
                         return True, name
         return False, ""
     
