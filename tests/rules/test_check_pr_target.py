@@ -158,3 +158,4 @@ def test_rule_on_dependencies_without_check(rule, dependent_missing_check_workfl
     result, message = rule.fn(dependent_missing_check_workflow)
     assert result is False
     assert message == message, "check-run is missing from the following jobs in the workflow: dependent-job"
+    
