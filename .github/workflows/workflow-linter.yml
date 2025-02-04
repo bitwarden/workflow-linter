@@ -54,7 +54,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Start
-        uses: bitwarden/gh-actions/report-deployment-status-to-slack/action.yml@main
+        uses: bitwarden/gh-actions/report-deployment-status-to-slack@main
         with:
           project: $TEST_REPORT_PROJECT
           environment: EU-QA Cloud
@@ -66,7 +66,7 @@ jobs:
           AZURE_KV_CI_SERVICE_PRINCIPAL: ${{ secrets.AZURE_KV_CI_SERVICE_PRINCIPAL }}
 
       - name: Success
-        uses: bitwarden/gh-actions/report-deployment-status-to-slack/action.yml@main
+        uses: bitwarden/gh-actions/report-deployment-status-to-slack@main
         with:
           project: $TEST_REPORT_PROJECT
           environment: US-QA Cloud
@@ -78,7 +78,7 @@ jobs:
           AZURE_KV_CI_SERVICE_PRINCIPAL: ${{ secrets.AZURE_KV_CI_SERVICE_PRINCIPAL }}
 
       - name: Failure
-        uses: bitwarden/gh-actions/report-deployment-status-to-slack/action.yml@main
+        uses: bitwarden/gh-actions/report-deployment-status-to-slack@main
         with:
           project: $TEST_REPORT_PROJECT
           environment: US-QA Cloud
@@ -90,7 +90,7 @@ jobs:
           AZURE_KV_CI_SERVICE_PRINCIPAL: ${{ secrets.AZURE_KV_CI_SERVICE_PRINCIPAL }}
 
       - name: No Changes
-        uses: bitwarden/gh-actions/report-deployment-status-to-slack/action.yml@main
+        uses: bitwarden/gh-actions/report-deployment-status-to-slack@main
         with:
           project: $TEST_REPORT_PROJECT
           environment: EU-QA Cloud
