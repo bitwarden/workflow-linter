@@ -18,11 +18,9 @@ class RuleCheckPrTarget(Rule):
         
         In order to prevent a vulnerable branch from being used for an attack 
         prior to being caught through vetting, all pull_request_target workflows 
-        should only run when targeting the main branch so pull requests targeting 
-        a vulnerable branch do not run anything.  
+        should only be run by users with appropriate permissions.  
 
-        This greatly reduces the risk as someone would need to make multiple 
-        changes to allow a branch to be exposed.
+        This greatly reduces the risk as community contributors can't use a fork to run a compromised workflow that uses pull_request_target.
         """
         self.message = "A check-run job must be included as a direct job dependency when pull_request_target is used"
         self.on_fail = LintLevels.WARNING
