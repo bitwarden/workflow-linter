@@ -53,7 +53,7 @@ jobs:
   quality:
     name: Quality scan
     runs-on: ubuntu-22.04
-    needs: check-run
+    # needs: check-run
     permissions:
       contents: read
       pull-requests: write
