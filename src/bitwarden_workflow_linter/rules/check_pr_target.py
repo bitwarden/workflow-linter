@@ -22,7 +22,7 @@ class RuleCheckPrTarget(Rule):
 
         This greatly reduces the risk as community contributors can't use a fork to run a compromised workflow that uses pull_request_target.
         """
-        self.message = "A check-run job must be included as a direct job dependency when pull_request_target is used"
+        self.message = "A check-run job must be included as a direct job dependency when pull_request_target is used and the workflow may only apply to runs on the main branch"
         self.on_fail = LintLevels.WARNING
         self.compatibility = [Workflow]
         self.settings = settings
@@ -68,6 +68,7 @@ class RuleCheckPrTarget(Rule):
                 Errors.append("Workflows using pull_request_target can only target the main branch")
             if result:
                 missing_jobs = self.check_run_required(obj, check_job)
+                print(missing_jobs)
                 if missing_jobs:
                     job_list = ', '.join(missing_jobs)
                     Errors.append("check-run is missing from the following jobs in the workflow: {job_list}")
