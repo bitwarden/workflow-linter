@@ -27,10 +27,24 @@ class RuleCheckPrTarget(Rule):
         self.compatibility = [Workflow]
         self.settings = settings
     
-    def has_check_run(self, obj:Workflow) -> Tuple[bool, str]:
+    def targets_main_branch(self, obj:Workflow) -> Tuple[bool]:
+        branches_list = [
+            branch
+            for key, value in obj.on.items() if value
+            for key2, value2 in value.items() if key2 == 'branches'
+            for branch in value2
+            ]
+        if any(branch != 'main' for branch in branches_list):
+            return False
+        else:
+            return True
+
+    
+    def has_check_run(self, obj: Workflow) -> Tuple[bool, str]:
         for name, job in obj.jobs.items():
-                if job.uses == "bitwarden/gh-actions/.github/workflows/check-run.yml@main":
-                    return True, name
+            if job.uses == "bitwarden/gh-actions/.github/workflows/check-run.yml@main":
+                return True, name
+
         return False, ""
     
     def check_run_required(self, obj:Workflow, check_job:str) -> list:
@@ -46,16 +60,21 @@ class RuleCheckPrTarget(Rule):
         return missing_jobs
 
     def fn(self, obj: Workflow) -> Tuple[bool, str]:
+        Errors = []
         if obj.on.get("pull_request_target"):
             result, check_job = self.has_check_run(obj)
+            main_branch_only = self.targets_main_branch(obj)
+            if not main_branch_only:
+                Errors.append("Workflows using pull_request_target can only target the main branch")
             if result:
                 missing_jobs = self.check_run_required(obj, check_job)
                 if missing_jobs:
                     job_list = ', '.join(missing_jobs)
-                    print(job_list)
-                    return False, f"{self.message}, check-run is missing from the following jobs in the workflow: {job_list}"
-                return True, ""
+                    Errors.append("check-run is missing from the following jobs in the workflow: {job_list}")
+            if Errors:
+                error_message = "\n".join(Errors)
+                return False, f"{self.message}\n{error_message}"
             else:
-                return False, f"{self.message}"
+                return True, ""
         else:
             return True, ""
