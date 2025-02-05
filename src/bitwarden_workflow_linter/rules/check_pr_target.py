@@ -68,13 +68,12 @@ class RuleCheckPrTarget(Rule):
                 Errors.append("Workflows using pull_request_target can only target the main branch")
             if result:
                 missing_jobs = self.check_run_required(obj, check_job)
-                print(missing_jobs)
                 if missing_jobs:
                     job_list = ', '.join(missing_jobs)
                     Errors.append("check-run is missing from the following jobs in the workflow: {job_list}")
             if Errors:
-                error_message = "\n".join(Errors)
-                return False, f"{self.message}\n{error_message}"
+                self.message = "\n".join(Errors)
+                return False, f"{self.message}"
             else:
                 return True, ""
         else:
