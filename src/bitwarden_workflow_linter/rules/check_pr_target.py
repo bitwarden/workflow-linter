@@ -39,12 +39,10 @@ class RuleCheckPrTarget(Rule):
         else:
             return True
 
-    
     def has_check_run(self, obj: Workflow) -> Tuple[bool, str]:
         for name, job in obj.jobs.items():
             if job.uses == "bitwarden/gh-actions/.github/workflows/check-run.yml@main":
                 return True, name
-
         return False, ""
     
     def check_run_required(self, obj:Workflow, check_job:str) -> list:
@@ -70,7 +68,11 @@ class RuleCheckPrTarget(Rule):
                 missing_jobs = self.check_run_required(obj, check_job)
                 if missing_jobs:
                     job_list = ', '.join(missing_jobs)
-                    Errors.append("check-run is missing from the following jobs in the workflow: {job_list}")
+                    message = f"Check-run is missing from the following jobs in the workflow: {job_list}"
+                    Errors.append(message)
+            else:
+                message = f"A check-run job must be included as a direct job dependency when pull_request_target is used"
+                Errors.append(message)
             if Errors:
                 self.message = "\n".join(Errors)
                 return False, f"{self.message}"
