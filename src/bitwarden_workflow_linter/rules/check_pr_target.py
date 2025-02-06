@@ -27,7 +27,7 @@ class RuleCheckPrTarget(Rule):
         self.compatibility = [Workflow]
         self.settings = settings
     
-    def targets_main_branch(self, obj:Workflow) -> Tuple[bool]:
+    def targets_main_branch(self, obj:Workflow) -> bool:
         if obj.on["pull_request_target"].get("branches"):
             branches_list = obj.on["pull_request_target"].get("branches")
             if any(branch != 'main' for branch in branches_list):
