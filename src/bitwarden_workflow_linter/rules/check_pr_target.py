@@ -30,6 +30,8 @@ class RuleCheckPrTarget(Rule):
     def targets_main_branch(self, obj:Workflow) -> bool:
         if obj.on["pull_request_target"].get("branches"):
             branches_list = obj.on["pull_request_target"].get("branches")
+            if isinstance(branches_list, str):
+                branches_list = [branches_list]
             if any(branch != 'main' for branch in branches_list):
                 return False
         else:
