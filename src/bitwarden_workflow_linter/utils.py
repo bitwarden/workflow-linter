@@ -113,11 +113,13 @@ class Settings:
 
     enabled_rules: list[str]
     approved_actions: dict[str, Action]
+    actionlint_version = str
 
     def __init__(
         self,
         enabled_rules: Optional[list[str]] = None,
         approved_actions: Optional[dict[str, dict[str, str]]] = None,
+        actionlint_version: Optional[str] = None,
     ) -> None:
         """Settings object that can be overridden in settings.py.
 
@@ -126,7 +128,7 @@ class Settings:
             All of the python modules that implement a Rule to be run against
             the workflows. These must be available somewhere on the PYTHONPATH
           approved_actions:
-            The colleciton of GitHub Actions that are pre-approved to be used
+            The colleciton of GitHub Actionsß that are pre-approved to be used
             in any workflow (Required by src.rules.step_approved)
         """
         if enabled_rules is None:
@@ -135,6 +137,10 @@ class Settings:
         if approved_actions is None:
             approved_actions = {}
 
+        if actionlint_version is None:
+            actionlint_version = ""
+
+        self.actionlint_version = actionlint_version
         self.enabled_rules = enabled_rules
         self.approved_actions = {
             name: Action(**action) for name, action in approved_actions.items()
@@ -175,4 +181,5 @@ class Settings:
         return Settings(
             enabled_rules=settings["enabled_rules"],
             approved_actions=settings["approved_actions"],
+            actionlint_version=settings["actionlint_version"],
         )

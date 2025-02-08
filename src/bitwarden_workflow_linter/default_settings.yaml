@@ -9,3 +9,5 @@ enabled_rules:
   - bitwarden_workflow_linter.rules.run_actionlint.RunActionlint
 
 approved_actions_path: default_actions.json
+
+actionlint_version: "1.6.17"
