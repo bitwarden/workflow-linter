@@ -128,7 +128,7 @@ class Settings:
             All of the python modules that implement a Rule to be run against
             the workflows. These must be available somewhere on the PYTHONPATH
           approved_actions:
-            The colleciton of GitHub Actionsß that are pre-approved to be used
+            The colleciton of GitHub Actions that are pre-approved to be used
             in any workflow (Required by src.rules.step_approved)
         """
         if enabled_rules is None:
