@@ -30,12 +30,12 @@
       "customType": "regex",
       "fileMatch": ["(^|/)default_settings.yaml?$"], 
       "matchStrings": [
-        "^actionlint_version: ['\"]?(?<currentValue>[^'\"]+)['\"]?\""
+        "actionlint_version: ['\"]?(?<currentValue>[^'\"]+)['\"]?\""
       ],
-      "versioningTemplate": "regex:^(?<major>\\d{4})-(?<minor>\\d{2})-(?<patch>\\d{2})$",
+      "versioningTemplate": "semver",
       "depNameTemplate": "actionlint",
-      "datasourceTemplate": "github-tags",
-      "lookupNameTemplate": "rhysd/actionlint"
+      "datasourceTemplate": "github-releases",
+      "packageNameTemplate": "rhysd/actionlint"
     }
   ]
 }
