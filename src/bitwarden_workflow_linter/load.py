@@ -12,6 +12,7 @@ from .models.step import Step
 from .models.workflow import Workflow
 from .rule import Rule
 from .utils import Settings
+from .utils import LintLevels
 
 yaml = YAML()
 
@@ -127,13 +128,14 @@ class Rules:
         """
         # [TODO]: data resiliency
         for rule in settings.enabled_rules:
-            module_name = rule.split(".")
+            rule_id = rule.id
+            module_name = rule_id.split(".")
             module_name = ".".join(module_name[:-1])
-            rule_name = rule.split(".")[-1]
+            rule_name = rule_id.split(".")[-1]
 
             try:
                 rule_class = getattr(importlib.import_module(module_name), rule_name)
-                rule_inst = rule_class(settings=settings)
+                rule_inst = rule_class(settings=settings, lint_level=lint_level(rule.level))
 
                 if Workflow in rule_inst.compatibility:
                     self.workflow.append(rule_inst)
@@ -157,3 +159,21 @@ class Rules:
         for rule in self.step:
             print(f" - {type(rule).__name__}")
         print("========================\n")
+
+
+def lint_level(level: str) -> LintLevels:
+    """Convert a string to a LintLevels enum.
+
+    Args:
+      level:
+        The string representation of the LintLevels enum
+
+    Returns:
+      The LintLevels enum value
+    """
+    if level == "error":
+        return LintLevels.ERROR
+    elif level == "warning":
+        return LintLevels.WARNING
+    else:
+        return LintLevels.NONE
