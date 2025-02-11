@@ -34,12 +34,20 @@ the below and create a `settings.yaml` in the directory that `bwwl` will be runn
 
 ```yaml
 enabled_rules:
-    - bitwarden_workflow_linter.rules.name_exists.RuleNameExists
-    - bitwarden_workflow_linter.rules.name_capitalized.RuleNameCapitalized
-    - bitwarden_workflow_linter.rules.pinned_job_runner.RuleJobRunnerVersionPinned
-    - bitwarden_workflow_linter.rules.job_environment_prefix.RuleJobEnvironmentPrefix
-    - bitwarden_workflow_linter.rules.step_pinned.RuleStepUsesPinned
-    - bitwarden_workflow_linter.rules.underscore_outputs.RuleUnderscoreOutputs
+  - id: bitwarden_workflow_linter.rules.name_exists.RuleNameExists
+    level: error
+  - id: bitwarden_workflow_linter.rules.name_capitalized.RuleNameCapitalized
+    level: error
+  - id: bitwarden_workflow_linter.rules.pinned_job_runner.RuleJobRunnerVersionPinned
+    level: error
+  - id: bitwarden_workflow_linter.rules.job_environment_prefix.RuleJobEnvironmentPrefix
+    level: error
+  - id: bitwarden_workflow_linter.rules.step_pinned.RuleStepUsesPinned
+    level: error
+  - id: bitwarden_workflow_linter.rules.underscore_outputs.RuleUnderscoreOutputs
+    level: warning
+  - id: bitwarden_workflow_linter.rules.run_actionlint.RunActionlint
+    level: warning
 
 approved_actions_path: default_actions.json
 ```
@@ -125,9 +133,9 @@ from ..utils import LintLevels, Settings
 
 
 class RuleJobNameExists(Rule):
-    def __init__(self, settings: Settings = None) -> None:
+    def __init__(self, settings: Settings = None, , lint_level: Optional[LintLevels] = LintLevels.ERROR) -> None:
         self.message = "name must exist"
-        self.on_fail: LintLevels = LintLevels.ERROR
+        self.on_fail: LintLevels = lint_level
         self.compatibility: List[Union[Workflow, Job, Step]] = [Job]
         self.settings: Settings = settings
 
