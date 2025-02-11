@@ -71,8 +71,7 @@ on:
   workflow_dispatch:
   pull_request_target:
     types: [opened, synchronize]
-    branches:
-      - 'main'
+    branches: main
 
 jobs:
   check-run:
@@ -261,17 +260,17 @@ def test_rule_on_dependencies_without_check(rule, dependent_missing_check_workfl
     assert result is False
     assert message == message, "check-run is missing from the following jobs in the workflow: dependent-job"
 
-def test_rule_on_no_target_workflow(rule, no_branches_workflow):
+def test_rule_on_no_branches_workflow(rule, no_branches_workflow):
     result, message = rule.fn(no_branches_workflow)
     assert result is False
     assert message == "Workflows using pull_request_target can only target the main branch"
 
-def test_rule_on_no_target_workflow(rule, bad_branches_workflow):
+def test_rule_on_only_target_main(rule, bad_branches_workflow):
     result, message = rule.fn(bad_branches_workflow)
     assert result is False
     assert message == "Workflows using pull_request_target can only target the main branch"
 
-def test_rule_on_no_target_workflow(rule, two_failures_workflow):
+def test_rule_on_two_failures(rule, two_failures_workflow):
     result, message = rule.fn(two_failures_workflow)
     assert result is False
     assert message == "Workflows using pull_request_target can only target the main branch\nA check-run job must be included as a direct job dependency when pull_request_target is used"
