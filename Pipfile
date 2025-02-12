@@ -17,6 +17,7 @@ coverage = "*"
 pytest-cov = "*"
 pylint = "*"
 pytype = "*"
+hatchling = "*"
 
 [requires]
 python_version = "3.11"
