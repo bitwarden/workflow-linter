@@ -111,7 +111,7 @@ SettingsFromFactory = TypeVar("SettingsFromFactory", bound="Settings")
 class Settings:
     """Class that contains configuration-as-code for any portion of the app."""
 
-    enabled_rules: list[str]
+    enabled_rules: list[dict[str, str]]
     approved_actions: dict[str, Action]
 
     def __init__(
