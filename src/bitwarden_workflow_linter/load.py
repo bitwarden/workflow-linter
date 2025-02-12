@@ -128,14 +128,14 @@ class Rules:
         """
         # [TODO]: data resiliency
         for rule in settings.enabled_rules:
-            rule_id = rule.id
+            rule_id = rule["id"]
             module_name = rule_id.split(".")
             module_name = ".".join(module_name[:-1])
             rule_name = rule_id.split(".")[-1]
 
             try:
                 rule_class = getattr(importlib.import_module(module_name), rule_name)
-                rule_inst = rule_class(settings=settings, lint_level=lint_level(rule.level))
+                rule_inst = rule_class(settings=settings, lint_level=lint_level(rule["level"]))
 
                 if Workflow in rule_inst.compatibility:
                     self.workflow.append(rule_inst)
