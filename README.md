@@ -133,7 +133,7 @@ from ..utils import LintLevels, Settings
 
 
 class RuleJobNameExists(Rule):
-    def __init__(self, settings: Settings = None, , lint_level: Optional[LintLevels] = LintLevels.ERROR) -> None:
+    def __init__(self, settings: Settings = None, lint_level: Optional[LintLevels] = LintLevels.ERROR) -> None:
         self.message = "name must exist"
         self.on_fail: LintLevels = lint_level
         self.compatibility: List[Union[Workflow, Job, Step]] = [Job]
