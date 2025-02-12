@@ -11,8 +11,7 @@ from .models.job import Job
 from .models.step import Step
 from .models.workflow import Workflow
 from .rule import Rule
-from .utils import Settings
-from .utils import LintLevels
+from .utils import Settings, LintLevels
 
 yaml = YAML()
 
