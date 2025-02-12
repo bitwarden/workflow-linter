@@ -1,0 +1,36 @@
+name: Test Actionlint on Windows
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "**/run_actionlint.py"
+      - "**/default_actions.json"
+
+jobs:
+  test:
+    name: CI workflow-linter (v2)
+    runs-on: windows-latest  # or windows-2019, or windows-2022, depending on what you need
+    steps:
+        - name: Check out repo
+          uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+  
+        - name: Set up Python
+          uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
+          with:
+            python-version-file: ".python-version"
+  
+        - name: Install dependencies
+          run: |
+            python -m pip install --upgrade pip
+            pip install pipenv
+            pipenv install --dev
+  
+        - name: Run pytest
+          run: pipenv run pytest tests --cov=src
+  
+        - name: Check type hinting
+          run: pipenv run pytype src
+  
