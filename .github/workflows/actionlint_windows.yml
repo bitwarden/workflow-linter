@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    name: CI workflow-linter (v2)
+    name: Windows workflow-linter (v2)
     runs-on: windows-2022
     steps:
         - name: Check out repo
