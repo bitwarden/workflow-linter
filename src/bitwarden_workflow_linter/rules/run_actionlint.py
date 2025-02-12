@@ -101,7 +101,7 @@ class RunActionlint(Rule):
                     ["actionlint", obj.filename],
                     capture_output=True,
                     text=True,
-                    check=False
+                    check=False,
                 )
             if result.returncode == 1:
                 return False, result.stdout
