@@ -14,6 +14,8 @@ dataclasses-json = "*"
 black = "*"
 pytest = "*"
 coverage = "*"
+pytest-cov = "*"
+pylint = "*"
 
 
 [requires]
