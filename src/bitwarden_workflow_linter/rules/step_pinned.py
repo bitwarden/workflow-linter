@@ -23,15 +23,17 @@ class RuleStepUsesPinned(Rule):
     updated.
     """
 
-    def __init__(self, settings: Optional[Settings] = None) -> None:
+    def __init__(self, settings: Optional[Settings] = None, lint_level: Optional[LintLevels] = LintLevels.ERROR) -> None:
         """Constructor for RuleStepUsesPinned to override base Rule.
 
         Args:
           settings:
             A Settings object that contains any default, overridden, or custom settings
             required anywhere in the application.
+          lint_level:
+            The LintLevels enum value to determine the severity of the rule.
         """
-        self.on_fail = LintLevels.ERROR
+        self.on_fail = lint_level
         self.compatibility = [Step]
         self.settings = settings
 

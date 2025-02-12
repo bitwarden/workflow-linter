@@ -111,13 +111,13 @@ SettingsFromFactory = TypeVar("SettingsFromFactory", bound="Settings")
 class Settings:
     """Class that contains configuration-as-code for any portion of the app."""
 
-    enabled_rules: list[str]
+    enabled_rules: list[dict[str, str]]
     approved_actions: dict[str, Action]
     actionlint_version = str
 
     def __init__(
         self,
-        enabled_rules: Optional[list[str]] = None,
+        enabled_rules: Optional[list[dict[str, str]]] = None,
         approved_actions: Optional[dict[str, dict[str, str]]] = None,
         actionlint_version: Optional[str] = None,
     ) -> None:
