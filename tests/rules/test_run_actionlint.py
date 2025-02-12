@@ -138,7 +138,7 @@ def test_check_actionlint_installed_locally(monkeypatch):
 
     monkeypatch.setattr(subprocess, "run", mock_run)
 
-    result, message = check_actionlint("linux", "1.6.7")
+    result, message = check_actionlint("linux")
 
     assert result is True
     assert message == "."
@@ -149,7 +149,7 @@ def test_check_actionlint_not_in_path(monkeypatch):
 
     monkeypatch.setattr(subprocess, "run", mock_run)
 
-    result, message = check_actionlint("linux", "1.6.7")
+    result, message = check_actionlint("linux")
     assert result is False
     assert message == "Failed to install Actionlint, please check your package installer or manually install it"
 
