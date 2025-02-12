@@ -15,16 +15,18 @@ class RuleJobRunnerVersionPinned(Rule):
     breaking the majority of our pipelines, we pin the versions.
     """
 
-    def __init__(self, settings: Optional[Settings] = None) -> None:
+    def __init__(self, settings: Optional[Settings] = None, lint_level: Optional[LintLevels] = LintLevels.NONE) -> None:
         """Constructor for RuleJobRunnerVersionPinned to override Rule class.
 
         Args:
           settings:
             A Settings object that contains any default, overridden, or custom settings
             required anywhere in the application.
+          lint_level:
+            The LintLevels enum value to determine the severity of the rule.
         """
         self.message = "Workflow runner must be pinned"
-        self.on_fail = LintLevels.ERROR
+        self.on_fail = lint_level
         self.compatibility = [Job]
         self.settings = settings
 

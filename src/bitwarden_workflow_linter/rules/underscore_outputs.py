@@ -17,16 +17,18 @@ class RuleUnderscoreOutputs(Rule):
     A simple standard to ensure uniformity in naming.
     """
 
-    def __init__(self, settings: Optional[Settings] = None) -> None:
+    def __init__(self, settings: Optional[Settings] = None, lint_level: Optional[LintLevels] = LintLevels.ERROR) -> None:
         """Constructor for RuleUnderscoreOutputs to override the Rule class.
 
         Args:
           settings:
             A Settings object that contains any default, overridden, or custom settings
             required anywhere in the application.
+          lint_level:
+            The LintLevels enum value to determine the severity of the rule.
         """
         self.message = "outputs with more than one word should use an underscore"
-        self.on_fail = LintLevels.WARNING
+        self.on_fail = lint_level
         self.compatibility = [Workflow, Job, Step]
         self.settings = settings
 
