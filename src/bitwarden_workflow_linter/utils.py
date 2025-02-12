@@ -116,7 +116,7 @@ class Settings:
 
     def __init__(
         self,
-        enabled_rules: Optional[list[str]] = None,
+        enabled_rules: Optional[list[dict[str, str]]] = None,
         approved_actions: Optional[dict[str, dict[str, str]]] = None,
     ) -> None:
         """Settings object that can be overridden in settings.py.
