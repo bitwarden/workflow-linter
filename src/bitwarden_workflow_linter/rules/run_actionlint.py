@@ -16,7 +16,6 @@ def install_actionlint(platform_system: str, version: str) -> Tuple[bool, str]:
     and installs actionlint"""
 
     error = f"An error occurred when installing Actionlint on {platform_system}"
-    actionlint_version = f"actionlint@{version}"
     if platform_system.startswith("Linux"):
         return install_actionlint_source(error, version)
     elif platform_system == "Darwin":
