@@ -36,4 +36,4 @@ jobs:
         #     pipenv install --dev
 
         - name: Lint
-          uses: bitwarden/gh-actions/test-lint-workflow@main
+          uses: bitwarden/gh-actions/test-lint-workflow/test-lint-workflow.yml@main
