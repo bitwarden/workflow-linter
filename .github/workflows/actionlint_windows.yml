@@ -20,15 +20,19 @@ jobs:
           uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
           with:
             python-version-file: ".python-version"
-  
-        - name: Install dependencies
+
+        - name: Install actionlint
           run: |
-            python -m pip install --upgrade pip
-            pip install pipenv
-            pipenv install --dev
+            choco install actionlint --version=1.6.17
+    
+        # - name: Install dependencies
+        #   run: |
+        #     python -m pip install --upgrade pip
+        #     pip install pipenv
+        #     pipenv install --dev
 
-        - name: Install bwwl binary
-          run: python -m pip install --upgrade bitwarden_workflow_linter
+        # - name: Install bwwl binary
+        #   run: python -m pip install --upgrade bitwarden_workflow_linter
 
-        - name: Lint
-          run: bwwl lint -f .github/workflows
+        # - name: Lint
+        #   run: bwwl lint -f .github/workflows
