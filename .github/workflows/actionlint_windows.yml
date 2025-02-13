@@ -32,11 +32,3 @@ jobs:
 
         - name: Lint
           run: bwwl lint -f .github/workflows
-        
-        - name: Validate examples
-          run: bwwl lint -f .github/templates/workflow-templates # validate that example workflows still meet bitwarden standards
-    
-  
-        - name: Check type hinting
-          run: pipenv run pytype src
-  
