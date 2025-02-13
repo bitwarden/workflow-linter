@@ -14,6 +14,7 @@ from ..utils import LintLevels, Settings
 def install_actionlint(platform_system: str, version: str) -> Tuple[bool, str]:
     """If actionlint is not installed, detects OS platform
     and installs actionlint"""
+    print("reached install")
 
     error = f"An error occurred when installing Actionlint on {platform_system}"
     if platform_system.startswith("Linux"):
@@ -51,6 +52,7 @@ def install_actionlint_source(error, version) -> Tuple[bool, str]:
 
 def check_actionlint(platform_system: str, version: str) -> Tuple[bool, str]:
     """Check if the actionlint is in the system's PATH."""
+    print("in check_actionlint")
     try:
         subprocess.run(
             ["actionlint", "--version"],
@@ -66,6 +68,7 @@ def check_actionlint(platform_system: str, version: str) -> Tuple[bool, str]:
 please check your package installer or manually install it",
         )
     except FileNotFoundError:
+        print("file not found")
         is_local = subprocess.run(
                     ["ls | grep '^actionlint'"],
                     capture_output=True,
@@ -76,6 +79,7 @@ please check your package installer or manually install it",
         if is_local.stdout:
             return True, "."
         else:
+            print("reached else")
             return install_actionlint(platform_system, version)
 
 class RunActionlint(Rule):
