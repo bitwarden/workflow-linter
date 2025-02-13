@@ -35,8 +35,5 @@ jobs:
         #     pip install pipenv
         #     pipenv install --dev
 
-        - name: Install bwwl binary
-          run: python -m pip install --upgrade bitwarden_workflow_linter
-
         - name: Lint
           run: bwwl lint -f .github/workflows

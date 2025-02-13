@@ -27,7 +27,6 @@ def install_actionlint(platform_system: str, version: str) -> Tuple[bool, str]:
             return False, f"{error} : check Brew installation"
     elif platform_system.startswith("Win"):
         try:
-            return install_actionlint_source(error, version)
             print(f"Version is {version}")
             subprocess.run(["choco install actionlint -y -v --version='1.6.17'"], check=True, shell=True)
             # subprocess.run(["choco", "install", "actionlint", "-y", f"--version='1.6.17'"], check=True)
@@ -93,12 +92,6 @@ class RunActionlint(Rule):
         self.settings = settings
 
     def fn(self, obj: Workflow) -> Tuple[bool, str]:
-        subprocess.run(
-                    ["actionlint", obj.filename],
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                )
         if not obj or not obj.filename:
             raise AttributeError(
                 "Running actionlint without a filename is not currently supported"
