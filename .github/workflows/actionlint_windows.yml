@@ -36,4 +36,4 @@ jobs:
         #     pipenv install --dev
 
         - name: Lint
-          run: bwwl lint -f .github/workflows
+          uses: uses: bitwarden/gh-actions/test-lint-workflow@6e3f7024df22b3d91c19c053133a25c389e88b8d
