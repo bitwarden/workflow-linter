@@ -8,4 +8,4 @@
 * @bitwarden/dept-bre
 
 # App-sec owns default_actions file
-src/default_actions.json @bitwarden/team-appsec
+src/bitwarden_workflow_linter/default_actions.json @bitwarden/team-appsec
