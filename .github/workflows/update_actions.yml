@@ -2,11 +2,11 @@ name: Update Approved Actions
 
 on:
   schedule:
-  '0 0 1 * *'
+   - '0 0 1 * *'
 
 jobs:
   actions-update:
     name: "Update Approved Actions"
-    uses: ./.github/workflows/_bwwl-operations.yml
+    uses: ./.github/workflows/_bwwl_operations.yml
     with:
       operation: 'update'

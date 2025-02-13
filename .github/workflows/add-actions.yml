@@ -12,7 +12,7 @@ on:
 jobs:
   add-action:
     name: "Add Approved Actions"
-    uses: ./.github/workflows/_bwwl-operations.yml
+    uses: ./.github/workflows/_bwwl_operations.yml
     with:
       operation: 'add'
       action: ${{ inputs.action }}
