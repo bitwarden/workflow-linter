@@ -27,8 +27,15 @@ jobs:
             pip install pipenv
             pipenv install --dev
 
-        - name: Run pytest
-          run: pipenv run pytest tests --cov=src
+        - name: Install bwwl binary
+          run: python -m pip install --upgrade bitwarden_workflow_linter
+
+        - name: Lint
+          run: bwwl lint -f .github/workflows
+        
+        - name: Validate examples
+          run: bwwl lint -f .github/templates/workflow-templates # validate that example workflows still meet bitwarden standards
+    
   
         - name: Check type hinting
           run: pipenv run pytype src
