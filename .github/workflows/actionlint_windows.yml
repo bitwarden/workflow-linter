@@ -21,9 +21,13 @@ jobs:
           with:
             python-version-file: ".python-version"
 
-        - name: Install actionlint
+        - name: Check Actionlint
           run: |
-            choco install actionlint -y --version=1.6.17
+            actionlint --version
+
+        # - name: Install actionlint
+        #   run: |
+        #     choco install actionlint -y -v --version=1.6.17
     
         # - name: Install dependencies
         #   run: |
