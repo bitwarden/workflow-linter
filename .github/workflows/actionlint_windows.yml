@@ -1,6 +1,9 @@
 name: Test Actionlint on Windows
 
 on:
+  push:
+    branches:
+      - "agalles/renovate-actionlint"
   pull_request:
     branches:
       - main
