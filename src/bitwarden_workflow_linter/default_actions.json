@@ -121,8 +121,8 @@
   },
   "actions/upload-artifact": {
     "name": "actions/upload-artifact",
-    "sha": "b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882",
-    "version": "v4.4.3"
+    "sha": "65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08",
+    "version": "v4.6.0"
   },
   "actions/upload-pages-artifact": {
     "name": "actions/upload-pages-artifact",
@@ -221,8 +221,8 @@
   },
   "docker/build-push-action": {
     "name": "docker/build-push-action",
-    "sha": "48aba3b46d1b1fec4febb7c5d0c644b249a11355",
-    "version": "v6.10.0"
+    "sha": "67a2d409c0a876cbe6b11854e3e25193efe4e62d",
+    "version": "v6.12.0"
   },
   "docker/login-action": {
     "name": "docker/login-action",
@@ -273,6 +273,11 @@
     "name": "gradle/actions",
     "sha": "cc4fc85e6b35bafd578d5ffbc76a5518407e1af0",
     "version": "v4.2.1"
+  },
+  "gradle/wrapper-validation-action": {
+    "name": "gradle/wrapper-validation-action",
+    "sha": "f9c9c575b8b21b6485636a91ffecd10e558c62f6",
+    "version": "v3.5.0"
   },
   "hashicorp/setup-packer": {
     "name": "hashicorp/setup-packer",
