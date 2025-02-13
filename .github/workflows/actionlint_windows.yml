@@ -4,9 +4,9 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - "**/run_actionlint.py"
-      - "**/default_actions.json"
+    # paths:
+    #   - "**/run_actionlint.py"
+    #   - "**/default_actions.json"
 
 jobs:
   test:
