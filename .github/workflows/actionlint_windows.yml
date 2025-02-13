@@ -36,7 +36,7 @@ jobs:
             wsl --set-default-version 2  # Set WSL 2 as the default version
 
             # Download and install Ubuntu from Microsoft Store (using PowerShell)
-            Invoke-WebRequest -Uri https://aka.ms/wsl-ubuntu-2004 -OutFile ubuntu-2004.appx -UseBasicP -SkipHttpValidation
+            Invoke-WebRequest -Uri https://aka.ms/wsl-ubuntu-2004 -OutFile ubuntu-2004.appx -UseBasicP
             Add-AppxPackage .\ubuntu-2004.appx
 
             # Install Ubuntu if not already installed (you can specify other distributions)
