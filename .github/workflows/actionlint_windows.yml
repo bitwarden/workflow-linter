@@ -23,7 +23,7 @@ jobs:
 
         - name: Install actionlint
           run: |
-            choco install actionlint --version=1.6.17
+            choco install actionlint -y --version=1.6.17
     
         # - name: Install dependencies
         #   run: |
