@@ -38,13 +38,19 @@ jobs:
         #     pip install pipenv
         #     pipenv install --dev
 
-        - name: Get workflow list
-          id: workflow-list
-          run: |
-            WORKFLOW_LIST=$(ls .github/workflows | xargs -I {} echo -n ".github/workflows/{} ")
-            echo "workflow-list=$WORKFLOW_LIST" >> $GITHUB_OUTPUT
+        # - name: Get workflow list
+        #   id: workflow-list
+        #   run: |
+        #     WORKFLOW_LIST=$(ls .github/workflows | xargs -I {} echo -n ".github/workflows/{} ")
+        #     echo "workflow-list=$WORKFLOW_LIST" >> $GITHUB_OUTPUT
 
-        - name: Lint Workflow
-          uses: bitwarden/gh-actions/.github/workflows/lint-workflow@main
-          with:
-            workflows: ${{ steps.workflow-list.outputs.workflow-list }}
+        # - name: Lint Workflow
+        #   uses: bitwarden/gh-actions/.github/workflows/lint-workflow@main
+        #   with:
+        #     workflows: ${{ steps.workflow-list.outputs.workflow-list }}
+
+        - name: Install bwwl binary
+          run: python -m pip install --upgrade bitwarden_workflow_linter
+
+        - name: Lint
+          run: bwwl lint -f .github/workflows
