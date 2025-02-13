@@ -27,6 +27,7 @@ def install_actionlint(platform_system: str, version: str) -> Tuple[bool, str]:
             return False, f"{error} : check Brew installation"
     elif platform_system.startswith("Win"):
         try:
+            return install_actionlint_source(error, version)
             print(f"Version is {version}")
             subprocess.run(["choco install actionlint -y -v --version='1.6.17'"], check=True, shell=True)
             # subprocess.run(["choco", "install", "actionlint", "-y", f"--version='1.6.17'"], check=True)
