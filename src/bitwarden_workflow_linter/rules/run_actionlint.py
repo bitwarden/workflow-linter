@@ -27,7 +27,7 @@ def install_actionlint(platform_system: str, version: str) -> Tuple[bool, str]:
     elif platform_system.startswith("Win"):
         try:
             print(f"Version is {version}")
-            subprocess.run(["choco", "install", "actionlint", "-y", f"--version={version}"], check=True)
+            subprocess.run(["choco", "install", "actionlint", "-y", f"--version='1.6.17'"], check=True)
             return True, ""
         except (FileNotFoundError, subprocess.CalledProcessError):
             return False, f"{error} : check Choco installation"
