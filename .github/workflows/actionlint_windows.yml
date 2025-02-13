@@ -27,21 +27,6 @@ jobs:
             pip install pipenv
             pipenv install --dev
 
-        - name: Enable WSL and Install Ubuntu
-          shell: pwsh
-          run: |
-            # Enable WSL feature on Windows
-            dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
-            dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
-            wsl --set-default-version 2  # Set WSL 2 as the default version
-
-            # Download and install Ubuntu from Microsoft Store (using PowerShell)
-            Invoke-WebRequest -Uri https://aka.ms/wsl-ubuntu-2004 -OutFile ubuntu-2004.appx -UseBasicP -SkipHttpValidation
-            Add-AppxPackage .\ubuntu-2004.appx
-
-            # Install Ubuntu if not already installed (you can specify other distributions)
-            wsl --install --distribution Ubuntu-24.04  # Replace with your preferred Linux distribution
-    
         - name: Run pytest
           run: pipenv run pytest tests --cov=src
   
