@@ -21,41 +21,15 @@ jobs:
           uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
           with:
             python-version-file: ".python-version"
-
-        # - name: Install actionlint
-        #   run: |
-        #     choco install actionlint -y -v --version=1.6.17
     
         - name: Install dependencies
           run: |
             python -m pip install --upgrade pip
             pip install pipenv
             pipenv install --dev
-
-        # - name: Get workflow list
-        #   id: workflow-list
-        #   run: |
-        #     WORKFLOW_LIST=$(ls .github/workflows | xargs -I {} echo -n ".github/workflows/{} ")
-        #     echo "workflow-list=$WORKFLOW_LIST" >> $GITHUB_OUTPUT
-
-        # - name: Setup
-        #   id: setup 
-        #   run: |
-        #     FORMAT_PATH=$(echo ${{ steps.workflow-list.outputs.workflow-list }} | sed 's/ *$//')
-        #     echo "path=$FORMAT_PATH" >> $GITHUB_OUTPUT
-        #   shell: bash
-        
-        # - name: Run Linter
-        #   uses: bitwarden/gh-actions/.github/workflows/lint-workflow@main
-        #   with:
-        #     workflows: ${{ steps.workflow-list.outputs.workflow-list }}
           
         - name: Install bwwl binary
           run: python -m pip install --upgrade .
 
         - name: Lint
           run: bwwl lint -f .github/workflows
-
-        # - name: Test Lint Workflow
-        #   run: |
-        #    ./src/bitwarden_workflow_linter .github/workflows
