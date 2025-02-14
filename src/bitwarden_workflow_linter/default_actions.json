@@ -181,8 +181,8 @@
   },
   "codecov/codecov-action": {
     "name": "codecov/codecov-action",
-    "sha": "7f8b4b4bde536c465e797be725718b88c5d95e0e",
-    "version": "v5.1.1"
+    "sha": "1e68e06f1dbfde0e4cefc87efeba9e4643565303",
+    "version": "v5.1.2"
   },
   "codecov/test-results-action": {
     "name": "codecov/test-results-action",
@@ -378,11 +378,6 @@
     "name": "softprops/action-gh-release",
     "sha": "7b4da11513bf3f43f9999e90eabced41ab8bb048",
     "version": "v2.2.0"
-  },
-  "sonarsource/sonarcloud-github-action": {
-    "name": "sonarsource/sonarcloud-github-action",
-    "sha": "02ef91109b2d589e757aefcfb2854c2783fd7b19",
-    "version": "v4.0.0"
   },
   "sonarsource/sonarqube-scan-action": {
     "name": "sonarsource/sonarqube-scan-action",
