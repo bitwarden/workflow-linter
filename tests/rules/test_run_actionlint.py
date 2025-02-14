@@ -118,16 +118,33 @@ def test_failed_check_actionlint_installed(monkeypatch):
     result, _ = check_actionlint("Linux")
     assert result is False
 
-
-def test_check_actionlint_not_installed(monkeypatch):
+def test_check_actionlint_installed_locally(monkeypatch):
     def mock_run(*args, **kwargs):
-        raise FileNotFoundError
+        if "actionlint" in args[0]:
+            raise FileNotFoundError
+        else:
+            class MockProcess:
+                def __init__(self):
+                    self.stdout = "actionlint"
+
+            return MockProcess()
 
     monkeypatch.setattr(subprocess, "run", mock_run)
 
-    result, _ = check_actionlint("Linux")
-    assert result is False
+    result, message = check_actionlint("linux")
 
+    assert result is True
+    assert message == "."
+
+def test_check_actionlint_not_in_path(monkeypatch):
+    def mock_run(*args, **kwargs):
+        raise subprocess.CalledProcessError(1, args[0])
+
+    monkeypatch.setattr(subprocess, "run", mock_run)
+
+    result, message = check_actionlint("linux")
+    assert result is False
+    assert message == "Failed to install Actionlint, please check your package installer or manually install it"
 
 def test_run_actionlint_installed(monkeypatch, rule):
     def mock_check_actionlint(*args, **kwargs):
