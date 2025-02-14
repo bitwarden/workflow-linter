@@ -1,8 +1,7 @@
-name: Approved Actions Operations
-run-name: ${{ input.operation }} Approved Actions
+name: Approved actions operations
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       operation:
         description: 'Operation to perform. ex: update, add'
@@ -12,10 +11,12 @@ on:
         description: 'Single action to add. ex: actions/checkout'
         required: false
         type: string
+  schedule:
+  - cron: '0 0 1 * *'
 
 jobs:
-  actions-update:
-    name: "Update Approved Actions"
+  actions-operation:
+    name: "Approved actions operations"
     runs-on: ubuntu-24.04
     steps:
       - name: Login to Azure - CI Subscription
@@ -56,7 +57,7 @@ jobs:
         run: python -m pip install --upgrade bitwarden_workflow_linter
 
       - name: Create Branch
-        if: ${{ inputs.operation == 'update' }}
+        if: ${{ github.events_name == 'schedule' }} || ${{ inputs.operation == 'update' }}
         id: create-branch
         run: |
           NAME="update-actions-$(date +'%Y%m%d-%H%M%S')"
@@ -74,7 +75,7 @@ jobs:
           echo "name=$NAME" >> $GITHUB_OUTPUT
 
       - name: Run bwwl update
-        if: ${{ inputs.operation == 'update' }}
+        if: ${{ github.events_name == 'schedule' }} || ${{ inputs.operation == 'update' }}
         run: bwwl actions update -o src/bitwarden_workflow_linter/default_actions.json
 
       - name: Run bwwl update
@@ -84,9 +85,8 @@ jobs:
       - name: Commit changes
         env:
           _PR_BRANCH: ${{ steps.create-branch.outputs.name }}
-          _OP: ${{ inputs.operation }}
         run: |
-          git commit -m "${{ env._OP }} approved actions" -a
+          git commit -m "update approved actions" -a
           git push origin $_PR_BRANCH
 
       - name: Generate GH App token
@@ -102,8 +102,7 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           _PR_BRANCH: ${{ steps.create-branch.outputs.name }}
-          _TITLE: "bwwl Update/Add Approved Actions"
-          _OP: ${{ inputs.operation }}
+          _TITLE: "Update/Add bwwl approved actions"
         run: |
           PR_URL=$(gh pr create --title "$_TITLE" \
             --base "main" \
@@ -119,14 +118,5 @@ jobs:
               - [ ] Other
 
               ## Description
-              - This PR ${{ env._OP }}s to the approved actions for the Bitwarden Workflow Linter.")
+              - This PR updates the approved actions for the Bitwarden Workflow Linter.")
           echo "pr_number=${PR_URL##*/}" >> $GITHUB_OUTPUT
-
-      - name: Approve and Merge PR
-        if: ${{ steps.create-pr.outcome == 'success' }}
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          _PR_NUMBER: ${{ steps.create-pr.outputs.pr_number }}
-        run: |
-          gh pr review $_PR_NUMBER --approve
-          gh pr merge $_PR_NUMBER --squash --auto --delete-branch
