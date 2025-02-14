@@ -69,7 +69,7 @@ jobs:
         #   run: bwwl lint -f .github/workflows
 
         - name: Python lint
-          run: python src/bitwarden_workflow_linter ".github/workflows"
+          run: python src/bitwarden_workflow_linter/cli.py".github/workflows"
           shell: bash
 
         # - name: YAML lint
