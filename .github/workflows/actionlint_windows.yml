@@ -21,6 +21,7 @@ jobs:
           uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
           with:
             python-version-file: ".python-version"
+            PYTHONDONTWRITEBYTECODE: "1" 
 
         # - name: Install actionlint
         #   run: |
@@ -30,7 +31,7 @@ jobs:
           run: |
             python -m pip install --upgrade pip
             pip install pipenv
-            PYTHONDONTWRITEBYTECODE=1 pipenv install --dev
+            pipenv install --dev
 
         # - name: Get workflow list
         #   id: workflow-list
