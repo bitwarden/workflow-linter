@@ -20,11 +20,7 @@ def install_actionlint(platform_system: str, version: str) -> Tuple[bool, str]:
     if platform_system.startswith("Linux"):
         return install_actionlint_source(error, version)
     elif platform_system == "Darwin":
-        try:
-            subprocess.run(["brew", "install", "actionlint"], check=True) #homebrew does not have previous versions of actionlint available
-            return True, ""
-        except (FileNotFoundError, subprocess.CalledProcessError):
-            return False, f"{error} : check Brew installation"
+        return install_actionlint_source(error, version) # Homebrew does not maintain previous versions of Actionlint
     elif platform_system.startswith("Win"):
         try:
             print(f"Version is {version}")
