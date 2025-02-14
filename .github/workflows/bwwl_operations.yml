@@ -78,7 +78,7 @@ jobs:
         if: ${{ github.events_name == 'schedule' }} || ${{ inputs.operation == 'update' }}
         run: bwwl actions update -o src/bitwarden_workflow_linter/default_actions.json
 
-      - name: Run bwwl update
+      - name: Run bwwl add
         if: ${{ inputs.operation == 'add' }}
         run: bwwl actions add -o src/bitwarden_workflow_linter/default_actions.json ${{ inputs.action }}
 
@@ -101,7 +101,7 @@ jobs:
           git push origin $_PR_BRANCH
 
       - name: Generate GH App token
-        if:
+        if: ${{ steps.new-changes.outputs.new_changes == 'TRUE' }}
         uses: actions/create-github-app-token@c1a285145b9d317df6ced56c09f525b5c2b6f755 # v1.11.1
         id: app-token
         with:
