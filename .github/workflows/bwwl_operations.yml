@@ -18,7 +18,13 @@ jobs:
   actions-operation:
     name: "Approved actions operations"
     runs-on: ubuntu-24.04
+    env:
+      _ACTION: ${{ inputs.action }}
     steps:
+      -  name: Check for action input
+         if: ${{ inputs.operation == 'add' && !env._ACTION }}
+         run: echo "Action input is required for operation 'add'" && exit 1
+
       - name: Login to Azure - CI Subscription
         uses: Azure/login@e15b166166a8746d1a47596803bd8c1b595455cf # v1.6.0
         with:
@@ -67,8 +73,6 @@ jobs:
       - name: Create Branch
         if: ${{ inputs.operation == 'add' }}
         id: create-branch
-        env:
-          _ACTION: ${{ inputs.action }}
         run: |
           NAME= "add-action-$_ACTION"
           git switch -c $NAME
@@ -80,7 +84,7 @@ jobs:
 
       - name: Run bwwl add
         if: ${{ inputs.operation == 'add' }}
-        run: bwwl actions add -o src/bitwarden_workflow_linter/default_actions.json ${{ inputs.action }}
+        run: bwwl actions add -o src/bitwarden_workflow_linter/default_actions.json "$_ACTION"
 
       - name: Check for changes to commit
         id: new-changes
@@ -98,7 +102,7 @@ jobs:
           _PR_BRANCH: ${{ steps.create-branch.outputs.name }}
         run: |
           git commit -m "Update approved actions" -a
-          git push origin $_PR_BRANCH
+          git push origin "$_PR_BRANCH"
 
       - name: Generate GH App token
         if: ${{ steps.new-changes.outputs.new_changes == 'TRUE' }}
