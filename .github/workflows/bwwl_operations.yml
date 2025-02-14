@@ -82,14 +82,26 @@ jobs:
         if: ${{ inputs.operation == 'add' }}
         run: bwwl actions add -o src/bitwarden_workflow_linter/default_actions.json ${{ inputs.action }}
 
+      - name: Check for changes to commit
+        id: new-changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "new_changes=TRUE" >> $GITHUB_OUTPUT
+          else
+            echo "new_changes=FALSE" >> $GITHUB_OUTPUT
+            echo "No changes to commit!";
+          fi
+
       - name: Commit changes
+        if: ${{ steps.new-changes.outputs.new_changes == 'TRUE' }}
         env:
           _PR_BRANCH: ${{ steps.create-branch.outputs.name }}
         run: |
-          git commit -m "update approved actions" -a
+          git commit -m "Update approved actions" -a
           git push origin $_PR_BRANCH
 
       - name: Generate GH App token
+        if:
         uses: actions/create-github-app-token@c1a285145b9d317df6ced56c09f525b5c2b6f755 # v1.11.1
         id: app-token
         with:
@@ -98,6 +110,7 @@ jobs:
           owner: ${{ github.repository_owner }}
 
       - name: Create PR
+        if: ${{ steps.new-changes.outputs.new_changes == 'TRUE' }}
         id: create-pr
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
