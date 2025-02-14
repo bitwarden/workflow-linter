@@ -51,7 +51,7 @@ jobs:
         #     workflows: ${{ steps.workflow-list.outputs.workflow-list }}
           
         - name: Install bwwl binary
-          run: python -m pip install --upgrade src/bitwarden_workflow_linter
+          run: python -m pip install --upgrade .
 
         - name: Lint
           run: bwwl lint -f .github/workflows
