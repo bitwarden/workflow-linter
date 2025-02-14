@@ -14,7 +14,6 @@ from ..utils import LintLevels, Settings
 def install_actionlint(platform_system: str, version: str) -> Tuple[bool, str]:
     """If actionlint is not installed, detects OS platform
     and installs actionlint"""
-    print("reached install")
 
     error = f"An error occurred when installing Actionlint on {platform_system}"
     if platform_system.startswith("Linux"):
@@ -23,13 +22,11 @@ def install_actionlint(platform_system: str, version: str) -> Tuple[bool, str]:
         return install_actionlint_source(error, version) # Homebrew does not maintain previous versions of Actionlint
     elif platform_system.startswith("Win"):
         try:
-            print(f"Version is {version}")
             subprocess.run(["choco", "install", "actionlint", "-y", f"--version='{version}'"], check=True)
             return True, ""
         except (FileNotFoundError, subprocess.CalledProcessError):
             return False, f"{error} : check Choco installation"
     return False, error
-
 
 def install_actionlint_source(error, version) -> Tuple[bool, str]:
     """Install Actionlint Binary from provided script"""
@@ -47,7 +44,6 @@ def install_actionlint_source(error, version) -> Tuple[bool, str]:
 
 def check_actionlint(platform_system: str, version: str) -> Tuple[bool, str]:
     """Check if the actionlint is in the system's PATH."""
-    print("in check_actionlint")
     try:
         subprocess.run(
             ["actionlint", "--version"],
