@@ -164,6 +164,8 @@ two empty lines between each job)
 To activate a rule after implementing it, add it to `settings.yaml` in the project's base folder
 and `src/bitwarden_workflow_linter/default_settings.yaml` to make the rule default
 
+Before creating a new rule please read the [Workflow linter rule rollout process](./RULE_ROLLOUT.md) document in which you'll find the process for rolling out new workflow linter rules.
+
 ### To-Do
 
 -   [ ] Add Rule to assert correct format for single line run
