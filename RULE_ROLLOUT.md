@@ -40,3 +40,4 @@ Change the rule to the ERROR level.
 At the end of the grace period, the new rule is transitioned to an error-level one by creating a PR in the workflow linter repository.
 
 A major version bump should be released by adding the `version:major` label to the PR. Raising the rule to the error level is a breaking change that requires teams to comply with it to avoid workflow linter check failures.
+An announcement is made to the `#team-eng` Slack channel as a follow-up on the same thread where the original announcement was made, with the `Also sent to #team-eng channel` checkbox checked, that the level was changed to an error level.
