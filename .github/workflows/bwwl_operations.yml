@@ -99,10 +99,10 @@ jobs:
       - name: Commit changes
         if: ${{ steps.new-changes.outputs.new_changes == 'TRUE' }}
         env:
-          _PR_BRANCH: ${{ steps.create-branch.outputs.name }}
+          PR_BRANCH: ${{ steps.create-branch.outputs.name }}
         run: |
           git commit -m "Update approved actions" -a
-          git push origin "$_PR_BRANCH"
+          git push origin "$PR_BRANCH"
 
       - name: Generate GH App token
         if: ${{ steps.new-changes.outputs.new_changes == 'TRUE' }}
