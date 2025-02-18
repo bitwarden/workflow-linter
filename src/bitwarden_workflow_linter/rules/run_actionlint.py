@@ -21,8 +21,6 @@ def install_actionlint(platform_system: str) -> Tuple[bool, str]:
         return install_actionlint_source(error)
     elif platform_system == "Darwin":
         try:
-
-            return install_actionlint_source(error)
             subprocess.run(["brew", "install", "actionlint"], check=True)
             return True, ""
         except (FileNotFoundError, subprocess.CalledProcessError):
