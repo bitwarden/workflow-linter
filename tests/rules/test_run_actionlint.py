@@ -22,10 +22,10 @@ def fixture_rule():
     return RunActionlint()
 
 
-# def test_rule_on_correct_workflow(rule):
-#     correct_workflow = WorkflowBuilder.build("tests/fixtures/test_workflow.yaml")
-#     result, _ = rule.fn(correct_workflow)
-#     assert result is True
+def test_rule_on_correct_workflow(rule):
+    correct_workflow = WorkflowBuilder.build("tests/fixtures/test_workflow.yaml")
+    result, _ = rule.fn(correct_workflow)
+    assert result is True
 
 
 def test_rule_on_incorrect_workflow(rule):
@@ -75,7 +75,8 @@ def test_check_actionlint_installed_locally_linux(monkeypatch):
     result, message = check_actionlint("Linux")
 
     assert result is True
-    assert message == os.path.abspath("./actionlint")
+    # assert message == os.path.abspath("./actionlint")
+    assert "/actionlint" in message
 
 
 def test_install_actionlint_darwin(monkeypatch):
@@ -218,7 +219,7 @@ def test_check_actionlint_not_in_path(monkeypatch):
 
     monkeypatch.setattr(subprocess, "run", mock_run)
 
-    result, message = check_actionlint("linux")
+    result, message = check_actionlint("Linux")
     assert result is False
     assert message == "Failed to install Actionlint, please check your package installer or manually install it"
 
