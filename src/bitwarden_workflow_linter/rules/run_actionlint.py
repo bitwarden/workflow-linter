@@ -21,6 +21,8 @@ def install_actionlint(platform_system: str) -> Tuple[bool, str]:
         return install_actionlint_source(error)
     elif platform_system == "Darwin":
         try:
+
+            return install_actionlint_source(error)
             subprocess.run(["brew", "install", "actionlint"], check=True)
             return True, ""
         except (FileNotFoundError, subprocess.CalledProcessError):
@@ -65,8 +67,8 @@ def check_actionlint(platform_system: str) -> Tuple[bool, str]:
 please check your package installer or manually install it",
         )
     except FileNotFoundError:
-        if os.system.exists("./actionlint"):
-            return True, os.path.abspath("actionlint")
+        if os.path.exists("./actionlint"):
+            return True, os.path.abspath("./actionlint")
         else:
             return install_actionlint(platform_system)
 
@@ -90,7 +92,7 @@ class RunActionlint(Rule):
         if installed:
             if location:
                 result = subprocess.run(
-                    [location + "/actionlint", obj.filename],
+                    [location, obj.filename],
                     capture_output=True,
                     text=True,
                     check=False,
