@@ -2,6 +2,7 @@
 
 import pytest
 import subprocess
+import os
 
 from ruamel.yaml import YAML
 
@@ -134,7 +135,7 @@ def test_check_actionlint_installed_locally(monkeypatch):
     result, message = check_actionlint("linux")
 
     assert result is True
-    assert message == "."
+    assert message == os.path.abspath("./actionlint")
 
 def test_check_actionlint_not_in_path(monkeypatch):
     def mock_run(*args, **kwargs):
