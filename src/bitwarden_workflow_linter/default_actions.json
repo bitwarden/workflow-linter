@@ -121,8 +121,8 @@
   },
   "actions/upload-artifact": {
     "name": "actions/upload-artifact",
-    "sha": "b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882",
-    "version": "v4.4.3"
+    "sha": "65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08",
+    "version": "v4.6.0"
   },
   "actions/upload-pages-artifact": {
     "name": "actions/upload-pages-artifact",
@@ -221,8 +221,8 @@
   },
   "docker/build-push-action": {
     "name": "docker/build-push-action",
-    "sha": "48aba3b46d1b1fec4febb7c5d0c644b249a11355",
-    "version": "v6.10.0"
+    "sha": "67a2d409c0a876cbe6b11854e3e25193efe4e62d",
+    "version": "v6.12.0"
   },
   "docker/login-action": {
     "name": "docker/login-action",
@@ -264,10 +264,20 @@
     "sha": "3096afedf9873361b2b2f65e1445b13272c83eb8",
     "version": "codeql-bundle-v2.20.0"
   },
+  "goto-bus-stop/setup-zig": {
+    "name": "goto-bus-stop/setup-zig",
+    "sha": "abea47f85e598557f500fa1fd2ab7464fcb39406",
+    "version": "v2.2.1"
+  },
   "gradle/actions": {
     "name": "gradle/actions",
     "sha": "cc4fc85e6b35bafd578d5ffbc76a5518407e1af0",
     "version": "v4.2.1"
+  },
+  "gradle/wrapper-validation-action": {
+    "name": "gradle/wrapper-validation-action",
+    "sha": "f9c9c575b8b21b6485636a91ffecd10e558c62f6",
+    "version": "v3.5.0"
   },
   "hashicorp/setup-packer": {
     "name": "hashicorp/setup-packer",
@@ -324,6 +334,11 @@
     "sha": "276d7966e389d888f011539a86c8920025ea0626",
     "version": "v3.0.1"
   },
+  "PyO3/maturin-action": {
+    "name": "PyO3/maturin-action",
+    "sha": "ea5bac0f1ccd0ab11c805e2b804bfcb65dac2eab",
+    "version": "v1.45.0"
+  },
   "reactivecircus/android-emulator-runner": {
     "name": "reactivecircus/android-emulator-runner",
     "sha": "62dbb605bba737720e10b196cb4220d374026a6d",
@@ -338,6 +353,11 @@
     "name": "samuelmeuli/action-snapcraft",
     "sha": "d33c176a9b784876d966f80fb1b461808edc0641",
     "version": "v2.1.1"
+  },
+  "shivammathur/setup-php": {
+    "name": "shivammathur/setup-php",
+    "sha": "c541c155eee45413f5b09a52248675b1a2575231",
+    "version": "2.31.1"
   },
   "sigstore/cosign-installer": {
     "name": "sigstore/cosign-installer",

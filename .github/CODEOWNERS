@@ -6,3 +6,6 @@
 
 # Default file owners
 * @bitwarden/dept-bre
+
+# App-sec owns default_actions file
+src/bitwarden_workflow_linter/default_actions.json @bitwarden/team-appsec

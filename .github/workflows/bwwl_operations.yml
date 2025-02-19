@@ -1,14 +1,30 @@
-name: Update Approved Actions
+name: Approved actions operations
 
 on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: 'Operation to perform. ex: update, add'
+        required: true
+        type: string
+      action:
+        description: 'Single action to add. ex: actions/checkout'
+        required: false
+        type: string
   schedule:
-  - cron: '0 0 */14 * *'
+  - cron: '0 0 1 * *'
 
 jobs:
-  actions-update:
-    name: "Update Approved Actions"
+  actions-operation:
+    name: "Approved actions operations"
     runs-on: ubuntu-24.04
+    env:
+      _ACTION: ${{ inputs.action }}
     steps:
+      -  name: Check for action input
+         if: ${{ inputs.operation == 'add' && !env._ACTION }}
+         run: echo "Action input is required for operation 'add'" && exit 1
+
       - name: Login to Azure - CI Subscription
         uses: Azure/login@e15b166166a8746d1a47596803bd8c1b595455cf # v1.6.0
         with:
@@ -21,6 +37,9 @@ jobs:
           keyvault: "bitwarden-ci"
           secrets: "github-gpg-private-key,
             github-gpg-private-key-passphrase"
+
+      - name: Checkout Branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@cb9bde2e2525e640591a934b1fd28eef1dcaf5e5 # v6.2.0
@@ -35,11 +54,8 @@ jobs:
           git config --local user.email "106330231+bitwarden-devops-bot@users.noreply.github.com"
           git config --local user.name "bitwarden-devops-bot"
 
-      - name: Checkout Branch
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-
       - name: Set up Python 3.11
-        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
         with:
           python-version: "3.11"
 
@@ -47,16 +63,30 @@ jobs:
         run: python -m pip install --upgrade bitwarden_workflow_linter
 
       - name: Create Branch
+        if: ${{ github.events_name == 'schedule' }} || ${{ inputs.operation == 'update' }}
         id: create-branch
         run: |
           NAME="update-actions-$(date +'%Y%m%d-%H%M%S')"
           git switch -c $NAME
           echo "name=$NAME" >> $GITHUB_OUTPUT
 
+      - name: Create Branch
+        if: ${{ inputs.operation == 'add' }}
+        id: create-branch
+        run: |
+          NAME= "add-action-$_ACTION"
+          git switch -c $NAME
+          echo "name=$NAME" >> $GITHUB_OUTPUT
+
       - name: Run bwwl update
+        if: ${{ github.events_name == 'schedule' }} || ${{ inputs.operation == 'update' }}
         run: bwwl actions update -o src/bitwarden_workflow_linter/default_actions.json
 
-      - name: Check if there are changes to commit
+      - name: Run bwwl add
+        if: ${{ inputs.operation == 'add' }}
+        run: bwwl actions add -o src/bitwarden_workflow_linter/default_actions.json "$_ACTION"
+
+      - name: Check for changes to commit
         id: new-changes
         run: |
           if [ -n "$(git status --porcelain)" ]; then
@@ -67,16 +97,16 @@ jobs:
           fi
 
       - name: Commit changes
-        if: steps.new-changes.outputs.new_changes == 'TRUE'
+        if: ${{ steps.new-changes.outputs.new_changes == 'TRUE' }}
         env:
-          PR_BRANCH: ${{ steps.create-branch.outputs.name }}
+          _PR_BRANCH: ${{ steps.create-branch.outputs.name }}
         run: |
           git commit -m "Update approved actions" -a
-          git push origin $PR_BRANCH
+          git push origin "$_PR_BRANCH"
 
       - name: Generate GH App token
-        if: steps.new-changes.outputs.new_changes == 'TRUE'
-        uses: actions/create-github-app-token@c1a285145b9d317df6ced56c09f525b5c2b6f755 # v1.11.1
+        if: ${{ steps.new-changes.outputs.new_changes == 'TRUE' }}
+        uses: actions/create-github-app-token@67e27a7eb7db372a1c61a7f9bdab8699e9ee57f7 # v1.11.3
         id: app-token
         with:
           app-id: ${{ secrets.GH_APP_ID }}
@@ -84,16 +114,16 @@ jobs:
           owner: ${{ github.repository_owner }}
 
       - name: Create PR
-        if: steps.new-changes.outputs.new_changes == 'TRUE'
+        if: ${{ steps.new-changes.outputs.new_changes == 'TRUE' }}
         id: create-pr
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          PR_BRANCH: ${{ steps.create-branch.outputs.name }}
-          TITLE: "Update bwwl Approved Actions"
+          _PR_BRANCH: ${{ steps.create-branch.outputs.name }}
+          _TITLE: "Update/Add bwwl approved actions"
         run: |
-          PR_URL=$(gh pr create --title "$TITLE" \
+          PR_URL=$(gh pr create --title "$_TITLE" \
             --base "main" \
-            --head "$PR_BRANCH" \
+            --head "$_PR_BRANCH" \
             --label "version:patch" \
             --label "automated pr" \
             --body "
@@ -107,12 +137,3 @@ jobs:
               ## Description
               - This PR updates the approved actions for the Bitwarden Workflow Linter.")
           echo "pr_number=${PR_URL##*/}" >> $GITHUB_OUTPUT
-
-      - name: Approve and Merge PR
-        if: ${{ steps.create-pr.outcome == 'success' }}
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          PR_NUMBER: ${{ steps.create-pr.outputs.pr_number }}
-        run: |
-          gh pr review $PR_NUMBER --approve
-          gh pr merge $PR_NUMBER --squash --auto --delete-branch

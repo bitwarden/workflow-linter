@@ -22,16 +22,18 @@ class RuleJobEnvironmentPrefix(Rule):
     visible when debugging a shell Step.
     """
 
-    def __init__(self, settings: Optional[Settings] = None) -> None:
+    def __init__(self, settings: Optional[Settings] = None, lint_level: Optional[LintLevels] = LintLevels.NONE) -> None:
         """RuleJobEnvironmentPrefix constructor to override the Rule class.
 
         Args:
           settings:
             A Settings object that contains any default, overridden, or custom settings
             required anywhere in the application.
+          lint_level:
+            The LintLevels enum value to determine the severity of the rule.
         """
         self.message = "Job environment vars should start with an underscore:"
-        self.on_fail = LintLevels.ERROR
+        self.on_fail = lint_level
         self.compatibility = [Job]
         self.settings = settings
 
