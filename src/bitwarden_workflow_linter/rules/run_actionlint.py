@@ -39,11 +39,17 @@ def install_actionlint_source(error) -> Tuple[bool, str]:
     url = "https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash"
     version = "1.6.17"
     request = urllib.request.urlopen(url)
+    cwd = os.cwd()
     with open("download-actionlint.bash", "wb+") as fp:
         fp.write(request.read())
     try:
         subprocess.run(["bash", "download-actionlint.bash", version], check=True)
-        return True, os.getcwd()
+        if "runner" in cwd:
+            subprocess.run(
+                ["git update-index --chmod=+x ./actionlint"],
+                shell=True
+            )
+        return True, cwd
     except (FileNotFoundError, subprocess.CalledProcessError):
         return False, error
 
