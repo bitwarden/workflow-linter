@@ -92,6 +92,7 @@ class RunActionlint(Rule):
         installed, location = check_actionlint(platform.system())
         if installed:
             if location:
+                print(location)
                 # Option1
                 # result = subprocess.run(
                 #     [location + "/actionlint", obj.filename],
