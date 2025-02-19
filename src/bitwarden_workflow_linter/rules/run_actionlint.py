@@ -64,9 +64,15 @@ def check_actionlint(platform_system: str) -> Tuple[bool, str]:
             "Failed to install Actionlint, \
 please check your package installer or manually install it",
         )
+    # Option1
     except FileNotFoundError:
         return install_actionlint(platform_system)
-
+    # Option2
+    # except FileNotFoundError:
+    #     if os.path.exists("./actionlint"):
+    #         return True, os.path.abspath("./actionlint")
+    #     else:
+    #         return install_actionlint(platform_system)
 
 class RunActionlint(Rule):
     """Rule to run actionlint as part of workflow linter V2."""
@@ -86,12 +92,20 @@ class RunActionlint(Rule):
         installed, location = check_actionlint(platform.system())
         if installed:
             if location:
+                # Option1
                 result = subprocess.run(
                     [location + "/actionlint", obj.filename],
                     capture_output=True,
                     text=True,
                     check=False,
                 )
+                # Option2
+                # result = subprocess.run(
+                #     [location, obj.filename],
+                #     capture_output=True,
+                #     text=True,
+                #     check=False,
+                # )
             else:
                 result = subprocess.run(
                     ["actionlint", obj.filename],
