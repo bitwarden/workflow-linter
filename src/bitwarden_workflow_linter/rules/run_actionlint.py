@@ -100,8 +100,15 @@ class RunActionlint(Rule):
                 #     check=False,
                 # )
                 # Option2
+                # result = subprocess.run(
+                #     [location, obj.filename],
+                #     capture_output=True,
+                #     text=True,
+                #     check=False,
+                # )
+                # option3
                 result = subprocess.run(
-                    [location, obj.filename],
+                    ["./actionlint", obj.filename],
                     capture_output=True,
                     text=True,
                     check=False,
