@@ -39,7 +39,6 @@ def install_actionlint_source(error) -> Tuple[bool, str]:
     url = "https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash"
     version = "1.6.17"
     request = urllib.request.urlopen(url)
-    cwd = os.getcwd()
     with open("download-actionlint.bash", "wb+") as fp:
         fp.write(request.read())
     try:
