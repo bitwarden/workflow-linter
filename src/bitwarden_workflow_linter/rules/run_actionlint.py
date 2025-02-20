@@ -39,11 +39,17 @@ def install_actionlint_source(error) -> Tuple[bool, str]:
     url = "https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash"
     version = "1.6.17"
     request = urllib.request.urlopen(url)
+    cwd = os.getcwd()
     with open("download-actionlint.bash", "wb+") as fp:
         fp.write(request.read())
     try:
         subprocess.run(["bash", "download-actionlint.bash", version], check=True)
-        return True, os.getcwd()
+        if "runner" in cwd:
+            subprocess.run(
+                ["git update-index --chmod=+x ./actionlint"],
+                shell=True
+            )
+        return True, "./actionlint"
     except (FileNotFoundError, subprocess.CalledProcessError):
         return False, error
 
@@ -65,18 +71,10 @@ def check_actionlint(platform_system: str) -> Tuple[bool, str]:
 please check your package installer or manually install it",
         )
     except FileNotFoundError:
-        is_local = subprocess.run(
-                    ["ls | grep '^actionlint'"],
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                    shell=True
-                )
-        if is_local.stdout:
-            return True, "."
+        if os.path.exists("./actionlint"):
+            return True, "./actionlint"
         else:
             return install_actionlint(platform_system)
-
 
 class RunActionlint(Rule):
     """Rule to run actionlint as part of workflow linter V2."""
@@ -97,7 +95,7 @@ class RunActionlint(Rule):
         if installed:
             if location:
                 result = subprocess.run(
-                    [location + "/actionlint", obj.filename],
+                    [location, obj.filename],
                     capture_output=True,
                     text=True,
                     check=False,
@@ -107,7 +105,7 @@ class RunActionlint(Rule):
                     ["actionlint", obj.filename],
                     capture_output=True,
                     text=True,
-                    check=False
+                    check=False,
                 )
             if result.returncode == 1:
                 return False, result.stdout
