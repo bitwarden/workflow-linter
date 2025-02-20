@@ -76,7 +76,7 @@ please check your package installer or manually install it",
     # Option2
     except FileNotFoundError:
         if os.path.exists("./actionlint"):
-            return True, os.path.abspath("./actionlint")
+            return True, "./actionlint"
         else:
             return install_actionlint(platform_system)
 
