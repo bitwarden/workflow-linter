@@ -49,7 +49,7 @@ def install_actionlint_source(error) -> Tuple[bool, str]:
                 ["git update-index --chmod=+x ./actionlint"],
                 shell=True
             )
-        return True, cwd
+        return True, "./actionlint"
     except (FileNotFoundError, subprocess.CalledProcessError):
         return False, error
 
@@ -98,6 +98,7 @@ class RunActionlint(Rule):
         installed, location = check_actionlint(platform.system())
         if installed:
             if location:
+                print("Location is ", location)
                 # Option1
                 # result = subprocess.run(
                 #     [location + "/actionlint", obj.filename],
@@ -106,19 +107,19 @@ class RunActionlint(Rule):
                 #     check=False,
                 # )
                 # Option2
-                # result = subprocess.run(
-                #     [location, obj.filename],
-                #     capture_output=True,
-                #     text=True,
-                #     check=False,
-                # )
-                # option3
                 result = subprocess.run(
-                    ["./actionlint", obj.filename],
+                    [location, obj.filename],
                     capture_output=True,
                     text=True,
                     check=False,
                 )
+                # option3
+                # result = subprocess.run(
+                #     ["./actionlint", obj.filename],
+                #     capture_output=True,
+                #     text=True,
+                #     check=False,
+                # )
             else:
                 result = subprocess.run(
                     ["actionlint", obj.filename],
