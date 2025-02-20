@@ -22,7 +22,6 @@ jobs:
             run: |
                 WORKFLOW_LIST=$(ls .github/workflows | xargs -I {} echo -n ".github/workflows/examples/{} ")
                 echo "workflow-list=$WORKFLOW_LIST" >> $GITHUB_OUTPUT
-                - name: Lint Workflow
 
           - name: Lint examples
             uses: bitwarden/gh-actions/lint-workflow@main
