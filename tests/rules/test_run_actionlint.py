@@ -213,7 +213,7 @@ def test_check_actionlint_installed_locally_linux(monkeypatch):
     result, message = check_actionlint("Linux")
 
     assert result is True
-    assert message == os.path.abspath("./actionlint")
+    assert message == "./actionlint"
 
 def test_check_actionlint_installed_darwin(monkeypatch):
     def mock_run(*args, **kwargs):
@@ -250,7 +250,7 @@ def test_check_actionlint_installed_locally_darwin(monkeypatch):
     result, message = check_actionlint("Darwin")
 
     assert result is True
-    assert message == os.path.abspath("./actionlint")
+    assert message == "./actionlint"
 def test_check_actionlint_installed_windows(monkeypatch):
     def mock_run(*args, **kwargs):
         return subprocess.CompletedProcess(args, 0)
