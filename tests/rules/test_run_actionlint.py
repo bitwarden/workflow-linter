@@ -286,7 +286,7 @@ def test_check_actionlint_installed_locally_windows(monkeypatch):
     result, message = check_actionlint("Windows")
 
     assert result is True
-    assert message == os.path.abspath("./actionlint")
+    assert message == "./actionlint"
 
 
 def test_check_actionlint_not_in_path(monkeypatch):
