@@ -59,20 +59,10 @@ def check_actionlint(platform_system: str, version: str) -> Tuple[bool, str]:
 please check your package installer or manually install it",
         )
     except FileNotFoundError:
-        is_local = subprocess.run(
-                    ["ls | grep '^actionlint'"],
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                    shell=True
-                )
-        if is_local.stdout:
-            return True, "."
+        if os.path.exists("./actionlint"):
+            return True, "./actionlint"
         else:
-            if os.path.exists("./actionlint"):
-                return True, "./actionlint"
-            else:
-                return install_actionlint(platform_system)
+            return install_actionlint(platform_system)
 
 
 class RunActionlint(Rule):
