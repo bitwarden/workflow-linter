@@ -20,7 +20,7 @@ jobs:
           - name: Get workflow list
             id: workflow-list
             run: |
-                WORKFLOW_LIST=$(find . -maxdepth 1 -type f .github/workflows/examples | xargs -I {} echo -n ".github/workflows/examples/{} ")
+                WORKFLOW_LIST=$(find .github/workflows/examples -maxdepth 1 -type f | xargs -I {} echo -n ".github/workflows/examples/{} ")
                 echo "workflow-list=$WORKFLOW_LIST" >> $GITHUB_OUTPUT
 
           - name: Lint examples
