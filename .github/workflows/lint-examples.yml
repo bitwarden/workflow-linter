@@ -2,8 +2,8 @@ name: Lint Example Workflows
 
 on:
     pull_request:
-      paths:
-        - .github/workflows/**
+      branches:
+        - "main"
     merge_group:
       types: [checks_requested]
     workflow_call:
@@ -24,6 +24,12 @@ jobs:
                 echo "workflow-list=$WORKFLOW_LIST" >> $GITHUB_OUTPUT
 
           - name: Lint examples
+            id: lint-examples
             uses: bitwarden/gh-actions/lint-workflow@main
             with:
                 workflows: ${{ steps.workflow-list.outputs.workflow-list }}
+
+          - name: Failure message
+            if: ${{ failure() && steps.lint-examples.conclusion == 'failure' }}
+            run: echo "And NOW this step will run"
+  
