@@ -5,9 +5,9 @@
 # The Scan Workflow enables you to trigger SAST and quality scans directly
 # From the GitHub workflow.
 
-names: Scan
+name: Scan
 
-on:
+ons:
   # Controls when the workflow will run
 
   # Can use other triggers such as multiple events, activity types and fiters:
