@@ -29,7 +29,7 @@ jobs:
             with:
                 workflows: ${{ steps.workflow-list.outputs.workflow-list }}
 
-        #   - name: Failure message
-        #     if: ${{ failure() && steps.lint-examples.conclusion == 'failure' }}
-        #     run: echo "And NOW this step will run"
+          - name: Failure message
+            if: ${{ failure() && steps.lint-examples.conclusion == 'failure' }}
+            run: echo "And NOW this step will run"
   
