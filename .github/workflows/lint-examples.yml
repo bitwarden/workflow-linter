@@ -27,4 +27,3 @@ jobs:
             uses: bitwarden/gh-actions/lint-workflow@main
             with:
                 workflows: ${{ steps.workflow-list.outputs.workflow-list }}
-        
