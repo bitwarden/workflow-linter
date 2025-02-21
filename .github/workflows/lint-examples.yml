@@ -31,5 +31,8 @@ jobs:
 
           - name: Failure message
             if: ${{ failure() && steps.lint-examples.conclusion == 'failure' }}
-            run: echo "And NOW this step will run"
+            run: |
+              echo "Changes to the workflow linter should include updating workflow \
+              examples in .github/workflows/examples directory"
+              exit 1
   
