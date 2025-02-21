@@ -1,5 +1,3 @@
----
-
 # Workflow templates are based on starter workflows provided by github at
 # https://github.com/actions/starter-workflows/tree/main and customized to
 # represent common practices used on Bitwarden repositories.
