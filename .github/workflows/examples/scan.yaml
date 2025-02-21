@@ -1,8 +1,8 @@
-# Workflow templates are based on starter workflows provided by github at 
-# https://github.com/actions/starter-workflows/tree/main and customized to 
+# Workflow templates are based on starter workflows provided by github at
+# https://github.com/actions/starter-workflows/tree/main and customized to
 # represent common practices used on Bitwarden repositories.
 
-# The Scan Workflow enables you to trigger SAST and quality scans directly 
+# The Scan Workflow enables you to trigger SAST and quality scans directly
 # From the GitHub workflow.
 
 name: Scan
@@ -10,7 +10,7 @@ name: Scan
 on:
 # Controls when the workflow will run
 
-# Can use other triggers such as multiple events, activity types and fiters: 
+# Can use other triggers such as multiple events, activity types and fiters:
 # https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#on
   workflow_dispatch: # When triggered manually
 
@@ -25,7 +25,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains the jobs "check-run", "sast", and "quality" 
+  # This workflow contains the jobs "check-run", "sast", and "quality"
   # This job is relatively simple and just imports a previously written action to be used in this workflow
   check-run: # You set this value with the name of the job you're describing
     name: Check PR run # Human readable descriptor
@@ -45,7 +45,7 @@ jobs:
     steps:
       - name: Check out repo
         # Always pin a public action version to a full git SHA.  Version pins are insecure and can introduce vulnerabilities into workflows.
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2  
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2 
         with: # Parameters specific to this action that need to be defined in order for the step to be completed
           ref: ${{  github.event.pull_request.head.sha }}
 
@@ -70,7 +70,7 @@ jobs:
         with:
           sarif_file: cx_result.sarif
 
-  quality: 
+  quality:
     name: Quality scan
     runs-on: ubuntu-22.04
     needs: check-run
