@@ -37,7 +37,7 @@ def install_actionlint_source(error, version) -> Tuple[bool, str]:
         fp.write(request.read())
     try:
         subprocess.run(["bash", "download-actionlint.bash", version], check=True)
-        return True, os.getcwd()
+        return True, "./actionlint"
     except (FileNotFoundError, subprocess.CalledProcessError):
         return False, error
 
@@ -69,7 +69,10 @@ please check your package installer or manually install it",
         if is_local.stdout:
             return True, "."
         else:
-            return install_actionlint(platform_system)
+            if os.path.exists("./actionlint"):
+                return True, "./actionlint"
+            else:
+                return install_actionlint(platform_system)
 
 
 class RunActionlint(Rule):
@@ -91,7 +94,7 @@ class RunActionlint(Rule):
         if installed:
             if location:
                 result = subprocess.run(
-                    [location + "/actionlint", obj.filename],
+                    [location, obj.filename],
                     capture_output=True,
                     text=True,
                     check=False,
