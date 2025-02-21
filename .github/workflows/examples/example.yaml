@@ -44,7 +44,7 @@ env:  # Environment variables set for this step but not accessible by all workfl
 jobs:  # A workflow run is made up of one or more jobs that can run sequentially or in parallel
   first-job:
     name: First Job Name
-    uses: ./.github/templates/workflow-templates/example-references/_version.yml  # Path to an existing github action
+    uses: ./.github/workflows/examples/example-references/_version.yml  # Path to an existing github action
     if: github.event.pull_request.draft == false  # prevent part of a job from running on a draft PR
     secrets: inherit  # When called by another workflow, pass all the calling workflow's secrets to the called workflow
     # "secrets" is only available for a reusable workflow call with "uses"
