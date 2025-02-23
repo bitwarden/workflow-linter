@@ -63,7 +63,7 @@ jobs:
         run: python -m pip install --upgrade bitwarden_workflow_linter
 
       - name: Create Branch
-        if: ${{ github.events_name == 'schedule' }} || ${{ inputs.operation == 'update' }}
+        if: ${{ github.events_name == 'schedule' || inputs.operation == 'update' }}
         run: |
           NAME="update-actions-$(date +'%Y%m%d-%H%M%S')"
           git switch -c $NAME
@@ -77,7 +77,7 @@ jobs:
           echo "BRANCH_NAME=$NAME" >> $GITHUB_ENV
 
       - name: Run bwwl update
-        if: ${{ github.events_name == 'schedule' }} || ${{ inputs.operation == 'update' }}
+        if: ${{ github.events_name == 'schedule' || inputs.operation == 'update' }}
         run: bwwl actions update -o src/bitwarden_workflow_linter/default_actions.json
 
       - name: Run bwwl add
