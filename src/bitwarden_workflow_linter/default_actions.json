@@ -24,6 +24,11 @@
     "sha": "fe7b79cd5ee1e45176fcad797de68ecaf3ca4814",
     "version": "v4.2.0"
   },
+  "PyO3/maturin-action": {
+    "name": "PyO3/maturin-action",
+    "sha": "ea5bac0f1ccd0ab11c805e2b804bfcb65dac2eab",
+    "version": "v1.45.0"
+  },
   "Swatinem/rust-cache": {
     "name": "Swatinem/rust-cache",
     "sha": "82a92a6e8fbeee089604da2575dc567ae9ddeaab",
@@ -333,11 +338,6 @@
     "name": "peter-evans/close-issue",
     "sha": "276d7966e389d888f011539a86c8920025ea0626",
     "version": "v3.0.1"
-  },
-  "PyO3/maturin-action": {
-    "name": "PyO3/maturin-action",
-    "sha": "ea5bac0f1ccd0ab11c805e2b804bfcb65dac2eab",
-    "version": "v1.45.0"
   },
   "reactivecircus/android-emulator-runner": {
     "name": "reactivecircus/android-emulator-runner",
