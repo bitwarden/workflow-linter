@@ -156,17 +156,14 @@ def test_failed_check_actionlint_installed_windows(monkeypatch, settings):
 
 # test_check_actionlint_installed_locally
 def test_check_actionlint_installed_locally_linux(monkeypatch, settings):
-    def mock_run(*args, **kwargs):
-        if "actionlint" in args[0]:
-            raise FileNotFoundError
-        else:
-            class MockProcess:
-                def __init__(self):
-                    self.stdout = "actionlint"
+    def mock_install_actionlint(*args, **kwargs):
+        return (True, "./actionlint")
 
-            return MockProcess()
+    def mock_run(*args, **kwargs):
+        raise subprocess.CalledProcessError(1, ['actionlint'])
 
     monkeypatch.setattr(subprocess, "run", mock_run)
+    monkeypatch.setattr('src.bitwarden_workflow_linter.rules.run_actionlint.install_actionlint_source', mock_install_actionlint)
 
     result, message = check_actionlint("Linux", settings.actionlint_version)
 
@@ -174,17 +171,14 @@ def test_check_actionlint_installed_locally_linux(monkeypatch, settings):
     assert message == "./actionlint"
 
 def test_check_actionlint_installed_locally_darwin(monkeypatch, settings):
-    def mock_run(*args, **kwargs):
-        if "actionlint" in args[0]:
-            raise FileNotFoundError
-        else:
-            class MockProcess:
-                def __init__(self):
-                    self.stdout = "actionlint"
+    def mock_install_actionlint(*args, **kwargs):
+        return (True, "./actionlint")
 
-            return MockProcess()
+    def mock_run(*args, **kwargs):
+        raise subprocess.CalledProcessError(1, ['actionlint'])
 
     monkeypatch.setattr(subprocess, "run", mock_run)
+    monkeypatch.setattr('src.bitwarden_workflow_linter.rules.run_actionlint.install_actionlint_source', mock_install_actionlint)
 
     result, message = check_actionlint("Darwin", settings.actionlint_version)
 
@@ -192,17 +186,14 @@ def test_check_actionlint_installed_locally_darwin(monkeypatch, settings):
     assert message == "./actionlint"
 
 def test_check_actionlint_installed_locally_windows(monkeypatch, settings):
-    def mock_run(*args, **kwargs):
-        if "actionlint" in args[0]:
-            raise FileNotFoundError
-        else:
-            class MockProcess:
-                def __init__(self):
-                    self.stdout = "actionlint"
+    def mock_install_actionlint(*args, **kwargs):
+        return (True, "./actionlint")
 
-            return MockProcess()
+    def mock_run(*args, **kwargs):
+        raise subprocess.CalledProcessError(1, ['actionlint'])
 
     monkeypatch.setattr(subprocess, "run", mock_run)
+    monkeypatch.setattr('src.bitwarden_workflow_linter.rules.run_actionlint.install_actionlint_source', mock_install_actionlint)
 
     result, message = check_actionlint("Windows", settings.actionlint_version)
 
