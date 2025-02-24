@@ -35,4 +35,3 @@ jobs:
               echo "Changes to the workflow linter should include updating workflow \
               examples in .github/workflows/examples directory"
               exit 1
-  
