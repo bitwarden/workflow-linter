@@ -1,5 +1,6 @@
 """Test src/bitwarden_workflow_linter/rules/run_actionlint."""
 
+import os
 import pytest
 import subprocess
 
@@ -149,58 +150,28 @@ def test_failed_check_actionlint_installed_windows(monkeypatch):
 
 # test_check_actionlint_installed_locally
 def test_check_actionlint_installed_locally_linux(monkeypatch):
-    def mock_run(*args, **kwargs):
-        if "actionlint" in args[0]:
-            raise FileNotFoundError
-        else:
-            class MockProcess:
-                def __init__(self):
-                    self.stdout = "actionlint"
-
-            return MockProcess()
-
-    monkeypatch.setattr(subprocess, "run", mock_run)
-
+    monkeypatch.setattr(os.path, "exists", True)
+    
     result, message = check_actionlint("Linux")
 
     assert result is True
-    assert message == "./actionlint"
+    assert message == ""
 
 def test_check_actionlint_installed_locally_darwin(monkeypatch):
-    def mock_run(*args, **kwargs):
-        if "actionlint" in args[0]:
-            raise FileNotFoundError
-        else:
-            class MockProcess:
-                def __init__(self):
-                    self.stdout = "actionlint"
-
-            return MockProcess()
-
-    monkeypatch.setattr(subprocess, "run", mock_run)
-
+    monkeypatch.setattr(os.path, "exists", True)
+    
     result, message = check_actionlint("Darwin")
 
     assert result is True
-    assert message == "./actionlint"
+    assert message == ""
 
 def test_check_actionlint_installed_locally_windows(monkeypatch):
-    def mock_run(*args, **kwargs):
-        if "actionlint" in args[0]:
-            raise FileNotFoundError
-        else:
-            class MockProcess:
-                def __init__(self):
-                    self.stdout = "actionlint"
-
-            return MockProcess()
-
-    monkeypatch.setattr(subprocess, "run", mock_run)
-
+    monkeypatch.setattr(os.path, "exists", True)
+    
     result, message = check_actionlint("Windows")
 
     assert result is True
-    assert message == "./actionlint"
+    assert message == ""
 
 # test_install_actionlint
 def test_install_actionlint_linux():

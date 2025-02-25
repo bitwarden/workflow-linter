@@ -42,7 +42,7 @@ def install_actionlint_source(error) -> Tuple[bool, str]:
     with open("download-actionlint.bash", "wb+") as fp:
         fp.write(request.read())
     try:
-        subprocess.run(["bash", "download-actionlint.bash", version], check=True)
+        subprocess.run(["bash", "download-actionlint.bash"], check=True)
         return True, "./actionlint"
     except (FileNotFoundError, subprocess.CalledProcessError):
         return False, error
@@ -57,10 +57,10 @@ def check_actionlint(platform_system: str) -> Tuple[bool, str]:
             stderr=subprocess.PIPE,
             check=True,
         )
-        if version in f"{installed}":
+        if installed:
             return True, ""
         else:
-            return install_actionlint(platform_system, version)
+            return install_actionlint(platform_system)
     except subprocess.CalledProcessError:
         return (
             False,
@@ -74,10 +74,10 @@ please check your package installer or manually install it",
             stderr=subprocess.PIPE,
             check=True,
             )
-        if version in f"{installed}":
+        if installed:
             return True, "./actionlint"
         else:
-            return install_actionlint(platform_system, version)
+            return install_actionlint(platform_system)
 class RunActionlint(Rule):
     """Rule to run actionlint as part of workflow linter V2."""
 
