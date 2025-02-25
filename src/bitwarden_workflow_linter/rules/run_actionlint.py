@@ -62,17 +62,19 @@ def check_actionlint(platform_system: str, version: str) -> Tuple[bool, str]:
 please check your package installer or manually install it",
         )
     except FileNotFoundError:
-        installed = subprocess.run(
+        try:
+            installed = subprocess.run(
             ["./actionlint", "--version"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             check=True,
             )
-        
-        if version in f"{installed}":
-            return True, "./actionlint"
-        else:
-            return install_actionlint(platform_system, version)
+            if version in f"{installed}":
+                return True, "./actionlint"
+            else:
+                return install_actionlint(platform_system, version)
+        except FileNotFoundError:
+                return install_actionlint(platform_system, version)
 
 class RunActionlint(Rule):
     """Rule to run actionlint as part of workflow linter V2."""
