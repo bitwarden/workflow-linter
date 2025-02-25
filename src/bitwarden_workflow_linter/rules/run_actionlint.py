@@ -62,7 +62,7 @@ please check your package installer or manually install it",
         if os.path.exists("./actionlint"):
             return True, "./actionlint"
         else:
-            return install_actionlint(platform_system)
+            return install_actionlint(platform_system, version)
 
 
 class RunActionlint(Rule):
