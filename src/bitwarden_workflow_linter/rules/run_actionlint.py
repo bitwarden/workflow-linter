@@ -42,7 +42,7 @@ def install_actionlint_source(error) -> Tuple[bool, str]:
     with open("download-actionlint.bash", "wb+") as fp:
         fp.write(request.read())
     try:
-        subprocess.run(["bash", "download-actionlint.bash"], check=True)
+        subprocess.run(["bash", "download-actionlint.bash", version], check=True)
         return True, "./actionlint"
     except (FileNotFoundError, subprocess.CalledProcessError):
         return False, error
