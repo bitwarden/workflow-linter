@@ -155,30 +155,30 @@ def test_failed_check_actionlint_installed_windows(monkeypatch, settings):
     result, _ = check_actionlint("Windows", settings.actionlint_version)
     assert result is False
 
-# # test_check_actionlint_installed_locally
-# def test_check_actionlint_installed_locally_linux(monkeypatch, settings):
-#     monkeypatch.setattr(os.path, "exists", True)
+# test_check_actionlint_installed_locally
+def test_check_actionlint_installed_locally_linux(monkeypatch, settings):
+    monkeypatch.setattr(os.path, "exists", True)
 
-#     result, message = check_actionlint("Linux", settings.actionlint_version)
+    result, message = check_actionlint("Linux", settings.actionlint_version)
 
-#     assert result is True
-#     assert message == ""
+    assert result is True
+    assert message == ""
 
-# def test_check_actionlint_installed_locally_darwin(monkeypatch, settings):
-#     monkeypatch.setattr(os.path, "exists", True)
+def test_check_actionlint_installed_locally_darwin(monkeypatch, settings):
+    monkeypatch.setattr(os.path, "exists", True)
     
-#     result, message = check_actionlint("Darwin", settings.actionlint_version)
+    result, message = check_actionlint("Darwin", settings.actionlint_version)
 
-#     assert result is True
-#     assert message == ""
+    assert result is True
+    assert message == ""
 
-# def test_check_actionlint_installed_locally_windows(monkeypatch, settings):
-#     monkeypatch.setattr(os.path, "exists", True)
+def test_check_actionlint_installed_locally_windows(monkeypatch, settings):
+    monkeypatch.setattr(os.path, "exists", True)
     
-#     result, message = check_actionlint("Windows", settings.actionlint_version)
+    result, message = check_actionlint("Windows", settings.actionlint_version)
 
-#     assert result is True
-#     assert message == ""
+    assert result is True
+    assert message == ""
 
 # test_install_actionlint
 def test_install_actionlint_linux(settings):
