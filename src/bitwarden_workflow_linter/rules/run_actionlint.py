@@ -69,7 +69,7 @@ please check your package installer or manually install it",
             check=True,
             )
             if installed:
-                return True, "./actionlint"
+                return True, "./actionlint, version"
             else:
                 return install_actionlint(platform_system)
                 if version in f"{installed}":
