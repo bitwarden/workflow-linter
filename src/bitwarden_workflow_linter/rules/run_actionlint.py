@@ -68,14 +68,14 @@ please check your package installer or manually install it",
             stderr=subprocess.PIPE,
             check=True,
             )
-        if installed:
-            return True, "./actionlint"
-        else:
-            return install_actionlint(platform_system)
-            if version in f"{installed}":
+            if installed:
                 return True, "./actionlint"
             else:
-                return install_actionlint(platform_system, version)
+                return install_actionlint(platform_system)
+                if version in f"{installed}":
+                    return True, "./actionlint"
+                else:
+                    return install_actionlint(platform_system, version)
         except FileNotFoundError:
                 return install_actionlint(platform_system, version)
 
