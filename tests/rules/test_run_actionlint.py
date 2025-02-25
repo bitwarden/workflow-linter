@@ -55,7 +55,7 @@ def test_run_actionlint_installed(monkeypatch, rule):
         return True, "/mock/location"
 
     def mock_run(*args, **kwargs):
-        return subprocess.CompletedProcess(args, 0, stdout="")
+        return subprocess.CompletedProcess(args, 0)
 
     monkeypatch.setattr(subprocess, "run", mock_run)
     monkeypatch.setattr(
