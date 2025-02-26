@@ -6,7 +6,6 @@ on:
       - main
     paths:
       - "**/run_actionlint.py"
-      - "**/default_actions.json"
       - "**/actionlint_windows.yml"
 
 jobs:
