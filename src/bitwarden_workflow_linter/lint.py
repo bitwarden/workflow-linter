@@ -171,13 +171,14 @@ class LinterCmd:
                     return_code = max(return_code, return_value)
 
             if len(files_with_issues) > 0:
+                newline = "\n"  # For compatibility with Python 3.11
                 print(
                     f"""Found {len(files_with_issues)} file(s) with issues:
-  {"\n  ".join(files_with_issues)}
+  {f"{newline}  ".join(files_with_issues)}
 
-For help, refer to\n\
+For help, refer to
   - Workflow Syntax: \
-https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions\n\
+https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions
   - Bitwarden Examples: \
 https://github.com/bitwarden/workflow-linter/tree/main/.github/workflows/examples")"""
                 )
