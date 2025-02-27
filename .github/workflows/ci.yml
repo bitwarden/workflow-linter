@@ -7,6 +7,8 @@ on:
       - "tests/**"
   workflow_dispatch:
 
+permissions: read-all
+
 jobs:
   test:
     name: CI workflow-linter (v2)

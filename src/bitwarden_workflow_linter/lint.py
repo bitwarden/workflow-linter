@@ -4,7 +4,6 @@ Workflows."""
 import argparse
 import os
 
-from functools import reduce
 from typing import Optional
 
 from .load import WorkflowBuilder, Rules
@@ -115,6 +114,7 @@ class LinterCmd:
         if len(findings) > 0:
             for finding in findings:
                 print(f" - {finding}")
+            print(f"Issues found by {len(findings)} rules in {filename}")
             print()
 
         max_error_level = self.get_max_error_level(findings)
@@ -162,9 +162,27 @@ class LinterCmd:
         files = self.generate_files(input_files)
 
         if len(input_files) > 0:
-            return_code = reduce(
-                lambda a, b: a if a > b else b, map(self.lint_file, files)
-            )
+            files_with_issues = []
+            return_code = 0
+            for file in files:
+                return_value = self.lint_file(file)
+                if return_value > 0:
+                    files_with_issues.append(file)
+                    return_code = max(return_code, return_value)
+
+            if len(files_with_issues) > 0:
+                print(
+                    f"""Found {len(files_with_issues)} file(s) with issues:
+  {"\n  ".join(files_with_issues)}
+
+For help, refer to\n\
+  - Workflow Syntax: \
+https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions\n\
+  - Bitwarden Examples: \
+https://github.com/bitwarden/workflow-linter/tree/main/.github/workflows/examples")"""
+                )
+            else:
+                print("No issues found")
 
             if return_code == 1 and not strict:
                 return_code = 0
