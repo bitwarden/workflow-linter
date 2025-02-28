@@ -17,7 +17,8 @@ enabled_rules:
       level: warning
     - id: bitwarden_workflow_linter.rules.check_pr_target.RuleCheckPrTarget
       level: warning
-    - id: bitwarden_workflow_linter.rules.permissions_exist.RulePermissionsExist
-      level: warning
+    # Cannot add this in until the rule functionality is merged through to main
+    # - id: bitwarden_workflow_linter.rules.permissions_exist.RulePermissionsExist
+    #   level: warning
 
 approved_actions_path: default_actions.json
