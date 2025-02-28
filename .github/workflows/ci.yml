@@ -40,5 +40,6 @@ jobs:
         #   that would not work in a different repository
         # - Using strict to ensure that our examples pass all checks including warnings
         run: |
+          pipenv run pip install -e .
           cd .github/workflows
           pipenv run bwwl lint --strict -f ./examples
