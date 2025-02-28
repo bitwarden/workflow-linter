@@ -161,7 +161,7 @@ By default, a new Rule needs five things:
 not support Rules that check against multiple objects at a time OR file level formatting (one empty between each step or
 two empty lines between each job)
 
-IMPORTANT: A rule must be implemented and tested then merged into `main` before it can be activated.<br>
+_IMPORTANT: A rule must be implemented and tested then merged into `main` before it can be activated.<br>_
 This is because the released version of bwwl will use the current `settings.yaml` file, but it will not have the new rule functionality yet and cause an error in the workflow linting of this repository.
 
 To activate a rule after implementing and releasing it, add it to `settings.yaml` in the project's base folder
