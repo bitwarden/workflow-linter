@@ -38,6 +38,8 @@ jobs:
         # run notes:
         # - Changing directories will help catch any repo specific paths in the linter
         #   that would not work in a different repository
+        # - Changing directories utilizes the default_settings.yaml rather than this repos
+        #   settings.yaml, which better simulates running from another repository
         # - Using strict to ensure that our examples pass all checks including warnings
         run: |
           pipenv run pip install -e .
