@@ -33,3 +33,12 @@ jobs:
 
       - name: Check type hinting
         run: pipenv run pytype src
+
+      - name: Test against example workflows
+        # run notes:
+        # - Changing directories will help catch any repo specific paths in the linter
+        #   that would not work in a different repository
+        # - Using strict to ensure that our examples pass all checks including warnings
+        run: |
+          cd .github/workflows
+          pipenv run bwwl lint --strict -f ./examples
