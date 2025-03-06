@@ -10,7 +10,8 @@ from src.bitwarden_workflow_linter.load import WorkflowBuilder
 from src.bitwarden_workflow_linter.rules.run_actionlint import (
     RunActionlint,
     install_actionlint_source,
-    check_actionlint,
+    check_actionlint_local,
+    check_actionlint_path,
     install_actionlint,
 )
 from src.bitwarden_workflow_linter.utils import Settings
@@ -46,7 +47,7 @@ def test_check_actionlint_in_path(monkeypatch, settings):
 
     monkeypatch.setattr(subprocess, "run", mock_installed)
 
-    result, message = check_actionlint("Linux", settings.actionlint_version)
+    result, message = check_actionlint_path("Linux", settings.actionlint_version)
     assert result is True
     assert message == ""
 
@@ -56,17 +57,17 @@ def test_check_actionlint_not_in_path(monkeypatch, settings):
 
     monkeypatch.setattr(subprocess, "run", mock_run)
 
-    result, message = check_actionlint("Linux", settings.actionlint_version)
+    result, message = check_actionlint_path("Linux", settings.actionlint_version)
     assert result is False
     assert message == "Failed to install Actionlint, please check your package installer or manually install it"
 
 def test_run_actionlint_not_installed(monkeypatch, rule):
-    def mock_check_actionlint(*args, **kwargs):
+    def mock_check_actionlint_path(*args, **kwargs):
         return False, ""
 
     monkeypatch.setattr(
-        "src.bitwarden_workflow_linter.rules.run_actionlint.check_actionlint",
-        mock_check_actionlint,
+        "src.bitwarden_workflow_linter.rules.run_actionlint.check_actionlint_path",
+        mock_check_actionlint_path,
     )
 
     workflow = WorkflowBuilder.build("tests/fixtures/test_workflow.yaml")
@@ -75,7 +76,7 @@ def test_run_actionlint_not_installed(monkeypatch, rule):
     assert "Actionlint must pass" in error
 
 def test_run_actionlint_installed_error(monkeypatch, rule):
-    def mock_check_actionlint(*args, **kwargs):
+    def mock_check_actionlint_path(*args, **kwargs):
         return True, "/mock/location"
 
     def mock_run(*args, **kwargs):
@@ -83,8 +84,8 @@ def test_run_actionlint_installed_error(monkeypatch, rule):
 
     monkeypatch.setattr(subprocess, "run", mock_run)
     monkeypatch.setattr(
-        "src.bitwarden_workflow_linter.rules.run_actionlint.check_actionlint",
-        mock_check_actionlint,
+        "src.bitwarden_workflow_linter.rules.run_actionlint.check_actionlint_path",
+        mock_check_actionlint_path,
     )
 
     workflow = WorkflowBuilder.build("tests/fixtures/test_workflow.yaml")
@@ -99,7 +100,7 @@ def test_check_actionlint_installed_linux(monkeypatch, settings):
 
     monkeypatch.setattr(subprocess, "run", mock_run)
 
-    result, _ = check_actionlint("Linux", settings.actionlint_version)
+    result, _ = check_actionlint_path("Linux", settings.actionlint_version)
     assert result is True
 
 def test_check_actionlint_installed_darwin(monkeypatch, settings):
@@ -108,7 +109,7 @@ def test_check_actionlint_installed_darwin(monkeypatch, settings):
 
     monkeypatch.setattr(subprocess, "run", mock_run)
 
-    result, _ = check_actionlint("Darwin", settings.actionlint_version)
+    result, _ = check_actionlint_path("Darwin", settings.actionlint_version)
     assert result is True
 
 def test_check_actionlint_installed_windows(monkeypatch, settings):
@@ -117,7 +118,7 @@ def test_check_actionlint_installed_windows(monkeypatch, settings):
 
     monkeypatch.setattr(subprocess, "run", mock_run)
 
-    result, _ = check_actionlint("Windows", settings.actionlint_version)
+    result, _ = check_actionlint_path("Windows", settings.actionlint_version)
     assert result is True
 
 #test_failed_check_actionlint_installed
@@ -127,7 +128,7 @@ def test_failed_check_actionlint_installed_linux(monkeypatch, settings):
 
     monkeypatch.setattr(subprocess, "run", mock_run)
 
-    result, _ = check_actionlint("Linux", settings.actionlint_version)
+    result, _ = check_actionlint_path("Linux", settings.actionlint_version)
     assert result is False
 
 def test_failed_check_actionlint_installed_darwin(monkeypatch, settings):
@@ -136,7 +137,7 @@ def test_failed_check_actionlint_installed_darwin(monkeypatch, settings):
 
     monkeypatch.setattr(subprocess, "run", mock_run)
 
-    result, _ = check_actionlint("Darwin", settings.actionlint_version)
+    result, _ = check_actionlint_path("Darwin", settings.actionlint_version)
     assert result is False
 
 def test_failed_check_actionlint_installed_windows(monkeypatch, settings):
@@ -145,14 +146,14 @@ def test_failed_check_actionlint_installed_windows(monkeypatch, settings):
 
     monkeypatch.setattr(subprocess, "run", mock_run)
 
-    result, _ = check_actionlint("Windows", settings.actionlint_version)
+    result, _ = check_actionlint_path("Windows", settings.actionlint_version)
     assert result is False
 
 # test_check_actionlint_installed_locally
 def test_check_actionlint_installed_locally_linux(monkeypatch, settings):
     monkeypatch.setattr(os.path, "exists", True)
 
-    result, message = check_actionlint("Linux", settings.actionlint_version)
+    result, message = check_actionlint_local("Linux", settings.actionlint_version)
 
     assert result is True
     assert message == "./actionlint"
@@ -160,7 +161,7 @@ def test_check_actionlint_installed_locally_linux(monkeypatch, settings):
 def test_check_actionlint_installed_locally_darwin(monkeypatch, settings):
     monkeypatch.setattr(os.path, "exists", True)
 
-    result, message = check_actionlint("Darwin", settings.actionlint_version)
+    result, message = check_actionlint_local("Darwin", settings.actionlint_version)
 
     assert result is True
     assert message == "./actionlint"
@@ -175,7 +176,7 @@ def test_check_actionlint_installed_locally_windows(monkeypatch, settings):
     monkeypatch.setattr(os.path, "exists", mock_exists)
     monkeypatch.setattr(subprocess, "run", mock_run)
 
-    result, _ = check_actionlint("Windows", settings.actionlint_version)
+    result, _ = check_actionlint_local("Windows", settings.actionlint_version)
 
     assert result is True
 

@@ -40,7 +40,7 @@ def install_actionlint_source(error, version) -> Tuple[bool, str]:
     except (FileNotFoundError, subprocess.CalledProcessError):
         return False, error
 
-def check_actionlint(platform_system: str, version: str) -> Tuple[bool, str]:
+def check_actionlint_path(platform_system: str, version: str) -> Tuple[bool, str]:
     """Check if the actionlint is in the system's PATH."""
     try:
         installed = subprocess.run(
@@ -61,6 +61,10 @@ def check_actionlint(platform_system: str, version: str) -> Tuple[bool, str]:
 please check your package installer or manually install it",
         )
     except FileNotFoundError:
+        return check_actionlint_local(platform_system, version)
+
+def check_actionlint_local(platform_system: str, version: str) -> Tuple[bool, str]:
+
         try:
             installed = subprocess.run(
             ["./actionlint", "--version"],
@@ -90,7 +94,7 @@ class RunActionlint(Rule):
                 "Running actionlint without a filename is not currently supported"
             )
 
-        installed, location = check_actionlint(platform.system(), self.settings.actionlint_version)
+        installed, location = check_actionlint_path(platform.system(), self.settings.actionlint_version)
         if installed:
             if location:
                 result = subprocess.run(
