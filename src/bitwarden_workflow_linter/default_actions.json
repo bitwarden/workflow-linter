@@ -389,11 +389,6 @@
     "sha": "5792edc6a03735d592b13c08201711327a935735",
     "version": "v1.0.5"
   },
-  "tj-actions/changed-files": {
-    "name": "tj-actions/changed-files",
-    "sha": "bab30c2299617f6615ec02a68b9a40d10bd21366",
-    "version": "v45.0.5"
-  },
   "tyrrrz/action-http-request": {
     "name": "tyrrrz/action-http-request",
     "sha": "64c70c67f5ebc54d4c7ea09cbe3553322778afd5",
