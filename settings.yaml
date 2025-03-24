@@ -7,8 +7,8 @@ enabled_rules:
       level: error
     - id: bitwarden_workflow_linter.rules.job_environment_prefix.RuleJobEnvironmentPrefix
       level: error
-    #   - id: bitwarden_workflow_linter.rules.step_approved.RuleStepUsesApproved
-    #     level: error
+    - id: bitwarden_workflow_linter.rules.step_approved.RuleStepUsesApproved
+      level: error
     - id: bitwarden_workflow_linter.rules.step_pinned.RuleStepUsesPinned
       level: error
     - id: bitwarden_workflow_linter.rules.underscore_outputs.RuleUnderscoreOutputs
