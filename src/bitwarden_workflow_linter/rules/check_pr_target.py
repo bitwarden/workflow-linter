@@ -32,8 +32,9 @@ class RuleCheckPrTarget(Rule):
             branches_list = obj.on["pull_request_target"].get("branches")
             if isinstance(branches_list, str):
                 branches_list = [branches_list]
-            if any(branch != 'main' for branch in branches_list):
-                return False
+            for branch in branches_list:
+                if branch in ['master', 'main']:
+                    return False
         else:
             return False
         return True
