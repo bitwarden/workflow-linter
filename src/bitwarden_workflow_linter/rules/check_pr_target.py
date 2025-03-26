@@ -33,7 +33,7 @@ class RuleCheckPrTarget(Rule):
             if isinstance(branches_list, str):
                 branches_list = [branches_list]
             for branch in branches_list:
-                if branch in ['master', 'main']:
+                if branch not in ['master', 'main']:
                     return False
         else:
             return False
