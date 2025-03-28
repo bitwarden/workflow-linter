@@ -119,7 +119,7 @@ options:
 ```
 ## Pre-commit Hook Setup
 
-### Navigate to the `.git/hooks` directory in the repository:
+### Navigate to the `.git/hooks` directory in the repository you wish to lint:
 
 ```bash
 cd .git/hooks
