@@ -57,7 +57,7 @@ jobs:
       - name: Set up Python 3.11
         uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Install bwwl binary
         run: python -m pip install --upgrade bitwarden_workflow_linter
@@ -102,7 +102,7 @@ jobs:
 
       - name: Generate GH App token
         if: ${{ steps.new-changes.outputs.new_changes == 'TRUE' }}
-        uses: actions/create-github-app-token@67e27a7eb7db372a1c61a7f9bdab8699e9ee57f7 # v1.11.3
+        uses: actions/create-github-app-token@af35edadc00be37caa72ed9f3e6d5f7801bfdf09 # v1.11.7
         id: app-token
         with:
           app-id: ${{ secrets.BW_GHAPP_ID }}
