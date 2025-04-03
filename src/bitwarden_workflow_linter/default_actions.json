@@ -234,6 +234,11 @@
     "sha": "c47758b77c9736f4b2ef4073d4d51994fabfe349",
     "version": "v3.7.1"
   },
+  "docker/setup-docker-action": {
+    "name": "docker/setup-docker-action",
+    "sha": "b60f85385d03ac8acfca6d9996982511d8620a19",
+    "version": "v4.3.0"
+  },
   "docker/setup-qemu-action": {
     "name": "docker/setup-qemu-action",
     "sha": "49b3bc8e6bdd4a60e6116a5414239cba5943d3cf",
