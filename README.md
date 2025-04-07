@@ -10,6 +10,7 @@ To see an example of Workflow Linter in practice in GitHub Action, see the [comp
 - pipenv
 - Windows systems: Chocolatey package manager
 - Mac OS systems: Homebrew package manager
+- pipx
 
 ## Setup
 
@@ -38,6 +39,16 @@ This is the recommended method for most users. Installing from PyPI ensures you 
    ```bash
    deactivate
    ```
+#### Using pipx
+
+Alternatively, you can install `bwwl` globally using `pipx` to keep it isolated:
+
+1. **Install Bitwarden Workflow Linter:**
+   ```bash
+   pipx install bitwarden_workflow_linter --python python3.12
+   ```
+
+This method is ideal for running `bwwl` as a standalone CLI tool without managing a virtual environment manually.
 
 ### From GitHub Release
 Use this method if you need a specific version of the package that is not yet available on PyPI, or if you want to access pre-release versions.
