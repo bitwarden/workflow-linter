@@ -161,7 +161,7 @@ Try committing a change to the repository. The pre-commit hook should run the wo
 ## Development
 
 ### Setup
-Refer to the `Locally` instructions above to clone the repository and install the package.
+Refer to the [Locally](#locally) instructions above to clone the repository and install the package.
 
 ### Testing
 
