@@ -289,6 +289,11 @@
     "sha": "f9c9c575b8b21b6485636a91ffecd10e558c62f6",
     "version": "v3.5.0"
   },
+  "grafana/run-k6-action": {
+    "name": "grafana/run-k6-action",
+    "sha": "c6b79182b9b666aa4f630f4a6be9158ead62536e",
+    "version": "v1.2.0"
+  },
   "hashicorp/setup-packer": {
     "name": "hashicorp/setup-packer",
     "sha": "1aa358be5cf73883762b302a3a03abd66e75b232",
