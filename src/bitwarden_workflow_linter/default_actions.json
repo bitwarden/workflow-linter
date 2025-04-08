@@ -249,6 +249,11 @@
     "sha": "49b3bc8e6bdd4a60e6116a5414239cba5943d3cf",
     "version": "v3.2.0"
   },
+  "dorny/paths-filter": {
+    "name": "dorny/paths-filter",
+    "sha": "de90cc6fb38fc0963ad72b210f1f284cd68cea36",
+    "version": "v3.0.2"
+  },
   "dorny/test-reporter": {
     "name": "dorny/test-reporter",
     "sha": "31a54ee7ebcacc03a09ea97a7e5465a47b84aea5",
