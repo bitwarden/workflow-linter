@@ -71,7 +71,7 @@ Use this method if you need a specific version of the package that is not yet av
    ```
 
 ### Locally
-This method is useful for developers who want to contribute to the project or need to make local modifications to the source code.
+This method is useful for developers who want to contribute to the project or need to make local modifications to the source code. *Make sure to follow the virtual environment prerequisite setup*
 1. **Clone the repository:**
    ```bash
    git clone git@github.com:bitwarden/workflow-linter.git
