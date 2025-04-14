@@ -33,11 +33,21 @@ def install_actionlint(platform_system: str) -> Tuple[bool, str]:
             return False, f"{error} : check Choco installation"
     return False, error
 
+def load_config() -> dict:
+    """Load configuration from a JSON file."""
+    config_path = os.path.join(os.path.dirname(__file__), "../../../actionlint_version.json")
+    if not os.path.exists(config_path):
+        raise FileNotFoundError(f"Configuration file not found: {config_path}")
+    with open(config_path, "r") as config_file:
+        return json.load(config_file)
 
 def install_actionlint_source(error) -> Tuple[bool, str]:
+    config = load_config()
+    if "actionlint_version" not in config:
+        raise KeyError("The 'actionlint_version' is missing in the configuration file.")
+    version = config["actionlint_version"]
     """Install Actionlint Binary from provided script"""
     url = "https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash"
-    version = "1.6.17"
     request = urllib.request.urlopen(url)
     with open("download-actionlint.bash", "wb+") as fp:
         fp.write(request.read())

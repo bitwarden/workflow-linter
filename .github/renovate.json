@@ -19,5 +19,16 @@
       "matchManagers": ["pipenv"],
       "matchUpdateTypes": ["minor", "patch"]
     }
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": ["^actionlint_version\\.json$"],
+      "matchStrings": [
+        "\"actionlint_version\":\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      "datasource": "github-releases",
+      "depName": "rhysd/actionlint",
+      "versioning": "semver"
+    }
   ]
 }
