@@ -404,6 +404,11 @@
     "sha": "bfd4e558cda28cda6b5defafb9232d191be8c203",
     "version": "v4.2.1"
   },
+  "sravinet/toml-select": {
+    "name": "sravinet/toml-select",
+    "sha": "fe2e680f88a09851a0cd887dba0bbd19d3babe11",
+    "version": "v1.0.1"
+  },
   "stackrox/kube-linter-action": {
     "name": "stackrox/kube-linter-action",
     "sha": "5792edc6a03735d592b13c08201711327a935735",
