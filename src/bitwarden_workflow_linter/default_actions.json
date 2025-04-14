@@ -409,6 +409,11 @@
     "sha": "5792edc6a03735d592b13c08201711327a935735",
     "version": "v1.0.5"
   },
+  "step-security/changed-files": {
+    "name": "step-security/changed-files",
+    "sha": "3dbe17c78367e7d60f00d78ae6781a35be47b4a1",
+    "version": "v45.0.1"
+  },
   "tyrrrz/action-http-request": {
     "name": "tyrrrz/action-http-request",
     "sha": "64c70c67f5ebc54d4c7ea09cbe3553322778afd5",
