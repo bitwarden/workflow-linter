@@ -24,6 +24,11 @@
     "sha": "fe7b79cd5ee1e45176fcad797de68ecaf3ca4814",
     "version": "v4.2.0"
   },
+  "PyO3/maturin-action": {
+    "name": "PyO3/maturin-action",
+    "sha": "ea5bac0f1ccd0ab11c805e2b804bfcb65dac2eab",
+    "version": "v1.45.0"
+  },
   "Swatinem/rust-cache": {
     "name": "Swatinem/rust-cache",
     "sha": "82a92a6e8fbeee089604da2575dc567ae9ddeaab",
@@ -234,10 +239,20 @@
     "sha": "c47758b77c9736f4b2ef4073d4d51994fabfe349",
     "version": "v3.7.1"
   },
+  "docker/setup-docker-action": {
+    "name": "docker/setup-docker-action",
+    "sha": "b60f85385d03ac8acfca6d9996982511d8620a19",
+    "version": "v4.3.0"
+  },
   "docker/setup-qemu-action": {
     "name": "docker/setup-qemu-action",
     "sha": "49b3bc8e6bdd4a60e6116a5414239cba5943d3cf",
     "version": "v3.2.0"
+  },
+  "dorny/paths-filter": {
+    "name": "dorny/paths-filter",
+    "sha": "de90cc6fb38fc0963ad72b210f1f284cd68cea36",
+    "version": "v3.0.2"
   },
   "dorny/test-reporter": {
     "name": "dorny/test-reporter",
@@ -278,6 +293,16 @@
     "name": "gradle/wrapper-validation-action",
     "sha": "f9c9c575b8b21b6485636a91ffecd10e558c62f6",
     "version": "v3.5.0"
+  },
+  "grafana/run-k6-action": {
+    "name": "grafana/run-k6-action",
+    "sha": "c6b79182b9b666aa4f630f4a6be9158ead62536e",
+    "version": "v1.2.0"
+  },
+  "grafana/setup-k6-action": {
+    "name": "grafana/setup-k6-action",
+    "sha": "ffe7d7290dfa715e48c2ccc924d068444c94bde2",
+    "version": "v1.1.0"
   },
   "hashicorp/setup-packer": {
     "name": "hashicorp/setup-packer",
@@ -334,11 +359,6 @@
     "sha": "276d7966e389d888f011539a86c8920025ea0626",
     "version": "v3.0.1"
   },
-  "PyO3/maturin-action": {
-    "name": "PyO3/maturin-action",
-    "sha": "ea5bac0f1ccd0ab11c805e2b804bfcb65dac2eab",
-    "version": "v1.45.0"
-  },
   "reactivecircus/android-emulator-runner": {
     "name": "reactivecircus/android-emulator-runner",
     "sha": "62dbb605bba737720e10b196cb4220d374026a6d",
@@ -384,15 +404,20 @@
     "sha": "bfd4e558cda28cda6b5defafb9232d191be8c203",
     "version": "v4.2.1"
   },
+  "sravinet/toml-select": {
+    "name": "sravinet/toml-select",
+    "sha": "fe2e680f88a09851a0cd887dba0bbd19d3babe11",
+    "version": "v1.0.1"
+  },
   "stackrox/kube-linter-action": {
     "name": "stackrox/kube-linter-action",
     "sha": "5792edc6a03735d592b13c08201711327a935735",
     "version": "v1.0.5"
   },
-  "tj-actions/changed-files": {
-    "name": "tj-actions/changed-files",
-    "sha": "bab30c2299617f6615ec02a68b9a40d10bd21366",
-    "version": "v45.0.5"
+  "step-security/changed-files": {
+    "name": "step-security/changed-files",
+    "sha": "3dbe17c78367e7d60f00d78ae6781a35be47b4a1",
+    "version": "v45.0.1"
   },
   "tyrrrz/action-http-request": {
     "name": "tyrrrz/action-http-request",

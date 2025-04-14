@@ -27,6 +27,7 @@ class Workflow:
     name: Optional[str] = None
     on: Optional[CommentedMap] = None
     jobs: Optional[Dict[str, Job]] = None
+    permissions: Optional[object] = None  # This can be a CommentedMap or a string
 
     @classmethod
     def init(cls: Self, key: str, filename: str, data: CommentedMap) -> Self:
@@ -35,6 +36,7 @@ class Workflow:
             "filename": filename,
             "name": data["name"] if "name" in data else None,
             "on": data["on"] if "on" in data else None,
+            "permissions": data["permissions"] if "permissions" in data else None,
         }
 
         new_workflow = cls.from_dict(init_data)
