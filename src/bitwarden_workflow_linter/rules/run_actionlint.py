@@ -37,7 +37,7 @@ def load_config() -> dict:
     with open(config_path, "r") as config_file:
         return json.load(config_file)
 
-def install_actionlint_source(error) -> Tuple[bool, str]:
+def install_actionlint_source(error, version) -> Tuple[bool, str]:
     config = load_config()
     if "actionlint_version" not in config:
         raise KeyError("The 'actionlint_version' is missing in the configuration file.")
