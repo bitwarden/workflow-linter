@@ -38,12 +38,9 @@ def load_config() -> dict:
         return json.load(config_file)
 
 def install_actionlint_source(error, version) -> Tuple[bool, str]:
-    config = load_config()
-    if "actionlint_version" not in config:
-        raise KeyError("The 'actionlint_version' is missing in the configuration file.")
-    version = config["actionlint_version"]
     """Install Actionlint Binary from provided script"""
     url = "https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash"
+    version = version
     request = urllib.request.urlopen(url)
     with open("download-actionlint.bash", "wb+") as fp:
         fp.write(request.read())
@@ -106,8 +103,13 @@ class RunActionlint(Rule):
             raise AttributeError(
                 "Running actionlint without a filename is not currently supported"
             )
+    
+        config = load_config()
+        if "actionlint_version" not in config:
+            raise KeyError("The 'actionlint_version' is missing in the configuration file.")
+        version = config["actionlint_version"]
 
-        installed, location = check_actionlint_path(platform.system(), self.settings.actionlint_version)
+        installed, location = check_actionlint_path(platform.system(), version)
         if installed:
             if location:
                 result = subprocess.run(
