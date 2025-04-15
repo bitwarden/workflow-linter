@@ -20,15 +20,16 @@
       "matchUpdateTypes": ["minor", "patch"]
     }
   ],
-  "regexManagers": [
+  "customManagers": [
     {
+      "customType": "regex",
       "fileMatch": ["^actionlint_version\\.json$"],
       "matchStrings": [
         "\"actionlint_version\":\\s*\"(?<currentValue>[^\"]+)\""
       ],
-      "datasource": "github-releases",
-      "depName": "rhysd/actionlint",
-      "versioning": "semver"
+      "depNameTemplate": "rhysd/actionlint",
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "semver"
     }
   ]
 }
