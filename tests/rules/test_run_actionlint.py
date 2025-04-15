@@ -3,6 +3,7 @@
 import os
 import pytest
 import subprocess
+import json
 
 from ruamel.yaml import YAML
 
@@ -18,10 +19,19 @@ from src.bitwarden_workflow_linter.utils import Settings
 
 yaml = YAML()
 
+def load_config() -> dict:
+    """Load configuration from a JSON file."""
+    config_path = os.path.join(os.path.dirname(__file__), "../../actionlint_version.json")
+    if not os.path.exists(config_path):
+        raise FileNotFoundError(f"Configuration file not found: {config_path}")
+    with open(config_path, "r") as config_file:
+        return json.load(config_file)
+
 @pytest.fixture(name="settings")
 def fixture_settings():
+    config = load_config()
     return Settings(
-        actionlint_version="1.7.7"
+        actionlint_version = config["actionlint_version"]
     )
 
 @pytest.fixture(name="rule")
