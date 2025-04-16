@@ -16,7 +16,7 @@ pytest = "*"
 coverage = "*"
 pytest-cov = "*"
 pylint = "*"
-pytype = "*"
+pytype = {version = "*", sys_platform = "!= 'win32'"}
 hatchling = "*"
 build = "*"
 
