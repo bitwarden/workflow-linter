@@ -1,3 +1,3 @@
 """Metadata for Workflow Linter."""
 
-__version__ = "0.12.7"
+__version__ = "0.12.8"
