@@ -34,6 +34,7 @@ def install_actionlint(platform_system: str) -> Tuple[bool, str]:
             return False, f"{error} : check Choco installation"
     return False, error
 
+# temporarily commenting out this logic to allow time to troubleshoot it running in CI
 # def load_config() -> dict:
 #     """Load configuration from a JSON file."""
 #     config_path = os.path.join(os.path.dirname(__file__), "../../../actionlint_version.json")
