@@ -1,0 +1,34 @@
+name: Test Actionlint on Windows
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "**/run_actionlint.py"
+      - "**/actionlint_windows.yml"
+
+jobs:
+  test:
+    name: Windows workflow-linter (v2)
+    runs-on: windows-2022
+    steps:
+        - name: Check out repo
+          uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+  
+        - name: Set up Python
+          uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
+          with:
+            python-version-file: ".python-version"
+    
+        - name: Install dependencies
+          run: |
+            python -m pip install --upgrade pip
+            pip install pipenv
+            pipenv install --dev
+          
+        - name: Install bwwl binary
+          run: python -m pip install --upgrade .
+
+        - name: Lint
+          run: bwwl lint -f .github/workflows
