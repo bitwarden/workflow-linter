@@ -113,11 +113,13 @@ class Settings:
 
     enabled_rules: list[dict[str, str]]
     approved_actions: dict[str, Action]
+    actionlint_version: str
 
     def __init__(
         self,
         enabled_rules: Optional[list[dict[str, str]]] = None,
         approved_actions: Optional[dict[str, dict[str, str]]] = None,
+        actionlint_version: Optional[str] = None,
     ) -> None:
         """Settings object that can be overridden in settings.py.
 
@@ -139,9 +141,17 @@ class Settings:
         self.approved_actions = {
             name: Action(**action) for name, action in approved_actions.items()
         }
+        self.actionlint_version = actionlint_version
 
     @staticmethod
     def factory() -> SettingsFromFactory:
+        with (
+            importlib.resources.files("bitwarden_workflow_linter")
+            .joinpath("actionlint_version.yaml")
+            .open("r", encoding="utf-8") as file
+        ):
+            actionlint_version = yaml.load(file)["actionlint_version"]
+
         with (
             importlib.resources.files("bitwarden_workflow_linter")
             .joinpath("default_settings.yaml")
@@ -175,4 +185,5 @@ class Settings:
         return Settings(
             enabled_rules=settings["enabled_rules"],
             approved_actions=settings["approved_actions"],
+            actionlint_version=actionlint_version
         )
