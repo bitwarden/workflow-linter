@@ -36,7 +36,7 @@ def install_actionlint(platform_system: str) -> Tuple[bool, str]:
 
 def load_config() -> dict:
     """Load configuration from a JSON file."""
-    config_path = os.path.join(os.path.dirname(__file__), "../../../actionlint_version.json")
+    config_path = os.path.join(os.path.dirname(__file__), "actionlint_version.json")
     if not os.path.exists(config_path):
         raise FileNotFoundError(f"Configuration file not found: {config_path}")
     with open(config_path, "r") as config_file:
