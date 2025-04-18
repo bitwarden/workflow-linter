@@ -4,6 +4,7 @@ import pytest
 import subprocess
 
 from ruamel.yaml import YAML
+from src.bitwarden_workflow_linter.utils import Settings
 
 from src.bitwarden_workflow_linter.load import WorkflowBuilder
 from src.bitwarden_workflow_linter.rules.run_actionlint import (
@@ -14,20 +15,21 @@ from src.bitwarden_workflow_linter.rules.run_actionlint import (
 )
 
 yaml = YAML()
-
+settings = Settings.factory()
 
 @pytest.fixture(name="rule")
 def fixture_rule():
     return RunActionlint()
 
-
 def test_rule_on_correct_workflow(rule):
+    rule.settings = settings
     correct_workflow = WorkflowBuilder.build("tests/fixtures/test_workflow.yaml")
     result, _ = rule.fn(correct_workflow)
     assert result is True
 
 
 def test_rule_on_incorrect_workflow(rule):
+    rule.settings = settings
     incorrect_workflow = WorkflowBuilder.build(
         "tests/fixtures/test_workflow_incorrect.yaml"
     )
@@ -36,7 +38,7 @@ def test_rule_on_incorrect_workflow(rule):
 
 
 def test_pass_install_actionlint_linux():
-    result, _ = install_actionlint("Linux")
+    result, _ = install_actionlint("Linux", settings.actionlint_version)
     assert result is True
 
 
@@ -45,7 +47,7 @@ def test_install_actionlint_darwin(monkeypatch):
         return subprocess.CompletedProcess(args, 0)
 
     monkeypatch.setattr(subprocess, "run", mock_run)
-    result, _ = install_actionlint("Darwin")
+    result, _ = install_actionlint("Darwin", settings.actionlint_version)
     assert result is True
 
 
@@ -54,7 +56,7 @@ def test_failed_install_actionlint_darwin(monkeypatch):
         raise subprocess.CalledProcessError(1, "cmd")
 
     monkeypatch.setattr(subprocess, "run", mock_run)
-    result, error = install_actionlint("Darwin")
+    result, error = install_actionlint("Darwin", settings.actionlint_version)
     assert result is False
     assert "An error occurred" in error
 
@@ -64,7 +66,7 @@ def test_install_actionlint_windows(monkeypatch):
         return subprocess.CompletedProcess(args, 0)
 
     monkeypatch.setattr(subprocess, "run", mock_run)
-    result, _ = install_actionlint("Windows")
+    result, _ = install_actionlint("Windows", settings.actionlint_version)
     assert result is True
 
 
@@ -73,7 +75,7 @@ def test_failed_install_actionlint_windows(monkeypatch):
         raise subprocess.CalledProcessError(1, "cmd")
 
     monkeypatch.setattr(subprocess, "run", mock_run)
-    result, error = install_actionlint("Windows")
+    result, error = install_actionlint("Windows", settings.actionlint_version)
     assert result is False
     assert "An error occurred" in error
 
@@ -84,7 +86,7 @@ def test_install_actionlint_source(monkeypatch):
 
     monkeypatch.setattr(subprocess, "run", mock_run)
 
-    result, _ = install_actionlint_source("An error occurred")
+    result, _ = install_actionlint_source("An error occurred", settings.actionlint_version)
     assert result is True
 
 
@@ -94,7 +96,7 @@ def test_failed_install_actionlint_source(monkeypatch):
 
     monkeypatch.setattr(subprocess, "run", mock_run)
 
-    result, error = install_actionlint_source("An error occurred")
+    result, error = install_actionlint_source("An error occurred", settings.actionlint_version)
     assert result is False
     assert "An error occurred" in error
 
@@ -105,7 +107,7 @@ def test_check_actionlint_installed(monkeypatch):
 
     monkeypatch.setattr(subprocess, "run", mock_run)
 
-    result, _ = check_actionlint("Linux")
+    result, _ = check_actionlint("Linux", settings.actionlint_version)
     assert result is True
 
 
@@ -115,7 +117,7 @@ def test_failed_check_actionlint_installed(monkeypatch):
 
     monkeypatch.setattr(subprocess, "run", mock_run)
 
-    result, _ = check_actionlint("Linux")
+    result, _ = check_actionlint("Linux", settings.actionlint_version)
     assert result is False
 
 
@@ -125,11 +127,13 @@ def test_check_actionlint_not_installed(monkeypatch):
 
     monkeypatch.setattr(subprocess, "run", mock_run)
 
-    result, _ = check_actionlint("Linux")
+    result, _ = check_actionlint("Linux", settings.actionlint_version)
     assert result is False
 
 
 def test_run_actionlint_installed(monkeypatch, rule):
+    rule.settings = settings
+    
     def mock_check_actionlint(*args, **kwargs):
         return True, "/mock/location"
 
@@ -148,6 +152,8 @@ def test_run_actionlint_installed(monkeypatch, rule):
 
 
 def test_run_actionlint_not_installed(monkeypatch, rule):
+    rule.settings = settings
+
     def mock_check_actionlint(*args, **kwargs):
         return False, ""
 
@@ -163,6 +169,8 @@ def test_run_actionlint_not_installed(monkeypatch, rule):
 
 
 def test_run_actionlint_installed_error(monkeypatch, rule):
+    rule.settings = settings
+
     def mock_check_actionlint(*args, **kwargs):
         return True, "/mock/location"
 

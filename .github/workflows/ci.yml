@@ -13,6 +13,8 @@ jobs:
   test:
     name: CI workflow-linter (v2)
     runs-on: ubuntu-22.04
+    env:
+      PYTHONPATH: "${{ github.workspace }}/src"
     steps:
       - name: Check out repo
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -27,6 +29,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install pipenv
           pipenv install --dev
+
+      - name: Check current working directory
+        run: pwd
+
+      - name: Debug file structure
+        run: ls -R src/bitwarden_workflow_linter
+
+      - name: Debug file structure
+        run: ls -R
 
       - name: Run pytest
         run: pipenv run pytest tests --cov=src
