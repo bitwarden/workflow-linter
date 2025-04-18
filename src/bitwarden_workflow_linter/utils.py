@@ -186,7 +186,7 @@ class Settings:
             .joinpath("actionlint_version.yml")
             .open("r", encoding="utf-8") as version_file
         ):
-            version_data = yaml.safe_load(version_file)
+            version_data = yaml.load(version_file)
             actionlint_version = version_data["actionlint_version"]
             
         return Settings(
