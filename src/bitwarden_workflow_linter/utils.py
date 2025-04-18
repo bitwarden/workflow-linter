@@ -155,16 +155,16 @@ class Settings:
         ):
             settings = yaml.load(file)
 
-        # load override settings
-        settings_filename = "settings.yaml"
-        local_settings = None
+        # # load override settings
+        # settings_filename = "settings.yaml"
+        # local_settings = None
 
-        if os.path.exists(settings_filename):
-            with open(settings_filename, encoding="utf8") as settings_file:
-                local_settings = yaml.load(settings_file)
+        # if os.path.exists(settings_filename):
+        #     with open(settings_filename, encoding="utf8") as settings_file:
+        #         local_settings = yaml.load(settings_file)
 
-        if local_settings:
-            settings.update(local_settings)
+        # if local_settings:
+        #     settings.update(local_settings)
 
         # load approved actions
         if settings["approved_actions_path"] == "default_actions.json":
