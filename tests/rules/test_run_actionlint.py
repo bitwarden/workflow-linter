@@ -15,25 +15,21 @@ from src.bitwarden_workflow_linter.rules.run_actionlint import (
 )
 
 yaml = YAML()
-
-@pytest.fixture(name="settings")
-def fixture_settings():
-    return Settings(
-        actionlint_version="1.7.7"
-    )
+settings = Settings.factory()
 
 @pytest.fixture(name="rule")
 def fixture_rule(settings):
     return RunActionlint(settings)
 
-
-def test_rule_on_correct_workflow(rule, settings):
+def test_rule_on_correct_workflow(rule):
+    rule.settings = settings
     correct_workflow = WorkflowBuilder.build("tests/fixtures/test_workflow.yaml")
     result, _ = rule.fn(correct_workflow)
     assert result is True
 
 
 def test_rule_on_incorrect_workflow(rule):
+    rule.settings = settings
     incorrect_workflow = WorkflowBuilder.build(
         "tests/fixtures/test_workflow_incorrect.yaml"
     )
@@ -136,6 +132,8 @@ def test_check_actionlint_not_installed(monkeypatch, settings):
 
 
 def test_run_actionlint_installed(monkeypatch, rule):
+    rule.settings = settings
+    
     def mock_check_actionlint(*args, **kwargs):
         return True, "/mock/location"
 
@@ -154,6 +152,8 @@ def test_run_actionlint_installed(monkeypatch, rule):
 
 
 def test_run_actionlint_not_installed(monkeypatch, rule):
+    rule.settings = settings
+
     def mock_check_actionlint(*args, **kwargs):
         return False, ""
 
@@ -169,6 +169,8 @@ def test_run_actionlint_not_installed(monkeypatch, rule):
 
 
 def test_run_actionlint_installed_error(monkeypatch, rule):
+    rule.settings = settings
+
     def mock_check_actionlint(*args, **kwargs):
         return True, "/mock/location"
 
