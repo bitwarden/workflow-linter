@@ -83,6 +83,7 @@ class RunActionlint(Rule):
                 "Running actionlint without a filename is not currently supported"
             )
 
+        """Check if Actionlint is alerady installed and if it is installed somewhere not on the PATH (location)"""
         installed, location = check_actionlint(platform.system(), self.settings.actionlint_version)
         if installed:
             if location:
