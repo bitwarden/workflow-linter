@@ -107,17 +107,18 @@ class SettingsError(Exception):
 
 SettingsFromFactory = TypeVar("SettingsFromFactory", bound="Settings")
 
-
 class Settings:
     """Class that contains configuration-as-code for any portion of the app."""
 
     enabled_rules: list[dict[str, str]]
     approved_actions: dict[str, Action]
+    actionlint_version: str
 
     def __init__(
         self,
         enabled_rules: Optional[list[dict[str, str]]] = None,
         approved_actions: Optional[dict[str, dict[str, str]]] = None,
+        actionlint_version: Optional[str] = None,
     ) -> None:
         """Settings object that can be overridden in settings.py.
 
@@ -134,7 +135,11 @@ class Settings:
 
         if approved_actions is None:
             approved_actions = {}
+        
+        if actionlint_version is None:
+            actionlint_version = ""
 
+        self.actionlint_version = actionlint_version
         self.enabled_rules = enabled_rules
         self.approved_actions = {
             name: Action(**action) for name, action in approved_actions.items()
@@ -175,4 +180,5 @@ class Settings:
         return Settings(
             enabled_rules=settings["enabled_rules"],
             approved_actions=settings["approved_actions"],
+            actionlint_version=settings["actionlint_version"],
         )
