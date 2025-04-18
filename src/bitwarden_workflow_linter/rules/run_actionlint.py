@@ -5,7 +5,6 @@ import subprocess
 import platform
 import urllib.request
 import os
-import json
 
 from ..rule import Rule
 from ..models.workflow import Workflow
@@ -18,14 +17,9 @@ def install_actionlint(platform_system: str, version: str) -> Tuple[bool, str]:
 
     error = f"An error occurred when installing Actionlint on {platform_system}"
 
-    if platform_system.startswith("Linux"):
+    if platform_system.startswith(("Linux", "Darwin")):
+        """Homebrew does not maintain non-latest versions of actionlint so Mac will install from source"""
         return install_actionlint_source(error,version)
-    elif platform_system == "Darwin":
-        try:
-            subprocess.run(["brew", "install", "actionlint"], check=True)
-            return True, ""
-        except (FileNotFoundError, subprocess.CalledProcessError):
-            return False, f"{error} : check Brew installation"
     elif platform_system.startswith("Win"):
         try:
             subprocess.run(["choco", "install", "actionlint", "-y"], check=True)
