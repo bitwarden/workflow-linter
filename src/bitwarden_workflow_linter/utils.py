@@ -155,6 +155,15 @@ class Settings:
         ):
             settings = yaml.load(file)
 
+        # load actionlint version
+        with (
+            importlib.resources.files("bitwarden_workflow_linter")
+            .joinpath("actionlint_version.yml")
+            .open("r", encoding="utf-8") as version_file
+        ):
+            version_data = yaml.load(version_file)
+            actionlint_version = version_data["actionlint_version"]
+
         # load override settings
         settings_filename = "settings.yaml"
         local_settings = None
@@ -180,15 +189,7 @@ class Settings:
             ) as action_file:
                 settings["approved_actions"] = json.load(action_file)
 
-        # load actionlint version
-        with (
-            importlib.resources.files("bitwarden_workflow_linter")
-            .joinpath("actionlint_version.yml")
-            .open("r", encoding="utf-8") as version_file
-        ):
-            version_data = yaml.load(version_file)
-            actionlint_version = version_data["actionlint_version"]
-            
+        
         return Settings(
             enabled_rules=settings["enabled_rules"],
             approved_actions=settings["approved_actions"],
