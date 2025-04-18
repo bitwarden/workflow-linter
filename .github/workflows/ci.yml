@@ -34,6 +34,9 @@ jobs:
       - name: Debug file structure
         run: ls -R src/bitwarden_workflow_linter
 
+      - name: Debug file structure
+        run: ls -R
+
       - name: Run pytest
         run: pipenv run pytest tests --cov=src
 
