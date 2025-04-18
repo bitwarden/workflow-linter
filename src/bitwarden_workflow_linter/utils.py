@@ -158,7 +158,7 @@ class Settings:
         # load actionlint version
         with (
             importlib.resources.files("bitwarden_workflow_linter")
-            .joinpath("actionlint_version.yml")
+            .joinpath("actionlint_version.yaml")
             .open("r", encoding="utf-8") as version_file
         ):
             version_data = yaml.load(version_file)
