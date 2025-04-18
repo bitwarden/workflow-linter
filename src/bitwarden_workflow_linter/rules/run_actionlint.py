@@ -5,7 +5,6 @@ import subprocess
 import platform
 import urllib.request
 import os
-import json
 
 from ..rule import Rule
 from ..models.workflow import Workflow
