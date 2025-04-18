@@ -4,8 +4,8 @@ import pytest
 import subprocess
 
 from ruamel.yaml import YAML
-from src.bitwarden_workflow_linter.utils import Settings
 
+from src.bitwarden_workflow_linter.utils import Settings
 from src.bitwarden_workflow_linter.load import WorkflowBuilder
 from src.bitwarden_workflow_linter.rules.run_actionlint import (
     RunActionlint,
@@ -20,6 +20,7 @@ settings = Settings.factory()
 @pytest.fixture(name="rule")
 def fixture_rule():
     return RunActionlint()
+
 
 def test_rule_on_correct_workflow(rule):
     rule.settings = settings
