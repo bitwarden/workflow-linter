@@ -107,17 +107,18 @@ class SettingsError(Exception):
 
 SettingsFromFactory = TypeVar("SettingsFromFactory", bound="Settings")
 
-
 class Settings:
     """Class that contains configuration-as-code for any portion of the app."""
 
     enabled_rules: list[dict[str, str]]
     approved_actions: dict[str, Action]
+    actionlint_version: str
 
     def __init__(
         self,
         enabled_rules: Optional[list[dict[str, str]]] = None,
         approved_actions: Optional[dict[str, dict[str, str]]] = None,
+        actionlint_version: Optional[str] = None,
     ) -> None:
         """Settings object that can be overridden in settings.py.
 
@@ -134,7 +135,11 @@ class Settings:
 
         if approved_actions is None:
             approved_actions = {}
+        
+        if actionlint_version is None:
+            actionlint_version = ""
 
+        self.actionlint_version = actionlint_version
         self.enabled_rules = enabled_rules
         self.approved_actions = {
             name: Action(**action) for name, action in approved_actions.items()
@@ -142,6 +147,7 @@ class Settings:
 
     @staticmethod
     def factory() -> SettingsFromFactory:
+        # load default settings
         with (
             importlib.resources.files("bitwarden_workflow_linter")
             .joinpath("default_settings.yaml")
@@ -149,6 +155,16 @@ class Settings:
         ):
             settings = yaml.load(file)
 
+        # load actionlint version
+        with (
+            importlib.resources.files("bitwarden_workflow_linter")
+            .joinpath("actionlint_version.yaml")
+            .open("r", encoding="utf-8") as version_file
+        ):
+            version_data = yaml.load(version_file)
+            actionlint_version = version_data["actionlint_version"]
+
+        # load override settings
         settings_filename = "settings.yaml"
         local_settings = None
 
@@ -159,6 +175,7 @@ class Settings:
         if local_settings:
             settings.update(local_settings)
 
+        # load approved actions
         if settings["approved_actions_path"] == "default_actions.json":
             with (
                 importlib.resources.files("bitwarden_workflow_linter")
@@ -172,7 +189,9 @@ class Settings:
             ) as action_file:
                 settings["approved_actions"] = json.load(action_file)
 
+        
         return Settings(
             enabled_rules=settings["enabled_rules"],
             approved_actions=settings["approved_actions"],
+            actionlint_version=actionlint_version,
         )
