@@ -5,7 +5,6 @@ import subprocess
 import os
 
 from ruamel.yaml import YAML
-from src.bitwarden_workflow_linter.utils import Settings
 
 from src.bitwarden_workflow_linter.utils import Settings
 from src.bitwarden_workflow_linter.load import WorkflowBuilder
@@ -21,7 +20,7 @@ yaml = YAML()
 settings = Settings.factory()
 
 @pytest.fixture(name="rule")
-def fixture_rule(settings):
+def fixture_rule():
     return RunActionlint(settings)
 
 
@@ -246,7 +245,7 @@ def test_check_actionlint_installed_locally_windows(monkeypatch):
     assert result is True
 
 # test_install_actionlint
-def test_install_actionlint_linux(settings):
+def test_install_actionlint_linux():
     result, _ = install_actionlint("Linux", settings.actionlint_version)
     assert result is True
 
@@ -276,7 +275,7 @@ def test_install_actionlint_source(monkeypatch):
     assert result is True
 
 # test non available OS
-def test_install_actionlint_non_available_os(settings):
+def test_install_actionlint_non_available_os():
     result, error = install_actionlint("MockOS", settings.actionlint_version)
     assert result is False
     assert "An error occurred when installing Actionlint on MockOS" in error
