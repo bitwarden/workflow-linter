@@ -20,12 +20,6 @@ from src.bitwarden_workflow_linter.rules.run_actionlint import (
 yaml = YAML()
 settings = Settings.factory()
 
-@pytest.fixture(name="settings")
-def fixture_settings():
-    return Settings(
-        actionlint_version="1.7.7"
-    )
-
 @pytest.fixture(name="rule")
 def fixture_rule(settings):
     return RunActionlint(settings)
