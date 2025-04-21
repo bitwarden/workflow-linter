@@ -90,14 +90,14 @@ class RunActionlint(Rule):
         self.compatibility = [Workflow]
         self.settings = settings
 
-        if not self.settings.actionlint_version:
-            raise KeyError("The 'actionlint_version' is missing in the configuration file.")
-
     def fn(self, obj: Workflow) -> Tuple[bool, str]:
         if not obj or not obj.filename:
             raise AttributeError(
                 "Running actionlint without a filename is not currently supported"
             )
+
+        if not self.settings.actionlint_version:
+            raise KeyError("The 'actionlint_version' is missing in the configuration file.")
 
         """Check if Actionlint is alerady installed and if it is installed somewhere not on the PATH (location)"""
         installed, location = check_actionlint_path(platform.system(), self.settings.actionlint_version)
