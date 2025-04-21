@@ -23,7 +23,7 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^actionlint_version\\.json$"],
+      "fileMatch": ["^actionlint_version\\.yaml$"],
       "matchStrings": [
         "\"actionlint_version\":\\s*\"(?<currentValue>[^\"]+)\""
       ],
