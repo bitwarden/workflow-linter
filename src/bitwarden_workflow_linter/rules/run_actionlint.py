@@ -90,6 +90,9 @@ class RunActionlint(Rule):
         self.compatibility = [Workflow]
         self.settings = settings
 
+        if not self.settings.actionlint_version:
+            raise KeyError("The 'actionlint_version' is missing in the configuration file.")
+
     def fn(self, obj: Workflow) -> Tuple[bool, str]:
         if not obj or not obj.filename:
             raise AttributeError(
