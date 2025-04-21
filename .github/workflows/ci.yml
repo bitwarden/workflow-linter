@@ -29,6 +29,8 @@ jobs:
           pipenv install --dev
 
       - name: Run pytest
+        env:
+          PYTHONPATH: "${{ github.workspace }}/src"
         run: pipenv run pytest tests --cov=src
 
       - name: Check type hinting
