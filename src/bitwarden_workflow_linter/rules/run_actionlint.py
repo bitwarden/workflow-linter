@@ -17,17 +17,12 @@ def install_actionlint(platform_system: str, version: str) -> Tuple[bool, str]:
 
     error = f"An error occurred when installing Actionlint on {platform_system}"
 
-    if platform_system.startswith("Linux"):
+    if platform_system.startswith(("Linux", "Darwin")):
+        """Homebrew does not maintain non-latest versions of actionlint so Mac will install from source"""
         return install_actionlint_source(error,version)
-    elif platform_system == "Darwin":
-        try:
-            subprocess.run(["brew", "install", "actionlint"], check=True)
-            return True, ""
-        except (FileNotFoundError, subprocess.CalledProcessError):
-            return False, f"{error} : check Brew installation"
     elif platform_system.startswith("Win"):
         try:
-            subprocess.run(["choco", "install", "actionlint", "-y"], check=True)
+            subprocess.run(["choco", "install", "actionlint", "-y", f"--version='{version}'"], check=True)
             return True, ""
         except (FileNotFoundError, subprocess.CalledProcessError):
             return False, f"{error} : check Choco installation"
@@ -42,21 +37,24 @@ def install_actionlint_source(error, version) -> Tuple[bool, str]:
         fp.write(request.read())
     try:
         subprocess.run(["bash", "download-actionlint.bash", version], check=True)
-        return True, os.getcwd()
+        return True, "./actionlint"
     except (FileNotFoundError, subprocess.CalledProcessError):
         return False, error
 
 
-def check_actionlint(platform_system: str, version: str) -> Tuple[bool, str]:
+def check_actionlint_path(platform_system: str, version: str) -> Tuple[bool, str]:
     """Check if the actionlint is in the system's PATH."""
     try:
-        subprocess.run(
+        installed = subprocess.run(
             ["actionlint", "--version"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             check=True,
         )
-        return True, ""
+        if version in f"{installed}":
+            return True, ""
+        else:
+            return install_actionlint(platform_system, version)
     except subprocess.CalledProcessError:
         return (
             False,
@@ -64,7 +62,23 @@ def check_actionlint(platform_system: str, version: str) -> Tuple[bool, str]:
 please check your package installer or manually install it",
         )
     except FileNotFoundError:
-        return install_actionlint(platform_system, version)
+        return check_actionlint_local(platform_system, version)
+
+def check_actionlint_local(platform_system: str, version: str) -> Tuple[bool, str]:
+
+        try:
+            installed = subprocess.run(
+            ["./actionlint", "--version"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=True,
+            )
+            if version in f"{installed}":
+                return True, "./actionlint"
+            else:
+                return install_actionlint(platform_system, version)
+        except FileNotFoundError:
+                return install_actionlint(platform_system, version)
 
 
 class RunActionlint(Rule):
@@ -82,12 +96,15 @@ class RunActionlint(Rule):
                 "Running actionlint without a filename is not currently supported"
             )
 
+        if not self.settings.actionlint_version:
+            raise KeyError("The 'actionlint_version' is missing in the configuration file.")
+
         """Check if Actionlint is alerady installed and if it is installed somewhere not on the PATH (location)"""
-        installed, location = check_actionlint(platform.system(), self.settings.actionlint_version)
+        installed, location = check_actionlint_path(platform.system(), self.settings.actionlint_version)
         if installed:
             if location:
                 result = subprocess.run(
-                    [location + "/actionlint", obj.filename],
+                     [location, obj.filename],
                     capture_output=True,
                     text=True,
                     check=False,
