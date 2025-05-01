@@ -329,11 +329,6 @@
     "sha": "e3e9da201b87ada54eb4c550c14fb783385c5c8a",
     "version": "v2.13.0"
   },
-  "launchdarkly/find-code-references-in-pull-request": {
-    "name": "launchdarkly/find-code-references-in-pull-request",
-    "sha": "d008aa4f321d8cd35314d9cb095388dcfde84439",
-    "version": "v2.0.0"
-  },
   "macauley/action-homebrew-bump-cask": {
     "name": "macauley/action-homebrew-bump-cask",
     "sha": "445c42390d790569d938f9068d01af39ca030feb",
