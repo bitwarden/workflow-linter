@@ -324,6 +324,11 @@
     "sha": "0025e74a8c7512023d06dc019c617aa3cf561fde",
     "version": "v1.10.0"
   },
+  "launchdarkly/find-code-references": {
+    "name": "launchdarkly/find-code-references",
+    "sha": "e3e9da201b87ada54eb4c550c14fb783385c5c8a",
+    "version": "v2.13.0"
+  },
   "launchdarkly/find-code-references-in-pull-request": {
     "name": "launchdarkly/find-code-references-in-pull-request",
     "sha": "d008aa4f321d8cd35314d9cb095388dcfde84439",
