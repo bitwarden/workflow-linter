@@ -309,6 +309,11 @@
     "sha": "1aa358be5cf73883762b302a3a03abd66e75b232",
     "version": "v3.1.0"
   },
+  "hashicorp/setup-terraform": {
+    "name": "hashicorp/setup-terraform",
+    "sha": "b9cd54a3c349d3f38e8881555d616ced269862dd",
+    "version": "v3.1.2"
+  },
   "helm/chart-releaser-action": {
     "name": "helm/chart-releaser-action",
     "sha": "a917fd15b20e8b64b94d9158ad54cd6345335584",
