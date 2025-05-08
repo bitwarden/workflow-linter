@@ -8,6 +8,8 @@ from src.bitwarden_workflow_linter.load import WorkflowBuilder
 from src.bitwarden_workflow_linter.rules.check_pr_target import (
     RuleCheckPrTarget,
 )
+from src.bitwarden_workflow_linter.models.workflow import Workflow
+from src.bitwarden_workflow_linter.utils import Settings
 
 yaml = YAML()
 message = "A check-run job must be included as a direct job dependency when pull_request_target is used and the workflow may only apply to runs on the main branch"
@@ -234,11 +236,53 @@ jobs:
 def fixture_rule():
     return RuleCheckPrTarget()
 
+@pytest.fixture
+def mock_workflow():
+    return Workflow(
+        on={
+            "pull_request_target": {
+                "branches": ["main"]
+            }
+        },
+        jobs={}
+    )
+def test_targets_main_branch_with_settings_yaml(mock_workflow):
+    settings = Settings({"default_branch": "main"})
+    rule = RuleCheckPrTarget(settings=settings)
+    assert rule.targets_main_branch(mock_workflow) is True
+
+def test_targets_custom_default_branch(mock_workflow):
+    settings = Settings(
+        enabled_rules=[],
+        approved_actions={},
+        actionlint_version="",
+        default_branch="production"
+    )
+    rule = RuleCheckPrTarget(settings=settings)
+    mock_workflow.on["pull_request_target"]["branches"] = ["production"]
+    assert rule.targets_main_branch(mock_workflow) is True
+
+def test_targets_main_branch_no_default_branch(mock_workflow):
+    settings = Settings({})
+    rule = RuleCheckPrTarget(settings=settings)
+    assert rule.targets_main_branch(mock_workflow) is True  # Defaults to "main"
+
+def test_targets_main_branch_incorrect_branch(mock_workflow):
+    settings = Settings({"default_branch": "main"})
+    rule = RuleCheckPrTarget(settings=settings)
+    mock_workflow.on["pull_request_target"]["branches"] = ["feature"]
+    assert rule.targets_main_branch(mock_workflow) is False
+
+def test_targets_main_branch_no_branches_specified(mock_workflow):
+    settings = Settings({"default_branch": "main"})
+    rule = RuleCheckPrTarget(settings=settings)
+    mock_workflow.on["pull_request_target"].pop("branches")
+    assert rule.targets_main_branch(mock_workflow) is False
+
 def test_rule_on_correct_workflow(rule, correct_workflow):
     result, message = rule.fn(correct_workflow)
     assert result is True
     assert message == ""
-
 
 def test_rule_on_no_checkworkflow(rule, no_check_workflow):
     result, message = rule.fn(no_check_workflow)
