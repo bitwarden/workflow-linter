@@ -120,7 +120,7 @@ class Settings:
         enabled_rules: Optional[list[dict[str, str]]] = None,
         approved_actions: Optional[dict[str, dict[str, str]]] = None,
         actionlint_version: Optional[str] = None,
-        default_branch: [str] = "main",
+        default_branch: str = "main",
     ) -> None:
         """Settings object that can be overridden in settings.py.
 
