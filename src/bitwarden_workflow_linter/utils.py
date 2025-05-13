@@ -113,7 +113,7 @@ class Settings:
     enabled_rules: list[dict[str, str]]
     approved_actions: dict[str, Action]
     actionlint_version: str
-    default_branch: str
+    default_branch: Optional[str]
 
     def __init__(
         self,
