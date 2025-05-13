@@ -28,11 +28,11 @@ class RuleCheckPrTarget(Rule):
         self.settings = settings
 
     def targets_main_branch(self, obj: Workflow) -> bool:
-        default_branch = self.settings.default_branch if self.settings else "main"
+        default_branch = self.settings.default_branch
         branches = obj.on["pull_request_target"].get("branches", [])
         if isinstance(branches, str):
             branches = [branches]
-        return branches == [default_branch]
+        return len(branches) == 1 and branches[0] == default_branch
 
     def has_check_run(self, obj: Workflow) -> Tuple[bool, str]:
         for name, job in obj.jobs.items():
