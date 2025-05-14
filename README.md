@@ -1,248 +1,148 @@
-# Bitwarden Workflow Linter
+actionlint
+==========
+[![CI Status][ci-badge]][ci]
+[![API Document][apidoc-badge]][apidoc]
 
-Bitwarden's Workflow Linter is an extensible linter to apply opinionated organization-specific GitHub Action standards. It was designed to be used alongside [yamllint](https://github.com/adrienverge/yamllint) to enforce specific YAML standards.
+[actionlint][repo] is a static checker for GitHub Actions workflow files. [Try it online!][playground]
 
-To see an example of Workflow Linter in practice in GitHub Action, see the [composite Action](https://github.com/bitwarden/gh-actions/tree/main/lint-workflow).
+Features:
 
-## Prerequisites
+- **Syntax check for workflow files** to check unexpected or missing keys following [workflow syntax][syntax-doc]
+- **Strong type check for `${{ }}` expressions** to catch several semantic errors like access to not existing property,
+  type mismatches, ...
+- **Actions usage check** to check that inputs at `with:` and outputs in `steps.{id}.outputs` are correct
+- **Reusable workflow check** to check inputs/outputs/secrets of reusable workflows and workflow calls
+- **[shellcheck][] and [pyflakes][] integrations** for scripts at `run:`
+- **Security checks**; [script injection][script-injection-doc] by untrusted inputs, hard-coded credentials
+- **Other several useful checks**; [glob syntax][filter-pattern-doc] validation, dependencies check for `needs:`,
+  runner label validation, cron syntax validation, ...
 
-- Python 3.12
-- pipenv
-- Windows systems: Chocolatey package manager
-- Mac OS systems: Homebrew package manager
-- pipx
+See the [full list][checks] of checks done by actionlint.
 
-## Setup
+<img src="https://github.com/rhysd/ss/blob/master/actionlint/main.gif?raw=true" alt="actionlint reports 7 errors" width="806" height="492"/>
 
-1. **Create the virtual environment:**
-   ```bash
-   python3.12 -m venv /Users/$USER/bitwarden_workflow_linter_venv
-   ```
-
-2. **Activate the virtual environment:**
-   ```bash
-   source /Users/$USER/bitwarden_workflow_linter_venv/bin/activate
-   ```
-
-## Installation
-
-### From PyPI
-This is the recommended method for most users. Installing from PyPI ensures you get the latest stable release and is the easiest way to install and update the package.
-
-
-1. **Install Bitwarden Workflow Linter:**
-   ```bash
-   pip install --upgrade bitwarden_workflow_linter
-   ```
-
-2. **Deactivate the virtual environment (optional):**
-   ```bash
-   deactivate
-   ```
-#### Using pipx
-
-Alternatively, you can install `bwwl` globally using `pipx` to keep it isolated:
-
-1. **Install Bitwarden Workflow Linter:**
-   ```bash
-   pipx install bitwarden_workflow_linter --python python3.12
-   ```
-
-This method is ideal for running `bwwl` as a standalone CLI tool without managing a virtual environment manually.
-
-### From GitHub Release
-Use this method if you need a specific version of the package that is not yet available on PyPI, or if you want to access pre-release versions.
-
-1. **Download the release tarball or zip file from GitHub:**
-   ```bash
-   wget https://github.com/bitwarden/workflow-linter/archive/refs/tags/vX.Y.Z.tar.gz
-   tar -xzf vX.Y.Z.tar.gz
-   cd workflow-linter-X.Y.Z
-   ```
-
-2. **Install the package:**
-   ```bash
-   pip install .
-   ```
-
-3. **Deactivate the virtual environment (optional):**
-   ```bash
-   deactivate
-   ```
-
-### Locally
-This method is useful for developers who want to contribute to the project or need to make local modifications to the source code. *Make sure to follow the virtual environment prerequisite setup*
-1. **Clone the repository:**
-   ```bash
-   git clone git@github.com:bitwarden/workflow-linter.git
-   cd workflow-linter
-   ```
-
-2. **Install the package:**
-   ```bash
-   pip install -e .
-   ```
-
-3. **Deactivate the virtual environment (optional):**
-   ```bash
-   deactivate
-   ```
-
-## Usage
-
-### Setup settings.yaml
-
-If a non-default configuration is desired (different than `src/bitwarden_workflow_linter/default_settings.yaml`), copy the below and create a `settings.yaml` in the directory that `bwwl` will be running from.
+**Example of broken workflow:**
 
 ```yaml
-enabled_rules:
-    - id: bitwarden_workflow_linter.rules.name_exists.RuleNameExists
-      level: error
-    - id: bitwarden_workflow_linter.rules.name_capitalized.RuleNameCapitalized
-      level: error
-    - id: bitwarden_workflow_linter.rules.pinned_job_runner.RuleJobRunnerVersionPinned
-      level: error
-    - id: bitwarden_workflow_linter.rules.job_environment_prefix.RuleJobEnvironmentPrefix
-      level: error
-    - id: bitwarden_workflow_linter.rules.step_pinned.RuleStepUsesPinned
-      level: error
-    - id: bitwarden_workflow_linter.rules.underscore_outputs.RuleUnderscoreOutputs
-      level: warning
-    - id: bitwarden_workflow_linter.rules.run_actionlint.RunActionlint
-      level: warning
-
-approved_actions_path: default_actions.json
+on:
+  push:
+    branch: main
+    tags:
+      - 'v\d+'
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [macos-latest, linux-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - run: echo "Checking commit '${{ github.event.head_commit.message }}'"
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node_version: 18.x
+      - uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ matrix.platform }}-node-${{ hashFiles('**/package-lock.json') }}
+        if: ${{ github.repository.permissions.admin == true }}
+      - run: npm install && npm test
 ```
 
-### Command Line Usage
+**actionlint reports 7 errors:**
 
-```bash
-usage: bwwl [-h] [-v] {lint,actions} ...
-
-positional arguments:
-  {lint,actions}
-    lint          Verify that a GitHub Action Workflow follows all of the Rules.
-    actions       Add or Update Actions in the pre-approved list.
-
-options:
-  -h, --help      show this help message and exit
-  -v, --verbose
 ```
-## Pre-commit Hook Setup
-
-### Navigate to the `.git/hooks` directory in the repository you wish to lint:
-
-```bash
-cd .git/hooks
-```
-
-### Create the `pre-commit` file (if it does not already exist):
-
-```bash
-touch pre-commit
-```
-
-### Make the script executable:
-
-```bash
-chmod +x pre-commit
-```
-
-### Edit the `pre-commit` script:
-
-Open the `pre-commit` file with your favorite text editor and add the following content, replacing `/Users/$USER/bitwarden_workflow_linter_venv/bin/activate` with the actual path to your virtual environment:
-
-```bash
-#!/bin/bash
-set -e
-# Activate the virtual environment
-source "/Users/$USER/bitwarden_workflow_linter_venv/bin/activate"
-# Get the repository root directory
-repo_root=$(git rev-parse --show-toplevel)
-# Run your Python script
-bwwl lint -f "$repo_root/.github/workflows"
-# Deactivate the virtual environment (optional)
-deactivate
+test.yaml:3:5: unexpected key "branch" for "push" section. expected one of "branches", "branches-ignore", "paths", "paths-ignore", "tags", "tags-ignore", "types", "workflows" [syntax-check]
+  |
+3 |     branch: main
+  |     ^~~~~~~
+test.yaml:5:11: character '\' is invalid for branch and tag names. only special characters [, ?, +, *, \, ! can be escaped with \. see `man git-check-ref-format` for more details. note that regular expression is unavailable. note: filter pattern syntax is explained at https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet [glob]
+  |
+5 |       - 'v\d+'
+  |           ^~~~
+test.yaml:10:28: label "linux-latest" is unknown. available labels are "windows-latest", "windows-latest-8-cores", "windows-2025", "windows-2022", "windows-2019", "ubuntu-latest", "ubuntu-latest-4-cores", "ubuntu-latest-8-cores", "ubuntu-latest-16-cores", "ubuntu-24.04", "ubuntu-22.04", "ubuntu-20.04", "macos-latest", "macos-latest-xl", "macos-latest-xlarge", "macos-latest-large", "macos-15-xlarge", "macos-15-large", "macos-15", "macos-14-xl", "macos-14-xlarge", "macos-14-large", "macos-14", "macos-13-xl", "macos-13-xlarge", "macos-13-large", "macos-13", "self-hosted", "x64", "arm", "arm64", "linux", "macos", "windows". if it is a custom label for self-hosted runner, set list of labels in actionlint.yaml config file [runner-label]
+   |
+10 |         os: [macos-latest, linux-latest]
+   |                            ^~~~~~~~~~~~~
+test.yaml:13:41: "github.event.head_commit.message" is potentially untrusted. avoid using it directly in inline scripts. instead, pass it through an environment variable. see https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions for more details [expression]
+   |
+13 |       - run: echo "Checking commit '${{ github.event.head_commit.message }}'"
+   |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+test.yaml:17:11: input "node_version" is not defined in action "actions/setup-node@v4". available inputs are "always-auth", "architecture", "cache", "cache-dependency-path", "check-latest", "node-version", "node-version-file", "registry-url", "scope", "token" [action]
+   |
+17 |           node_version: 18.x
+   |           ^~~~~~~~~~~~~
+test.yaml:21:20: property "platform" is not defined in object type {os: string} [expression]
+   |
+21 |           key: ${{ matrix.platform }}-node-${{ hashFiles('**/package-lock.json') }}
+   |                    ^~~~~~~~~~~~~~~
+test.yaml:22:17: receiver of object dereference "permissions" must be type of object but got "string" [expression]
+   |
+22 |         if: ${{ github.repository.permissions.admin == true }}
+   |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
-### Test the Hook:
+## Quick start
 
-Try committing a change to the repository. The pre-commit hook should run the workflow linter.
+Install `actionlint` command by downloading [the released binary][releases] or by Homebrew or by `go install`. See
+[the installation document][install] for more details like how to manage the command with several package managers
+or run via Docker container.
 
-## Development
-
-### Setup
-Refer to the [Locally](#locally) instructions above to clone the repository and install the package.
-
-### Testing
-
-All built-in `src/bitwarden_workflow_linter/rules` should have 100% code coverage and we should shoot for an overall coverage of 80%+. We are lax on the [imperative shell](https://www.destroyallsoftware.com/screencasts/catalog/functional-core-imperative-shell) (code interacting with other systems; ie. disk, network, etc), but we strive to maintain a high coverage over the functional core (objects and models).
-
-```bash
-pipenv shell
-pytest tests --cov=src
+```sh
+go install github.com/rhysd/actionlint/cmd/actionlint@latest
 ```
 
-### Code Reformatting
+Basically all you need to do is run the `actionlint` command in your repository. actionlint automatically detects workflows and
+checks errors. actionlint focuses on finding out mistakes. It tries to catch errors as much as possible and make false positives
+as minimal as possible.
 
-We adhere to PEP8 and use `black` to maintain this adherence. `black` should be run on any change being merged to `main`.
-
-```bash
-pipenv shell
-black .
+```sh
+actionlint
 ```
 
-### Linting
+Another option to try actionlint is [the online playground][playground]. Your browser can run actionlint through WebAssembly.
 
-We loosely use [Google's Python style guide](https://google.github.io/styleguide/pyguide.html), but yield to `black` when there is a conflict.
+See [the usage document][usage] for more details.
 
-```bash
-pipenv shell
-pylint --rcfile pylintrc src/ tests/
-```
+## Documents
 
-### Add a new Rule
+- [Checks][checks]: Full list of all checks done by actionlint with example inputs, outputs, and playground links.
+- [Installation][install]: Installation instructions. Prebuilt binaries, a Docker image, building from source, a download script
+  (for CI), supports by several package managers are available.
+- [Usage][usage]: How to use `actionlint` command locally or on GitHub Actions, the online playground, an official Docker image,
+  and integrations with reviewdog, Problem Matchers, super-linter, pre-commit, VS Code.
+- [Configuration][config]: How to configure actionlint behavior. Currently, the labels of self-hosted runners, the configuration
+  variables, and ignore patterns of errors for each file paths can be set.
+- [Go API][api]: How to use actionlint as Go library.
+- [References][refs]: Links to resources.
 
-A new Rule is created by extending the Rule base class and overriding the `fn(obj: Union[Workflow, Job, Step])` method. Available attributes of `Workflows`, `Jobs` and `Steps` can be found in their definitions under `src/models`.
+## Bug reporting
 
-For a simple example, we'll take a look at enforcing the existence of the `name` key in a Job. This is already done by default with the `src.rules.name_exists.RuleNameExists`, but provides a simple enough example to walk through.
+When you see some bugs or false positives, it is helpful to [file a new issue][issue-form] with a minimal example
+of input. Giving me some feedbacks like feature requests or ideas of additional checks is also welcome.
 
-```python
-from typing import Union, Tuple
+See the [contribution guide](./CONTRIBUTING.md) for more details.
 
-from ..rule import Rule
-from ..models.job import Job
-from ..models.workflow import Workflow
-from ..models.step import Step
-from ..utils import LintLevels, Settings
+## License
 
+actionlint is distributed under [the MIT license](./LICENSE.txt).
 
-class RuleJobNameExists(Rule):
-    def __init__(self, settings: Settings = None, lint_level: Optional[LintLevels] = LintLevels.ERROR) -> None:
-        self.message = "name must exist"
-        self.on_fail: LintLevels = lint_level
-        self.compatibility: List[Union[Workflow, Job, Step]] = [Job]
-        self.settings: Settings = settings
-
-    def fn(self, obj: Job) -> Tuple[bool, str]:
-        """<doc block goes here> """
-        if obj.name is not None:
-            return True, ""
-        return False, self.message
-```
-
-By default, a new Rule needs five things:
-
-- `self.message`: The message to return to the user on a lint failure
-- `self.on_fail`: The level of failure on a lint failure (NONE, WARNING, ERROR). NONE and WARNING will exit with a code of 0 (unless using `strict` mode for WARNING). ERROR will exit with a non-zero exit code
-- `self.compatibility`: The list of objects this rule is compatible with. This is used to create separate instances of the Rule for each object in the Rules collection.
-- `self.settings`: In general, this should default to what is shown here, but allows for overrides
-- `self.fn`: The function doing the actual work to check the object and enforce the standard.
-
-`fn` can be as simple or as complex as it needs to be to run a check on a _single_ object. This linter currently does not support Rules that check against multiple objects at a time OR file level formatting (one empty between each step or two empty lines between each job).
-
-_IMPORTANT: A rule must be implemented and tested then merged into `main` before it can be activated._ This is because the released version of `bwwl` will use the current `settings.yaml` file, but it will not have the new rule functionality yet and cause an error in the workflow linting of this repository.
-
-To activate a rule after implementing and releasing it, add it to `settings.yaml` in the project's base folder and `src/bitwarden_workflow_linter/default_settings.yaml` to make the rule default.
-
-Before creating a new rule please read the [Workflow linter rule rollout process](./RULE_ROLLOUT.md) document in which you'll find the process for rolling out new workflow linter rules.
+[ci-badge]: https://github.com/rhysd/actionlint/actions/workflows/ci.yaml/badge.svg
+[ci]: https://github.com/rhysd/actionlint/actions/workflows/ci.yaml
+[apidoc-badge]: https://pkg.go.dev/badge/github.com/rhysd/actionlint.svg
+[apidoc]: https://pkg.go.dev/github.com/rhysd/actionlint
+[repo]: https://github.com/rhysd/actionlint
+[playground]: https://rhysd.github.io/actionlint/
+[shellcheck]: https://github.com/koalaman/shellcheck
+[pyflakes]: https://github.com/PyCQA/pyflakes
+[syntax-doc]: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
+[filter-pattern-doc]: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
+[script-injection-doc]: https://docs.github.com/en/actions/learn-github-actions/security-hardening-for-github-actions#understanding-the-risk-of-script-injections
+[releases]: https://github.com/rhysd/actionlint/releases
+[checks]: https://github.com/rhysd/actionlint/blob/v1.7.7/docs/checks.md
+[install]: https://github.com/rhysd/actionlint/blob/v1.7.7/docs/install.md
+[usage]: https://github.com/rhysd/actionlint/blob/v1.7.7/docs/usage.md
+[config]: https://github.com/rhysd/actionlint/blob/v1.7.7/docs/config.md
+[api]: https://github.com/rhysd/actionlint/blob/v1.7.7/docs/api.md
+[refs]: https://github.com/rhysd/actionlint/blob/v1.7.7/docs/reference.md
+[issue-form]: https://github.com/rhysd/actionlint/issues/new

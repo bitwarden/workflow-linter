@@ -23,7 +23,11 @@ class RuleStepUsesPinned(Rule):
     updated.
     """
 
-    def __init__(self, settings: Optional[Settings] = None, lint_level: Optional[LintLevels] = LintLevels.ERROR) -> None:
+    def __init__(
+        self,
+        settings: Optional[Settings] = None,
+        lint_level: Optional[LintLevels] = LintLevels.ERROR,
+    ) -> None:
         """Constructor for RuleStepUsesPinned to override base Rule.
 
         Args:

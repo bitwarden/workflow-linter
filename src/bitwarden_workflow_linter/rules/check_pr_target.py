@@ -8,7 +8,11 @@ from ..utils import LintLevels, Settings
 
 
 class RuleCheckPrTarget(Rule):
-    def __init__(self, settings: Optional[Settings] = None, lint_level: Optional[LintLevels] = LintLevels.NONE) -> None:
+    def __init__(
+        self,
+        settings: Optional[Settings] = None,
+        lint_level: Optional[LintLevels] = LintLevels.NONE,
+    ) -> None:
         """
         To ensure pull_request_target is safe to use, the check-run step is added
         to all jobs as a dependency.
@@ -27,12 +31,12 @@ class RuleCheckPrTarget(Rule):
         self.compatibility = [Workflow]
         self.settings = settings
 
-    def targets_main_branch(self, obj:Workflow) -> bool:
+    def targets_main_branch(self, obj: Workflow) -> bool:
         if obj.on["pull_request_target"].get("branches"):
             branches_list = obj.on["pull_request_target"].get("branches")
             if isinstance(branches_list, str):
                 branches_list = [branches_list]
-            if any(branch != 'main' for branch in branches_list):
+            if any(branch != "main" for branch in branches_list):
                 return False
         else:
             return False
@@ -44,7 +48,7 @@ class RuleCheckPrTarget(Rule):
                 return True, name
         return False, ""
 
-    def check_run_required(self, obj:Workflow, check_job:str) -> list:
+    def check_run_required(self, obj: Workflow, check_job: str) -> list:
         missing_jobs = []
         for job in list(obj.jobs.keys()):
             if job is not check_job:
@@ -62,11 +66,13 @@ class RuleCheckPrTarget(Rule):
             result, check_job = self.has_check_run(obj)
             main_branch_only = self.targets_main_branch(obj)
             if not main_branch_only:
-                Errors.append("Workflows using pull_request_target can only target the main branch")
+                Errors.append(
+                    "Workflows using pull_request_target can only target the main branch"
+                )
             if result:
                 missing_jobs = self.check_run_required(obj, check_job)
                 if missing_jobs:
-                    job_list = ', '.join(missing_jobs)
+                    job_list = ", ".join(missing_jobs)
                     message = f"Check-run is missing from the following jobs in the workflow: {job_list}"
                     Errors.append(message)
             else:

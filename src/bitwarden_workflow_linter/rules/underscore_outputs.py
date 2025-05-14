@@ -1,4 +1,4 @@
-""" Rule to enforce all GitHub outputs with more than one words use an underscore."""
+"""Rule to enforce all GitHub outputs with more than one words use an underscore."""
 
 import re
 
@@ -17,7 +17,11 @@ class RuleUnderscoreOutputs(Rule):
     A simple standard to ensure uniformity in naming.
     """
 
-    def __init__(self, settings: Optional[Settings] = None, lint_level: Optional[LintLevels] = LintLevels.ERROR) -> None:
+    def __init__(
+        self,
+        settings: Optional[Settings] = None,
+        lint_level: Optional[LintLevels] = LintLevels.ERROR,
+    ) -> None:
         """Constructor for RuleUnderscoreOutputs to override the Rule class.
 
         Args:

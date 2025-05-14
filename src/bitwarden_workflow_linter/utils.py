@@ -107,6 +107,7 @@ class SettingsError(Exception):
 
 SettingsFromFactory = TypeVar("SettingsFromFactory", bound="Settings")
 
+
 class Settings:
     """Class that contains configuration-as-code for any portion of the app."""
 
@@ -135,7 +136,7 @@ class Settings:
 
         if approved_actions is None:
             approved_actions = {}
-        
+
         if actionlint_version is None:
             actionlint_version = ""
 
@@ -189,7 +190,6 @@ class Settings:
             ) as action_file:
                 settings["approved_actions"] = json.load(action_file)
 
-        
         return Settings(
             enabled_rules=settings["enabled_rules"],
             approved_actions=settings["approved_actions"],

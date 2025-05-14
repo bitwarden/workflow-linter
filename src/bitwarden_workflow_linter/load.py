@@ -134,7 +134,9 @@ class Rules:
 
             try:
                 rule_class = getattr(importlib.import_module(module_name), rule_name)
-                rule_inst = rule_class(settings=settings, lint_level=lint_level(rule["level"]))
+                rule_inst = rule_class(
+                    settings=settings, lint_level=lint_level(rule["level"])
+                )
 
                 if Workflow in rule_inst.compatibility:
                     self.workflow.append(rule_inst)

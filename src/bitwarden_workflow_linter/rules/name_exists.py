@@ -19,7 +19,11 @@ class RuleNameExists(Rule):
     It also helps with uniformity of runs.
     """
 
-    def __init__(self, settings: Optional[Settings] = None, lint_level: Optional[LintLevels] = LintLevels.NONE) -> None:
+    def __init__(
+        self,
+        settings: Optional[Settings] = None,
+        lint_level: Optional[LintLevels] = LintLevels.NONE,
+    ) -> None:
         """Constructor for RuleNameCapitalized to override Rule class.
 
         Args:

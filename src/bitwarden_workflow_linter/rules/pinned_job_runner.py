@@ -15,7 +15,11 @@ class RuleJobRunnerVersionPinned(Rule):
     breaking the majority of our pipelines, we pin the versions.
     """
 
-    def __init__(self, settings: Optional[Settings] = None, lint_level: Optional[LintLevels] = LintLevels.NONE) -> None:
+    def __init__(
+        self,
+        settings: Optional[Settings] = None,
+        lint_level: Optional[LintLevels] = LintLevels.NONE,
+    ) -> None:
         """Constructor for RuleJobRunnerVersionPinned to override Rule class.
 
         Args:

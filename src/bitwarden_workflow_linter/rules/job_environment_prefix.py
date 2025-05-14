@@ -22,7 +22,11 @@ class RuleJobEnvironmentPrefix(Rule):
     visible when debugging a shell Step.
     """
 
-    def __init__(self, settings: Optional[Settings] = None, lint_level: Optional[LintLevels] = LintLevels.NONE) -> None:
+    def __init__(
+        self,
+        settings: Optional[Settings] = None,
+        lint_level: Optional[LintLevels] = LintLevels.NONE,
+    ) -> None:
         """RuleJobEnvironmentPrefix constructor to override the Rule class.
 
         Args:
