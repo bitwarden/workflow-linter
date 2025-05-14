@@ -10,10 +10,9 @@ on:
   pull_request:  # When a pull request event occurs
 
 permissions:  # Sets permissions of the GITHUB_TOKEN
-  contents: read
-  packages: read
   checks: write  # Permits an action to create a check run
   contents: read  # For actions to fetch code and list commits
+  packages: read  # For actions to fetch packages
   id-token: write  # Required to fetch an OpenID Connect (OIDC) token
   pull-requests: write  # Permits an action to add a label to a pull request
 
