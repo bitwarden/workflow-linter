@@ -8,6 +8,7 @@ name: Build Thing on PR Target
 
 permissions:
   checks: read 
+  contents: read
 
 on:
   pull_request_target:
