@@ -6,6 +6,7 @@ name: CI
 
 on:
   workflow_dispatch:  # Allows you to run this workflow manually from the Actions tab
+  workflow_call: # Allows this workflow to be called from another workflow
   pull_request:  # When a pull request event occurs
 
 permissions:  # Sets permissions of the GITHUB_TOKEN
