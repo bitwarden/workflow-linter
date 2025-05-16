@@ -209,6 +209,11 @@
     "sha": "a9ffb7d5ac46eca1bb1f06656bf888b39462f161",
     "version": "v2.4.0"
   },
+  "databricks/setup-cli": {
+    "name": "databricks/setup-cli",
+    "sha": "e36d8a56a09740e5a9e4ed5aeaf6fc3a2eb2e148",
+    "version": "v0.252.0"
+  },
   "dawidd6/action-download-artifact": {
     "name": "dawidd6/action-download-artifact",
     "sha": "80620a5d27ce0ae443b965134db88467fc607b43",
