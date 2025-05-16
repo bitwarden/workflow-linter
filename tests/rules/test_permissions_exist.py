@@ -56,6 +56,25 @@ jobs:
     return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
 
 
+@pytest.fixture(name="correct_workflow_scoped_permissions_on_job")
+def fixture_correct_workflow_scoped_permissions_on_job():
+    workflow = """\
+---
+on:
+  workflow_dispatch:
+
+jobs:
+  job-key:
+    runs-on: ubuntu-latest
+    permissions:
+        contents: read
+        packages: read
+    steps:
+      - run: echo test
+"""
+    return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
+
+
 @pytest.fixture(name="incorrect_workflow_missing_permissions")
 def fixture_incorrect_workflow_missing_permissions():
     workflow = """\
@@ -68,6 +87,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo test
+"""
+    return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
+
+
+@pytest.fixture(name="incorrect_workflow_missing_permissions_partial")
+def fixture_incorrect_workflow_missing_permissions_partial():
+    workflow = """\
+---
+on:
+  workflow_dispatch:
+
+jobs:
+  job-key:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo test
+
+  job-key2:
+    runs-on: ubuntu-latest
+    permissions: read-all
+    steps:
+      - run: echo test2
 """
     return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
 
@@ -89,8 +130,21 @@ def test_rule_on_correct_workflow_scoped_permissions(
     assert result is True
 
 
+def test_rule_on_correct_workflow_scoped_permissions_on_job(
+    rule, correct_workflow_scoped_permissions_on_job
+):
+    result, _ = rule.fn(correct_workflow_scoped_permissions_on_job)
+    assert result is True
+
+
 def test_rule_on_incorrect_workflow_missing_permissions(
     rule, incorrect_workflow_missing_permissions
 ):
     result, _ = rule.fn(incorrect_workflow_missing_permissions)
+    assert result is False
+
+def test_rule_on_incorrect_workflow_missing_permissions_partial(
+    rule, incorrect_workflow_missing_permissions_partial
+):
+    result, _ = rule.fn(incorrect_workflow_missing_permissions_partial)
     assert result is False
