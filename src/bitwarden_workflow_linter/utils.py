@@ -113,12 +113,14 @@ class Settings:
     enabled_rules: list[dict[str, str]]
     approved_actions: dict[str, Action]
     actionlint_version: str
+    default_branch: Optional[str]
 
     def __init__(
         self,
         enabled_rules: Optional[list[dict[str, str]]] = None,
         approved_actions: Optional[dict[str, dict[str, str]]] = None,
         actionlint_version: Optional[str] = None,
+        default_branch: Optional[str] = None,
     ) -> None:
         """Settings object that can be overridden in settings.py.
 
@@ -144,6 +146,7 @@ class Settings:
         self.approved_actions = {
             name: Action(**action) for name, action in approved_actions.items()
         }
+        self.default_branch = default_branch
 
     @staticmethod
     def factory() -> SettingsFromFactory:
@@ -189,9 +192,13 @@ class Settings:
             ) as action_file:
                 settings["approved_actions"] = json.load(action_file)
 
-        
+        default_branch = settings.get("default_branch")
+        if default_branch is None or len(default_branch) == 0:
+            raise Exception("The default_branch is not set in the default_settings.yaml file")        
+
         return Settings(
             enabled_rules=settings["enabled_rules"],
             approved_actions=settings["approved_actions"],
             actionlint_version=actionlint_version,
+            default_branch=default_branch,
         )
