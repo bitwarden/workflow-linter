@@ -92,7 +92,7 @@ This method is useful for developers who want to contribute to the project or ne
 
 ### Setup settings.yaml
 
-If a non-default configuration is desired (different than `src/bitwarden_workflow_linter/default_settings.yaml`), copy the below and create a `settings.yaml` in the directory that `bwwl` will be running from.
+If a non-default configuration is desired (different than `src/bitwarden_workflow_linter/default_settings.yaml`), copy the below and create a `settings.yaml` in the directory that `bwwl` will be running from ( generally will be the root directory in CI).
 
 ```yaml
 enabled_rules:
@@ -104,14 +104,21 @@ enabled_rules:
       level: error
     - id: bitwarden_workflow_linter.rules.job_environment_prefix.RuleJobEnvironmentPrefix
       level: error
+    - id: bitwarden_workflow_linter.rules.step_approved.RuleStepUsesApproved
+      level: error
     - id: bitwarden_workflow_linter.rules.step_pinned.RuleStepUsesPinned
       level: error
     - id: bitwarden_workflow_linter.rules.underscore_outputs.RuleUnderscoreOutputs
       level: warning
     - id: bitwarden_workflow_linter.rules.run_actionlint.RunActionlint
       level: warning
+    - id: bitwarden_workflow_linter.rules.check_pr_target.RuleCheckPrTarget
+      level: error
+    - id: bitwarden_workflow_linter.rules.permissions_exist.RulePermissionsExist
+      level: warning
 
 approved_actions_path: default_actions.json
+default_branch: main
 ```
 
 ### Command Line Usage
