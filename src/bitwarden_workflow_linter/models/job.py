@@ -32,6 +32,7 @@ class Job:
         metadata=config(field_name="with"), default=None
     )
     outputs: Optional[CommentedMap] = None
+    permissions: Optional[object] = None  # This can be a CommentedMap or a string
 
     @classmethod
     def parse_needs(cls: Self, value):
@@ -50,6 +51,7 @@ class Job:
             "env": data["env"] if "env" in data else None,
             "needs": Job.parse_needs(data["needs"]) if "needs" in data else None,
             "outputs": data["outputs"] if "outputs" in data else None,
+            "permissions": data["permissions"] if "permissions" in data else None,
         }
 
         new_job = cls.from_dict(init_data)

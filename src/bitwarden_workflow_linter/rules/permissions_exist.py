@@ -3,6 +3,7 @@
 from typing import Optional, Tuple
 
 from ..models.workflow import Workflow
+from ..models.job import Job
 from ..rule import Rule
 from ..utils import LintLevels, Settings
 
@@ -26,18 +27,24 @@ class RulePermissionsExist(Rule):
         lint_level: Optional[LintLevels] = LintLevels.NONE,
     ) -> None:
         self.message = (
-            "A top-level permissions section must be configured in the workflow."
+            "All workflows must specify permissions on either workflow or job level"
         )
         self.on_fail = lint_level
         self.compatibility = [Workflow]
         self.settings = settings
 
-    def permissions_exist(self, obj: Workflow) -> bool:
-        if obj.permissions is None:
+    def permissions_exist_on_workflow(self, workflow: Workflow) -> bool:
+        if workflow.permissions is None:
             return False
         return True
 
+    def permissions_exist_on_jobs(self, jobs: list[Job]) -> bool:
+        for job in jobs:
+            if job.permissions is None:
+                return False
+        return True
+
     def fn(self, obj: Workflow) -> Tuple[bool, str]:
-        if not self.permissions_exist(obj):
+        if not self.permissions_exist_on_workflow(obj) and not self.permissions_exist_on_jobs(obj.jobs.values()):
             return False, f"{self.message}"
         return True, ""
