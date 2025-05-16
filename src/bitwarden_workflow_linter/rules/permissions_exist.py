@@ -27,7 +27,7 @@ class RulePermissionsExist(Rule):
         lint_level: Optional[LintLevels] = LintLevels.NONE,
     ) -> None:
         self.message = (
-            "All workflows must specify permissions on either the workflow level or on all jobs"
+            "All workflows must specify permissions on either workflow or job level"
         )
         self.on_fail = lint_level
         self.compatibility = [Workflow]
