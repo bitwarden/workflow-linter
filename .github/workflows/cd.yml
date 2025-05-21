@@ -144,6 +144,9 @@ jobs:
       - name: Build
         run: hatch build
 
+      - name: Show version to be published
+        run: hatch version
+
       - name: Publish
         env:
           HATCH_INDEX_USER: __token__
