@@ -12,7 +12,7 @@ on:
 jobs:
   version-type:
     name: Get version type
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
     uses: ./.github/workflows/_version_type.yml
 
   version-bump:
