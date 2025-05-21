@@ -12,7 +12,7 @@ on:
 jobs:
   version-type:
     name: Get version type
-    # if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     uses: ./.github/workflows/_version_type.yml
 
   version-bump:
@@ -22,6 +22,7 @@ jobs:
     needs: version-type
     outputs:
       version: ${{ steps.get-version.outputs.version }}
+      commit_hash: ${{ steps.version-commit.outputs.commit_hash }}
     steps:
       - name: Generate GH App token
         uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1.12.0
@@ -91,23 +92,28 @@ jobs:
           git tag v$VERSION
           git push
           git push --tags
+      
+      - name: Output version bump commit hash
+        id: version-commit
+        run: |
+          echo "commit_hash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
-  # release:
-  #   name: GitHub release
-  #   runs-on: ubuntu-22.04
-  #   needs: version-bump
-  #   steps:
-  #     - name: Check out repo
-  #       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+  release:
+    name: GitHub release
+    runs-on: ubuntu-22.04
+    needs: version-bump
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-  #     - name: Create GitHub release
-  #       uses: ncipollo/release-action@440c8c1cb0ed28b9f43e4d1d670870f059653174 # v1.16.0
-  #       with:
-  #         commit: ${{ github.sha }}
-  #         tag: v${{ needs.version-bump.outputs.version }}
-  #         name: v${{ needs.version-bump.outputs.version }}
-  #         token: ${{ secrets.GITHUB_TOKEN }}
-  #         draft: false
+      - name: Create GitHub release
+        uses: ncipollo/release-action@440c8c1cb0ed28b9f43e4d1d670870f059653174 # v1.16.0
+        with:
+          commit: ${{ github.sha }}
+          tag: v${{ needs.version-bump.outputs.version }}
+          name: v${{ needs.version-bump.outputs.version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: false
 
   deploy:
     name: Deploy workflow-linter (v2)
@@ -118,8 +124,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
-          ref: refs/tags/v${{ needs.version-bump.outputs.version }}
-
+          ref: ${{ needs.version-bump.outputs.commit_hash }}
 
       - name: Set up Python
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
@@ -144,11 +149,8 @@ jobs:
       - name: Build
         run: hatch build
 
-      - name: Show version to be published
-        run: hatch version
-
       - name: Publish
         env:
           HATCH_INDEX_USER: __token__
           HATCH_INDEX_AUTH: ${{ steps.retrieve-secret.outputs.pypi-api-token }}
-        run: hatch publish --dry-run
+        run: hatch publish
