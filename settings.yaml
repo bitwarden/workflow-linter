@@ -14,7 +14,7 @@ enabled_rules:
     - id: bitwarden_workflow_linter.rules.underscore_outputs.RuleUnderscoreOutputs
       level: warning
     - id: bitwarden_workflow_linter.rules.run_actionlint.RunActionlint
-      level: warning
+      level: error
     - id: bitwarden_workflow_linter.rules.check_pr_target.RuleCheckPrTarget
       level: error
     - id: bitwarden_workflow_linter.rules.permissions_exist.RulePermissionsExist
