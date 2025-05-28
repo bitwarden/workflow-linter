@@ -38,7 +38,7 @@ def main(input_args: Optional[List[str]] = None) -> int:
     args = parser.parse_args(input_args)
 
     if args.command == "lint":
-        return linter_cmd.run(args.files, args.strict)
+        return linter_cmd.run(args.files[0], args.strict)
 
     if args.command == "actions":
         print(f"{'-'*50}\n!!bwwl actions is in BETA!!\n{'-'*50}")
