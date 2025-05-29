@@ -51,7 +51,7 @@ class LinterCmd:
             action="store_true",
             help="return non-zero exit code on warnings as well as errors",
         )
-        parser_lint.add_argument("-f", "--files", nargs="+", action="append", help="files to lint")
+        parser_lint.add_argument("-f", "--files", nargs="+", action="append", required=True, help="files to lint")
         parser_lint.add_argument(
             "-o",
             "--output",
