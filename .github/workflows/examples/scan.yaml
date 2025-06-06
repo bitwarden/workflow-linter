@@ -7,10 +7,6 @@
 
 name: Scan
 
-permissions:
-    read-all # Sets permissions of the GITHUB_TOKEN
-    # More info: https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#permissions
-
 on:
     # Controls when the workflow will run
 
@@ -31,6 +27,8 @@ on:
         types: [opened, synchronize] # Options include labeled, unlabeled, reopened
         branches: "main"
 
+permissions: {}
+
 # A workflow run is made up of one or more jobs that can run sequentially or in
 # parallel
 jobs:
@@ -41,6 +39,8 @@ jobs:
         name: Check PR run # Human readable descriptor
         # location and branch of bitwarden-owned action being used
         uses: bitwarden/gh-actions/.github/workflows/check-run.yml@main
+        permissions:
+            contents: read
 
     sast:
         # A more complex job that has multiple actions as steps described below
