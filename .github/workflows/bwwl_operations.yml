@@ -120,9 +120,14 @@ jobs:
         id: create-pr
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          TITLE: "Update/Add bwwl approved actions"
+          BASE_TITLE: "Update/Add bwwl approved actions"
         run: |
-          PR_URL=$(gh pr create --title "$TITLE" \
+          actionName=""
+          if [ -n "$_ACTION" ]; then
+            actionName=" for $_ACTION"
+          fi
+          title="$BASE_TITLE$actionName"
+          PR_URL=$(gh pr create --title "$title" \
             --base "main" \
             --head "${{ env.BRANCH_NAME }}" \
             --label "version:patch" \
