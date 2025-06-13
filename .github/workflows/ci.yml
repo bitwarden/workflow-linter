@@ -36,6 +36,9 @@ jobs:
       - name: Check type hinting
         run: pipenv run pytype src
 
+      - name: Install local bwwl binary
+        run: pipenv run pip install -e .
+
       - name: Test against example workflows
         # run notes:
         # - Changing directories will help catch any repo specific paths in the linter
@@ -43,7 +46,17 @@ jobs:
         # - Changing directories utilizes the default_settings.yaml rather than this repos
         #   settings.yaml, which better simulates running from another repository
         # - Using strict to ensure that our examples pass all checks including warnings
-        run: |
-          pipenv run pip install -e .
-          cd .github/workflows
-          pipenv run bwwl lint --strict -f ./examples
+        working-directory: .github/workflows
+        run: pipenv run bwwl lint --strict -f ./examples
+
+      - name: Test bwwl actions - add
+        env:
+          _ACTION: bitwarden/gh-actions
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Avoid rate limiting
+        run: pipenv run bwwl actions add -o src/bitwarden_workflow_linter/default_actions.json "$_ACTION"
+
+      # TODO: Add this test back in and added related error logging to fix the underlying issue
+      # - name: Test bwwl actions - update
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Avoid rate limiting
+      #   run: pipenv run bwwl actions update -o src/bitwarden_workflow_linter/default_actions.json
