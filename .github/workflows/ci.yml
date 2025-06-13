@@ -49,10 +49,13 @@ jobs:
         working-directory: .github/workflows
         run: pipenv run bwwl lint --strict -f ./examples
 
-      - name: Test bwwl actions - update
-        run: pipenv run bwwl actions update -o src/bitwarden_workflow_linter/default_actions.json
-
       - name: Test bwwl actions - add
         env:
-          _ACTION: bitwarden/gh-actions
+          _ACTION: bitwarden/gh-action
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Avoid rate limiting
         run: pipenv run bwwl actions add -o src/bitwarden_workflow_linter/default_actions.json "$_ACTION"
+
+      - name: Test bwwl actions - update
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Avoid rate limiting
+        run: pipenv run bwwl actions update -o src/bitwarden_workflow_linter/default_actions.json
