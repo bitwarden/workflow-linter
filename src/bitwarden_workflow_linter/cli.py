@@ -36,7 +36,7 @@ def main(input_args: Optional[List[str]] = None) -> int:
         raise SystemExit(parser.print_help())
 
     args = parser.parse_args(input_args)
-    if len(args.files) > 1:
+    if hasattr(args, "files") and len(args.files) > 1:
       raise parser.error("Only one -f / --files flag must be specified")
     if args.command == "lint":
         return linter_cmd.run(args.files[0], args.strict)
