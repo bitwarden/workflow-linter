@@ -47,3 +47,11 @@ jobs:
           pipenv run pip install -e .
           cd .github/workflows
           pipenv run bwwl lint --strict -f ./examples
+
+      - name: Test bwwl update
+        run: bwwl actions update -o src/bitwarden_workflow_linter/default_actions.json
+
+      - name: Test bwwl add
+        env:
+          _ACTION: bitwarden/gh-actions
+        run: bwwl actions add -o src/bitwarden_workflow_linter/default_actions.json "$_ACTION"
