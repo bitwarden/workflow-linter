@@ -364,6 +364,11 @@
     "sha": "a21f25cd3998bf370fde17e3f1b4c12c175172f9",
     "version": "v2.0.0"
   },
+  "opentofu/setup-opentofu": {
+    "name": "opentofu/setup-opentofu",
+    "sha": "592200bd4b9bbf4772ace78f887668b1aee8f716",
+    "version": "v1.0.5"
+  },
   "peter-evans/close-issue": {
     "name": "peter-evans/close-issue",
     "sha": "276d7966e389d888f011539a86c8920025ea0626",
