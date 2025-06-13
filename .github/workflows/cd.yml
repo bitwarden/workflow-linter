@@ -20,6 +20,9 @@ jobs:
     if: needs.version-type.outputs.version_bump_type != 'skip'
     runs-on: ubuntu-24.04
     needs: version-type
+    permissions:
+      contents: write
+      id-token: write
     outputs:
       version: ${{ steps.get-version.outputs.version }}
       commit_hash: ${{ steps.version-commit.outputs.commit_hash }}
@@ -31,10 +34,13 @@ jobs:
           app-id: ${{ secrets.BW_GHAPP_ID }}
           private-key: ${{ secrets.BW_GHAPP_KEY }}
 
-      - name: Login to Azure - CI Subscription
-        uses: Azure/login@e15b166166a8746d1a47596803bd8c1b595455cf # v1.6.0
+      - name: Azure Login
+        id: azure-login
+        uses: bitwarden/gh-actions/azure-login@main
         with:
-          creds: ${{ secrets.AZURE_KV_CI_SERVICE_PRINCIPAL }}
+          subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+          client_id: ${{ secrets.AZURE_CLIENT_ID }}
 
       - name: Retrieve secrets
         id: retrieve-secrets
@@ -43,6 +49,9 @@ jobs:
           keyvault: "bitwarden-ci"
           secrets: "github-gpg-private-key,
             github-gpg-private-key-passphrase"
+
+      - name: Azure Logout
+        uses: bitwarden/gh-actions/azure-logout@main
 
       - name: Check out repo
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -92,7 +101,7 @@ jobs:
           git tag v$VERSION
           git push
           git push --tags
-      
+
       - name: Output version bump commit hash
         id: version-commit
         run: |
@@ -119,6 +128,9 @@ jobs:
     name: Deploy workflow-linter (v2)
     runs-on: ubuntu-22.04
     needs: version-bump
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Check out repo
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -134,10 +146,13 @@ jobs:
       - name: Install hatch
         run: pip install hatch
 
-      - name: Login to Azure - CI Subscription
-        uses: Azure/login@e15b166166a8746d1a47596803bd8c1b595455cf # v1.6.0
+      - name: Azure Login
+        id: azure-login
+        uses: bitwarden/gh-actions/azure-login@main
         with:
-          creds: ${{ secrets.AZURE_KV_CI_SERVICE_PRINCIPAL }}
+          subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+          client_id: ${{ secrets.AZURE_CLIENT_ID }}
 
       - name: Retrieve pypi api token
         id: retrieve-secret
@@ -145,6 +160,9 @@ jobs:
         with:
           keyvault: "bitwarden-ci"
           secrets: "pypi-api-token"
+
+      - name: Azure Logout
+        uses: bitwarden/gh-actions/azure-logout@main
 
       - name: Build
         run: hatch build

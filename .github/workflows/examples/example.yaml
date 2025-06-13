@@ -92,6 +92,27 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
             - first-job # This job will wait until first-job completes
         # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/setting-a-default-shell-and-working-directory
         steps:
+            # Using Azure go obtain secrets from Azure Key Vault
+            - name: Azure Login
+              id: azure-login
+              uses: bitwarden/gh-actions/azure-login@main
+              with:
+                subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+                tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+                client_id: ${{ secrets.AZURE_CLIENT_ID }}
+
+            # Obtain the Key Vault secrets and use them later via GitHub outputs
+            - name: Get KV secrets
+              id: get-kv-secrets
+              uses: bitwarden/gh-actions/get-keyvault-secrets@main
+              with:
+                keyvault: gh-REPOSITORY_NAME
+                secrets: "SECRETS-OR-CREDENTIALS,ANOTHER-SECRET" # Comma-separated list of secrets to retrieve from Azure Key Vault
+
+            # Logout to remove access to Azure Key Vault secrets
+            - name: Azure Logout
+              uses: bitwarden/gh-actions/azure-logout@main
+
             - name: Descriptive step name
               # NOT RECOMMENDED if: always()  # run even if previous steps failed or the workflow is canceled, this can cause a workflow run to hang indefinitely
               if: failure() # run when any previous step of a job fails
@@ -100,7 +121,7 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
               with: # Parameters specific to this action that need to be defined in order for the step to be completed
                   fetch-depth: 0 # Full git history for actions that rely on whether a change has occurred
                   ref: ${{ github.event.pull_request.head.sha }}
-                  creds: ${{ secrets.SECRETS_OR_CREDENTIALS }}
+                  creds: ${{ steps.get-kv-secrets.outputs.SECRETS-OR-CREDENTIALS }} # Use the secrets retrieved from Azure Key Vault in the previous step
             - name: Another descriptive step name
               # Run a script instead of an existing github action
               run: |
