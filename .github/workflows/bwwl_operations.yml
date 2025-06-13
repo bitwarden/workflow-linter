@@ -78,10 +78,14 @@ jobs:
 
       - name: Run bwwl update
         if: ${{ github.event_name == 'schedule' || inputs.operation == 'update' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Avoid rate limiting
         run: bwwl actions update -o src/bitwarden_workflow_linter/default_actions.json
 
       - name: Run bwwl add
         if: ${{ inputs.operation == 'add' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Avoid rate limiting
         run: bwwl actions add -o src/bitwarden_workflow_linter/default_actions.json "$_ACTION"
 
       - name: Check for changes to commit
