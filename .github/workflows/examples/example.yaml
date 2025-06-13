@@ -6,8 +6,8 @@
 
 name: Build
 
-permissions:
-    read-all # Sets permissions of the GITHUB_TOKEN
+permissions: # Sets permissions of the GITHUB_TOKEN (Can be set at the workflow level or job level)
+    contents: read
     # More info: https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#permissions
 
 on: # Describes when to run the workflow
@@ -83,6 +83,9 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
     second-job:
         name: Second Job Name
         runs-on: ubuntu-22.04 # The type of runner that the job will run on, not available if "uses" is used
+        permissions:
+            contents: read
+            id-token: write # Required to fetch an OpenID Connect (OIDC) token
         defaults:
             run: # Set the default shell and working directory
                 shell: bash
@@ -106,7 +109,7 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
               id: get-kv-secrets
               uses: bitwarden/gh-actions/get-keyvault-secrets@main
               with:
-                keyvault: gh-REPOSITORY_NAME
+                keyvault: gh-REPOSITORY_NAME_EXAMPLE # The name of the Azure Key Vault created for this repossitory
                 secrets: "SECRETS-OR-CREDENTIALS,ANOTHER-SECRET" # Comma-separated list of secrets to retrieve from Azure Key Vault
 
             # Logout to remove access to Azure Key Vault secrets
