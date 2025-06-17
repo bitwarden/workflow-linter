@@ -27,7 +27,7 @@ jobs:
       version: ${{ steps.get-version.outputs.version }}
       commit_hash: ${{ steps.version-commit.outputs.commit_hash }}
     steps:
-      - name: Azure Login
+      - name: Log in to Azure
         id: azure-login
         uses: bitwarden/gh-actions/azure-login@main
         with:
@@ -43,14 +43,14 @@ jobs:
           secrets: "github-gpg-private-key,
             github-gpg-private-key-passphrase"
 
-      - name: Get KV secrets
+      - name: Get Azure Key Vault Secrets
         id: get-kv-secrets
         uses: bitwarden/gh-actions/get-keyvault-secrets@main
         with:
           keyvault: gh-org-bitwarden
           secrets: "BW-GHAPP-ID,BW-GHAPP-KEY"
 
-      - name: Azure Logout
+      - name: Log out from Azure
         uses: bitwarden/gh-actions/azure-logout@main
 
       - name: Generate GH App token
@@ -153,7 +153,7 @@ jobs:
       - name: Install hatch
         run: pip install hatch
 
-      - name: Azure Login
+      - name: Log in to Azure
         id: azure-login
         uses: bitwarden/gh-actions/azure-login@main
         with:
@@ -168,7 +168,7 @@ jobs:
           keyvault: "bitwarden-ci"
           secrets: "pypi-api-token"
 
-      - name: Azure Logout
+      - name: Log out from Azure
         uses: bitwarden/gh-actions/azure-logout@main
 
       - name: Build

@@ -96,7 +96,7 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
         # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/setting-a-default-shell-and-working-directory
         steps:
             # Using Azure go obtain secrets from Azure Key Vault
-            - name: Azure Login
+            - name: Log in to Azure
               id: azure-login
               uses: bitwarden/gh-actions/azure-login@main
               with:
@@ -105,7 +105,7 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
                 client_id: ${{ secrets.AZURE_CLIENT_ID }}
 
             # Obtain the Key Vault secrets and use them later via GitHub outputs
-            - name: Get KV secrets
+            - name: Get Azure Key Vault Secrets
               id: get-kv-secrets
               uses: bitwarden/gh-actions/get-keyvault-secrets@main
               with:
@@ -113,7 +113,7 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
                 secrets: "SECRETS-OR-CREDENTIALS,ANOTHER-SECRET" # Comma-separated list of secrets to retrieve from Azure Key Vault
 
             # Logout to remove access to Azure Key Vault secrets
-            - name: Azure Logout
+            - name: Log out from Azure
               uses: bitwarden/gh-actions/azure-logout@main
 
             - name: Descriptive step name
