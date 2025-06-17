@@ -105,7 +105,7 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
                 client_id: ${{ secrets.AZURE_CLIENT_ID }}
 
             # Obtain the Key Vault secrets and use them later via GitHub outputs
-            - name: Get Azure Key Vault Secrets
+            - name: Get Azure Key Vault secrets
               id: get-kv-secrets
               uses: bitwarden/gh-actions/get-keyvault-secrets@main
               with:
