@@ -12,6 +12,9 @@ on:
         description: "version to be built"
         value: ${{ jobs.version.outputs.version }}
 
+permissions:
+  contents: read
+
 jobs:
   version:
     name: Calculate version

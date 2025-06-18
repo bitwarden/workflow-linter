@@ -3,6 +3,9 @@ name: Enforce PR labels
 on:
   pull_request:
     types: [labeled, unlabeled, opened, reopened, synchronize]
+
+permissions: {}
+
 jobs:
   enforce-labels:
     name: Enforce Labels
