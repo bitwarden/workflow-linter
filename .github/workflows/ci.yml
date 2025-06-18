@@ -5,6 +5,7 @@ on:
     paths:
       - "src/**"
       - "tests/**"
+      - ".github/workflows/ci.yml"
   workflow_dispatch:
 
 permissions: read-all
