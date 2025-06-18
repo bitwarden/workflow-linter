@@ -42,6 +42,7 @@ jobs:
         run: pipenv run pytest tests --cov=src
 
       - name: Check type hinting
+        if: startsWith(matrix.os, 'ubuntu')
         run: pipenv run pytype src
 
       - name: Install local bwwl binary
