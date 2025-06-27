@@ -8,6 +8,11 @@ on:
         description: "version to be built"
         value: ${{ jobs.version.outputs.bump_type }}
 
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
 jobs:
   version:
     name: Calculate Version
