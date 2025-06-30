@@ -35,7 +35,6 @@ jobs:
           fetch-depth: 0
 
       - name: Log in to Azure
-        id: azure-login
         if: ${{ inputs.push-docker-image }}
         uses: bitwarden/gh-actions/azure-login@main
         with:

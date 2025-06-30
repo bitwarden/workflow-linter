@@ -97,7 +97,6 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
         steps:
             # Using Azure go obtain secrets from Azure Key Vault
             - name: Log in to Azure
-              id: azure-login
               uses: bitwarden/gh-actions/azure-login@main
               with:
                 subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
