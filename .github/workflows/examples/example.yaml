@@ -6,8 +6,8 @@
 
 name: Build
 
-permissions:
-    read-all # Sets permissions of the GITHUB_TOKEN
+permissions: # Sets permissions of the GITHUB_TOKEN (Can be set at the workflow level or job level)
+    contents: read
     # More info: https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#permissions
 
 on: # Describes when to run the workflow
@@ -83,6 +83,9 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
     second-job:
         name: Second Job Name
         runs-on: ubuntu-22.04 # The type of runner that the job will run on, not available if "uses" is used
+        permissions:
+            contents: read
+            id-token: write # Required to fetch an OpenID Connect (OIDC) token
         defaults:
             run: # Set the default shell and working directory
                 shell: bash
@@ -92,6 +95,26 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
             - first-job # This job will wait until first-job completes
         # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/setting-a-default-shell-and-working-directory
         steps:
+            # Using Azure go obtain secrets from Azure Key Vault
+            - name: Log in to Azure
+              uses: bitwarden/gh-actions/azure-login@main
+              with:
+                subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+                tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+                client_id: ${{ secrets.AZURE_CLIENT_ID }}
+
+            # Obtain the Key Vault secrets and use them later via GitHub outputs
+            - name: Get Azure Key Vault secrets
+              id: get-kv-secrets
+              uses: bitwarden/gh-actions/get-keyvault-secrets@main
+              with:
+                keyvault: gh-REPOSITORY_NAME_EXAMPLE # The name of the Azure Key Vault created for this repossitory
+                secrets: "SECRETS-OR-CREDENTIALS,ANOTHER-SECRET" # Comma-separated list of secrets to retrieve from Azure Key Vault
+
+            # Logout to remove access to Azure Key Vault secrets
+            - name: Log out from Azure
+              uses: bitwarden/gh-actions/azure-logout@main
+
             - name: Descriptive step name
               # NOT RECOMMENDED if: always()  # run even if previous steps failed or the workflow is canceled, this can cause a workflow run to hang indefinitely
               if: failure() # run when any previous step of a job fails
@@ -100,7 +123,7 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
               with: # Parameters specific to this action that need to be defined in order for the step to be completed
                   fetch-depth: 0 # Full git history for actions that rely on whether a change has occurred
                   ref: ${{ github.event.pull_request.head.sha }}
-                  creds: ${{ secrets.SECRETS_OR_CREDENTIALS }}
+                  creds: ${{ steps.get-kv-secrets.outputs.SECRETS-OR-CREDENTIALS }} # Use the secrets retrieved from Azure Key Vault in the previous step
             - name: Another descriptive step name
               # Run a script instead of an existing github action
               run: |
