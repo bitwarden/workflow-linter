@@ -149,6 +149,11 @@
     "sha": "e6c4322d0397f3240f0e7e30a33b5c5df2d39e90",
     "version": "1.0.4"
   },
+  "astral-sh/setup-uv": {
+    "name": "astral-sh/setup-uv",
+    "sha": "bd01e18f51369d5a26f1651c3cb451d3417e3bba",
+    "version": "v6.3.1"
+  },
   "azure/webapps-deploy": {
     "name": "azure/webapps-deploy",
     "sha": "de617f46172a906d0617bb0e50d81e9e3aec24c8",
