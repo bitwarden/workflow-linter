@@ -58,7 +58,8 @@ class RuleCheckPrTarget(Rule):
             result, check_job = self.has_check_run(obj)
             main_branch_only = self.targets_main_branch(obj)
             if not main_branch_only:
-                Errors.append("Workflows using pull_request_target can only target the main branch")
+                default_branch = self.settings.default_branch
+                Errors.append(f"Workflows using pull_request_target can only target the '{default_branch}' branch")
             if result:
                 missing_jobs = self.check_run_required(obj, check_job)
                 if missing_jobs:
