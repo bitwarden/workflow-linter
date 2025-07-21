@@ -133,7 +133,7 @@ class ActionsCmd:
                 action.name,
             )
             if response is not None and response.status != 404:
-                tag_name = json.loads(response.data)["tag_name"]
+                tag_name = json.loads(response.data)["object"]["tag_name"]
 
                 # Get the URL to the commit for the tag
                 response = self.get_github_api_response(
@@ -166,7 +166,7 @@ class ActionsCmd:
                 tag_name = json.loads(response.data)[0]["name"]
         except KeyError as err:
             raise GitHubApiSchemaError(
-                f"Error with the GitHub API Response Schema for either /releases or"
+                f"Error with the GitHub API Response Schema for either /releases or "
                 f"/tags: {err}"
             ) from err
 
