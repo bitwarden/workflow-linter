@@ -5,6 +5,7 @@ import json
 import logging
 import os
 import urllib3 as urllib
+import sys
 
 from dataclasses import asdict
 from typing import Optional, Union
@@ -133,7 +134,7 @@ class ActionsCmd:
                 action.name,
             )
             if response is not None and response.status != 404:
-                tag_name = json.loads(response.data)["object"]["tag_name"]
+                tag_name = json.loads(response.data)["tag_name"]
 
                 # Get the URL to the commit for the tag
                 response = self.get_github_api_response(
