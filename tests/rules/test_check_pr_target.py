@@ -30,13 +30,13 @@ jobs:
   check-run:
     name: Check PR run
     uses: bitwarden/gh-actions/.github/workflows/check-run.yml@main
-  
+
   quality:
     name: Quality scan
     needs: check-run
     steps:
       - run: echo test
- 
+
   dependent-job:
      name: Another Dependent Job
      needs:
@@ -85,7 +85,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - run: echo test
-  
+
   quality:
     name: Quality scan
     steps:
@@ -124,13 +124,13 @@ jobs:
   check-run:
     name: Check PR run
     uses: bitwarden/gh-actions/.github/workflows/check-run.yml@main
-  
+
   quality:
     name: Quality scan
     needs: check-run
     steps:
       - run: echo test
- 
+
   dependent-job:
      name: Another Dependent Job
      needs:
@@ -153,13 +153,13 @@ jobs:
   check-run:
     name: Check PR run
     uses: bitwarden/gh-actions/.github/workflows/check-run.yml@main
-  
+
   quality:
     name: Quality scan
     needs: check-run
     steps:
       - run: echo test
- 
+
   dependent-job:
      name: Another Dependent Job
      needs:
@@ -186,13 +186,13 @@ jobs:
   check-run:
     name: Check PR run
     uses: bitwarden/gh-actions/.github/workflows/check-run.yml@main
-  
+
   quality:
     name: Quality scan
     needs: check-run
     steps:
       - run: echo test
- 
+
   dependent-job:
      name: Another Dependent Job
      needs:
@@ -216,13 +216,13 @@ jobs:
   check-run:
     name: Check PR run
     uses: bitwarden/some-other-repo/.github/workflows/check-run.yml@main
-  
+
   quality:
     name: Quality scan
     needs: check-run
     steps:
       - run: echo test
- 
+
   dependent-job:
      name: Another Dependent Job
      needs:
@@ -269,11 +269,11 @@ def test_targets_main_branch_no_default_branch(mock_workflow):
     with patch("src.bitwarden_workflow_linter.utils.Settings.factory") as mock_factory:
         # Simulate the default settings returned by the factory
         mock_factory.return_value = Settings(default_branch="main")
-        
+
         # Use the mocked factory to create the Settings instance
         settings = Settings.factory()
         rule = RuleCheckPrTarget(settings=settings)
-        
+
         # Assert that the workflow targets the main branch
         assert rule.targets_main_branch(mock_workflow) is True
 
@@ -317,14 +317,14 @@ def test_rule_on_dependencies_without_check(rule, dependent_missing_check_workfl
 def test_rule_on_no_branches_workflow(rule, no_branches_workflow):
     result, message = rule.fn(no_branches_workflow)
     assert result is False
-    assert message == "Workflows using pull_request_target can only target the main branch"
+    assert message == "Workflows using pull_request_target can only target the 'main' branch"
 
 def test_rule_on_only_target_main(rule, bad_branches_workflow):
     result, message = rule.fn(bad_branches_workflow)
     assert result is False
-    assert message == "Workflows using pull_request_target can only target the main branch"
+    assert message == "Workflows using pull_request_target can only target the 'main' branch"
 
 def test_rule_on_two_failures(rule, two_failures_workflow):
     result, message = rule.fn(two_failures_workflow)
     assert result is False
-    assert message == "Workflows using pull_request_target can only target the main branch\nA check-run job must be included as a direct job dependency when pull_request_target is used"
+    assert message == "Workflows using pull_request_target can only target the 'main' branch\nA check-run job must be included as a direct job dependency when pull_request_target is used"
