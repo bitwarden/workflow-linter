@@ -90,6 +90,9 @@ class ActionsCmd:
 
         response = http.request("GET", url, headers=headers)
 
+        # debugging
+        print(f'action: {action_name} response status: {response.status} response reason: {response.reason}')
+
         if response.status == 403 and response.reason == "rate limit exceeded":
             logging.error(
                 "Failed to call GitHub API for action: %s due to rate limit exceeded.",
