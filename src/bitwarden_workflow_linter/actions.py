@@ -91,7 +91,7 @@ class ActionsCmd:
         response = http.request("GET", url, headers=headers)
 
         # debugging
-        print(f'action: {action_name} response status: {response.status} response reason: {response.reason}')
+        print(f'a: {action_name} url:{url} stat:{response.status} reas:{response.reason}')
 
         if response.status == 403 and response.reason == "rate limit exceeded":
             logging.error(
