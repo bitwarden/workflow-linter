@@ -98,6 +98,7 @@ class ActionsCmd:
 
 
         if response.status == 403 or response.status == 429:
+            print(f'{action_name} {response.json()}')
             logging.error(
                 "Failed to call GitHub API for action: %s due to rate limit exceeded.",
                 action_name,
