@@ -92,6 +92,10 @@ class ActionsCmd:
 
         # debugging
         print(f'a: {action_name} url:{url} stat:{response.status} reas:{response.reason}')
+        for header, value in response.headers.items():
+            if 'X-' in header:
+                print(f'{action_name} {header} : {value}')
+
 
         if response.status == 403 or response.status == 429:
             logging.error(
