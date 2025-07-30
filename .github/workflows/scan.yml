@@ -51,3 +51,6 @@ jobs:
       contents: read
       pull-requests: write
       id-token: write
+    with:
+      sonar-sources: "src/"
+      sonar-tests: "tests/"
