@@ -4,15 +4,19 @@ on:
   workflow_dispatch:
     inputs:
       operation:
-        description: 'Operation to perform. ex: update, add'
+        description: "Operation to perform. ex: update, add"
         required: true
         type: string
       action:
-        description: 'Single action to add. ex: actions/checkout'
+        description: "Single action to add. ex: actions/checkout"
+        required: false
+        type: string
+      reason:
+        description: "Business reason for the new action."
         required: false
         type: string
   schedule:
-  - cron: '0 0 * * 1'
+    - cron: "0 0 * * 1"
 
 jobs:
   actions-operation:
@@ -24,10 +28,15 @@ jobs:
       pull-requests: write
     env:
       _ACTION: ${{ inputs.action }}
+      _REASON: ${{ inputs.reason }}
     steps:
-      -  name: Check for action input
-         if: ${{ inputs.operation == 'add' && !env._ACTION }}
-         run: echo "Action input is required for operation 'add'" && exit 1
+      - name: Check for action input
+        if: ${{ inputs.operation == 'add' && !env._ACTION }}
+        run: echo "Action input is required for operation 'add'" && exit 1
+
+      - name: Check for business reason
+        if: ${{ inputs.operation == 'add' && !env._REASON }}
+        run: echo "Business reason is required for operation 'add'" && exit 1
 
       - name: Log in to Azure
         uses: bitwarden/gh-actions/azure-login@main
@@ -134,6 +143,7 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           TITLE: "Update/Add bwwl approved actions${{ inputs.operation == 'add' && env._ACTION != '' && format(' for {0}', env._ACTION) || '' }}"
+          REASON: "${{ inputs.operation == 'add' && format('\n    ## Business Reason\n    {0}\n', env._REASON) || '' }}"
         run: |
           PR_URL=$(gh pr create --title "$TITLE" \
             --base "main" \
@@ -148,6 +158,9 @@ jobs:
               - [ ] Build/deploy pipeline (DevOps)
               - [ ] Other
 
+              ## Initiated by
+              ${{ github.actor }}
+              $REASON
               ## Description
               - This PR updates the approved actions for the Bitwarden Workflow Linter.")
           echo "pr_number=${PR_URL##*/}" >> $GITHUB_OUTPUT
