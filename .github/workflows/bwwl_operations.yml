@@ -163,4 +163,4 @@ jobs:
               $ARTIFACT
               ## Description
               - This PR updates the approved actions for the Bitwarden Workflow Linter.")
-          echo "pr_number=${PR_URL##*/}" >> $GITHUB_OUTPUT
+          echo "### PR created: $PR_URL" >> $GITHUB_STEP_SUMMARY
