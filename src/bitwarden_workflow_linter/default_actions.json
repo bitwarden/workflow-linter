@@ -379,6 +379,11 @@
     "sha": "276d7966e389d888f011539a86c8920025ea0626",
     "version": "v3.0.1"
   },
+  "peter-evans/repository-dispatch": {
+    "name": "peter-evans/repository-dispatch",
+    "sha": "ff45666b9427631e3450c54a1bcbee4d9ff4d7c0",
+    "version": "v3.0.0"
+  },
   "reactivecircus/android-emulator-runner": {
     "name": "reactivecircus/android-emulator-runner",
     "sha": "62dbb605bba737720e10b196cb4220d374026a6d",
