@@ -359,6 +359,11 @@
     "sha": "6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce",
     "version": "v2"
   },
+  "mlugg/setup-zig": {
+    "name": "mlugg/setup-zig",
+    "sha": "8d6198c65fb0feaa111df26e6b467fea8345e46f",
+    "version": "v2.0.5"
+  },
   "ncipollo/release-action": {
     "name": "ncipollo/release-action",
     "sha": "2c591bcc8ecdcd2db72b97d6147f871fcd833ba5",
