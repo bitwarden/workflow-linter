@@ -463,5 +463,10 @@
     "name": "yogevbd/enforce-label-action",
     "sha": "a3c219da6b8fa73f6ba62b68ff09c469b3a1c024",
     "version": "2.2.2"
+  },
+  "zizmorcore/zizmor-action": {
+    "name": "zizmorcore/zizmor-action",
+    "sha": "5ca5fc7a4779c5263a3ffa0e1f693009994446d1",
+    "version": "v0.1.2"
   }
 }
