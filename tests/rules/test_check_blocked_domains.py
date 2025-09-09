@@ -80,7 +80,7 @@ class TestRuleCheckBlockedDomains:
             assert len(blocked) > 0
             # Check that all expected domains are found
             for domain in expected_domains:
-                assert any(domain in found for found in blocked), f"Expected domain '{domain}' not found in {blocked}"
+                assert domain in blocked, f"Expected domain '{domain}' not found in {blocked}"
 
     def test_workflow_level_check_clean(self, rule):
         """Test workflow-level checking with clean content."""
