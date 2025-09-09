@@ -86,7 +86,10 @@ class RuleCheckBlockedDomains(Rule):
         
         for domain in domains:
             for blocked_domain in self.blocked_domains:
-                if blocked_domain.lower() in domain.lower() or domain.lower() in blocked_domain.lower():
+                blocked_domain_lc = blocked_domain.lower().strip()
+                domain_lc = domain.lower().strip()
+                # Check for exact match or subdomain match
+                if domain_lc == blocked_domain_lc or domain_lc.endswith('.' + blocked_domain_lc):
                     blocked_found.append(domain)
                     
         return len(blocked_found) == 0, blocked_found
