@@ -49,7 +49,15 @@ class RuleCheckBlockedDomains(Rule):
             return []
             
         # Pattern to match domain names in various contexts
-        # Matches full domains including subdomains
+        # Breaking down the regex:
+        # (?:https?://)?           - Optional protocol (http:// or https://)
+        # (?:www\.)?               - Optional www. prefix
+        # ([a-zA-Z0-9]             - Start of capturing group: first character (alphanumeric)
+        #   (?:[a-zA-Z0-9-]{0,61}  - Non-capturing group: 0-61 alphanumeric or hyphen chars
+        #   [a-zA-Z0-9])?          - End with alphanumeric (ensures no trailing hyphen)
+        # \.)+                     - Followed by dot, repeated (for subdomains)
+        # [a-zA-Z]{2,}             - Top-level domain (2+ letters)
+        # (?:/[^\s]*)?             - Optional path (slash followed by non-whitespace chars)
         domain_pattern = r'(?:https?://)?(?:www\.)?([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}(?:/[^\s]*)?'
         
         domains = set()
