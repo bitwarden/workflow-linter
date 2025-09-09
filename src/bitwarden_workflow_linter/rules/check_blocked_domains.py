@@ -52,7 +52,6 @@ class RuleCheckBlockedDomains(Rule):
         # Matches full domains including subdomains
         domain_pattern = r'(?:https?://)?(?:www\.)?([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}(?:/[^\s]*)?'
         
-        matches = re.findall(domain_pattern, text, re.IGNORECASE)
         domains = set()
         
         # Find all matches and extract the domain part
