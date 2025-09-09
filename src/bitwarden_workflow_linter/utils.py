@@ -114,6 +114,7 @@ class Settings:
     approved_actions: dict[str, Action]
     actionlint_version: str
     default_branch: Optional[str]
+    blocked_domains: Optional[list[str]]
 
     def __init__(
         self,
@@ -121,6 +122,7 @@ class Settings:
         approved_actions: Optional[dict[str, dict[str, str]]] = None,
         actionlint_version: Optional[str] = None,
         default_branch: Optional[str] = None,
+        blocked_domains: Optional[list[str]] = None,
     ) -> None:
         """Settings object that can be overridden in settings.py.
 
@@ -147,6 +149,7 @@ class Settings:
             name: Action(**action) for name, action in approved_actions.items()
         }
         self.default_branch = default_branch
+        self.blocked_domains = blocked_domains or []
 
     @staticmethod
     def factory() -> SettingsFromFactory:
@@ -201,4 +204,5 @@ class Settings:
             approved_actions=settings["approved_actions"],
             actionlint_version=actionlint_version,
             default_branch=default_branch,
+            blocked_domains=settings.get("blocked_domains", []),
         )
