@@ -33,8 +33,7 @@ class RuleCheckBlockedDomains(Rule):
         self.settings = settings
         
         # Get blocked domains from settings, use defaults if none provided
-        self.blocked_domains = (settings.blocked_domains if settings and settings.blocked_domains 
-                               else [])
+        self.blocked_domains = settings.blocked_domains if settings else []
 
     def extract_domains_from_text(self, text: str) -> List[str]:
         """Extract domain names from text content.
