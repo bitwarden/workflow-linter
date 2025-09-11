@@ -369,6 +369,11 @@
     "sha": "2c591bcc8ecdcd2db72b97d6147f871fcd833ba5",
     "version": "v1.14.0"
   },
+  "nrwl/nx-set-shas": {
+    "name": "nrwl/nx-set-shas",
+    "sha": "826660b82addbef3abff5fa871492ebad618c9e1",
+    "version": "v4.3.3"
+  },
   "nuget/setup-nuget": {
     "name": "nuget/setup-nuget",
     "sha": "a21f25cd3998bf370fde17e3f1b4c12c175172f9",
