@@ -31,8 +31,25 @@ jobs:
       _ARTIFACT: ${{ inputs.artifact }}
     steps:
       - name: Check for action input
-        if: ${{ inputs.operation == 'add' && !env._ACTION }}
-        run: echo "Action input is required for operation 'add'" && exit 1
+        if: ${{ inputs.operation == 'add' }}
+        run: |
+          if [ -z "$_ACTION" ]; then
+            echo "Action input is required for operation 'add'"
+            exit 1
+          fi
+
+          action_no_spaces=$(echo "$_ACTION" | tr -d ' ')
+          if [ "$_ACTION" != "$action_no_spaces" ]; then
+            echo "Action input must not contain spaces: '$_ACTION'"
+            exit 1
+          fi
+
+          owner=$(echo "$_ACTION" | cut -d'/' -f1 | xargs)
+          repository=$(echo "$_ACTION" | cut -d'/' -f2)
+          if [ -z "$owner" ] || [ -z "$repository" ] || [ "$owner" == "$_ACTION" ]; then
+            echo "Action input must be in the format 'owner/repo': $_ACTION"
+            exit 1
+          fi
 
       - name: Check for artifact reference
         if: ${{ inputs.operation == 'add' && !env._ARTIFACT }}
@@ -97,7 +114,7 @@ jobs:
       - name: Create Branch
         if: ${{ inputs.operation == 'add' }}
         run: |
-          NAME="add-action-$_ACTION"
+          NAME="add-action-$(echo "$_ACTION" | tr '/' '-')"
           git switch -c $NAME
           echo "BRANCH_NAME=$NAME" >> $GITHUB_ENV
 
