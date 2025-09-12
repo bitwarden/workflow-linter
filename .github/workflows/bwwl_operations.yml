@@ -115,8 +115,10 @@ jobs:
       - name: Create Branch
         if: ${{ inputs.operation == 'add' }}
         run: |
-          NAME="add-action-$(echo "$_ACTION" | tr '/' '-')"
-          git switch -c $NAME
+          # Sanitize _ACTION to allow only alphanumerics, hyphens, and underscores
+          SAFE_ACTION=$(echo "$_ACTION" | tr -c 'A-Za-z0-9_-.' '-' | tr '/' '-')
+          NAME="add-action-$SAFE_ACTION"
+          git switch -c "$NAME"
           echo "BRANCH_NAME=$NAME" >> $GITHUB_ENV
 
       - name: Run bwwl update
