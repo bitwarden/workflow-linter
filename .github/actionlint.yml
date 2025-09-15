@@ -4,6 +4,7 @@ self-hosted-runner:
   labels:
     - terraform-provider-bitwarden-sm-linux
     - qa-ubuntu-24.04-TSD-1534
+    - macos-26
 
 # Path-specific configurations.
 paths:
