@@ -104,7 +104,7 @@ class RunActionlint(Rule):
         config = self.get_config("RunActionlint")
         if config is None:
             config = {}
-        ignore_regex = config.get("ignore_regex", "")
+        ignore_regex = config.get("ignore_regex", None)
 
         installed, location = check_actionlint_path(platform.system(), self.settings.actionlint_version)
         if installed:
