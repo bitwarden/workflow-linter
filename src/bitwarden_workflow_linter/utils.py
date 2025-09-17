@@ -115,6 +115,7 @@ class Settings:
     actionlint_version: str
     default_branch: Optional[str]
     blocked_domains: Optional[list[str]]
+    rule_configs: dict[str, dict]
 
     def __init__(
         self,
@@ -123,6 +124,7 @@ class Settings:
         actionlint_version: Optional[str] = None,
         default_branch: Optional[str] = None,
         blocked_domains: Optional[list[str]] = None,
+        rule_configs: Optional[dict[str, dict]] = None,
     ) -> None:
         """Settings object that can be overridden in settings.py.
 
@@ -139,9 +141,12 @@ class Settings:
 
         if approved_actions is None:
             approved_actions = {}
-        
+
         if actionlint_version is None:
             actionlint_version = ""
+
+        if rule_configs is None:
+            rule_configs = {}
 
         self.actionlint_version = actionlint_version
         self.enabled_rules = enabled_rules
@@ -150,6 +155,32 @@ class Settings:
         }
         self.default_branch = default_branch
         self.blocked_domains = blocked_domains or []
+        self.rule_configs = rule_configs
+
+    def get_rule_config(self, rule_class_name: Optional[str] = None) -> Optional[dict]:
+        """Get configuration for a specific rule.
+
+        Args:
+          rule_class_name: Name of the rule class (e.g., 'RunActionlint').
+                          If None, will attempt to auto-detect from caller.
+
+        Returns:
+          Configuration dictionary for the rule, or None if not found
+        """
+        if rule_class_name is None:
+            import inspect
+            frame = inspect.currentframe()
+            try:
+                # Get the calling frame's class name
+                caller_locals = frame.f_back.f_locals
+                if 'self' in caller_locals:
+                    rule_class_name = type(caller_locals['self']).__name__
+                else:
+                    return None
+            finally:
+                del frame
+
+        return self.rule_configs.get(f"rule_{rule_class_name}")
 
     @staticmethod
     def factory() -> SettingsFromFactory:
@@ -197,7 +228,10 @@ class Settings:
 
         default_branch = settings.get("default_branch")
         if default_branch is None or len(default_branch) == 0:
-            raise Exception("The default_branch is not set in the default_settings.yaml file")        
+            raise Exception("The default_branch is not set in the default_settings.yaml file")
+
+        # Extract rule configurations (any key starting with "rule_")
+        rule_configs = {key: value for key, value in settings.items() if key.startswith("rule_")}
 
         return Settings(
             enabled_rules=settings["enabled_rules"],
@@ -205,4 +239,5 @@ class Settings:
             actionlint_version=actionlint_version,
             default_branch=default_branch,
             blocked_domains=settings.get("blocked_domains", []),
+            rule_configs=rule_configs,
         )

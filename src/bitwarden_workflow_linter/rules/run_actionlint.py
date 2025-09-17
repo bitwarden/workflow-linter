@@ -100,22 +100,30 @@ class RunActionlint(Rule):
             raise KeyError("The 'actionlint_version' is missing in the configuration file.")
 
         """Check if Actionlint is alerady installed and if it is installed somewhere not on the PATH (location)"""
+
+        config = self.get_config()
+        if config is None:
+            config = {}
+        ignore_regex = config.get("ignore_regex", "")
+
+        print(f"Actionlint ignore_regex: {ignore_regex}")
+
         installed, location = check_actionlint_path(platform.system(), self.settings.actionlint_version)
         if installed:
-            if location:
-                result = subprocess.run(
-                     [location, obj.filename],
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                )
-            else:
-                result = subprocess.run(
-                    ["actionlint", obj.filename],
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                )
+            if not location:
+                location = "actionlint"
+
+            commandArgs = [location]
+            if ignore_regex:
+                commandArgs.extend(["-ignore", ignore_regex])
+            commandArgs.append(obj.filename)
+
+            result = subprocess.run(
+                commandArgs,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
             if result.returncode == 1:
                 return False, result.stdout
             if result.returncode > 1:

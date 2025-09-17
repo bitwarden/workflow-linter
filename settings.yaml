@@ -28,3 +28,9 @@ default_branch: main
 # List of domains that should trigger an error if found in workflows
 blocked_domains:
   - ghrc.io
+
+# Per-rule configuration example
+# Each rule can have its own configuration section with the format rule_<ClassName>
+#rule_RunActionlint:
+  # List of regular expressions to filter errors by the error messages.
+  #ignore_regex: some regex to ignore.*

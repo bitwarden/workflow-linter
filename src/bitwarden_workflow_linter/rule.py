@@ -99,3 +99,13 @@ class Rule:
             )
 
         return LintFinding(self.build_lint_message(message, obj), self.on_fail)
+
+    def get_config(self) -> Optional[dict]:
+        """Get configuration for this rule from settings.
+
+        Returns:
+          Configuration dictionary for this rule, or None if not found
+        """
+        if self.settings is None:
+            return None
+        return self.settings.get_rule_config(type(self).__name__)
