@@ -149,6 +149,11 @@
     "sha": "e6c4322d0397f3240f0e7e30a33b5c5df2d39e90",
     "version": "1.0.4"
   },
+  "anthropics/claude-code-action": {
+    "name": "anthropics/claude-code-action",
+    "sha": "a5528eec7426a4f0c9c1ac96018daa53ebd05bc4",
+    "version": "v1"
+  },
   "astral-sh/setup-uv": {
     "name": "astral-sh/setup-uv",
     "sha": "bd01e18f51369d5a26f1651c3cb451d3417e3bba",
