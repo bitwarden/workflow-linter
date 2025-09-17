@@ -101,12 +101,10 @@ class RunActionlint(Rule):
 
         """Check if Actionlint is alerady installed and if it is installed somewhere not on the PATH (location)"""
 
-        config = self.get_config()
+        config = self.get_config("RunActionlint")
         if config is None:
             config = {}
         ignore_regex = config.get("ignore_regex", "")
-
-        print(f"Actionlint ignore_regex: {ignore_regex}")
 
         installed, location = check_actionlint_path(platform.system(), self.settings.actionlint_version)
         if installed:
