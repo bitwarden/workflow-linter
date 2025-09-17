@@ -157,29 +157,15 @@ class Settings:
         self.blocked_domains = blocked_domains or []
         self.rule_configs = rule_configs
 
-    def get_rule_config(self, rule_class_name: Optional[str] = None) -> Optional[dict]:
+    def get_rule_config(self, rule_class_name: str) -> Optional[dict]:
         """Get configuration for a specific rule.
 
         Args:
           rule_class_name: Name of the rule class (e.g., 'RunActionlint').
-                          If None, will attempt to auto-detect from caller.
 
         Returns:
           Configuration dictionary for the rule, or None if not found
         """
-        if rule_class_name is None:
-            import inspect
-            frame = inspect.currentframe()
-            try:
-                # Get the calling frame's class name
-                caller_locals = frame.f_back.f_locals
-                if 'self' in caller_locals:
-                    rule_class_name = type(caller_locals['self']).__name__
-                else:
-                    return None
-            finally:
-                del frame
-
         return self.rule_configs.get(f"rule_{rule_class_name}")
 
     @staticmethod
