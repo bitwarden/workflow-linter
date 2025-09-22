@@ -16,3 +16,4 @@ paths:
     ignore:
       # Ignore the specific error from shellcheck
       - 'shellcheck reported issue in this script: .+'
+      - 'property "(secret_no_env_one|secret_one)" is not defined in object type.*' # Needed for sm-action tests with dynamic output
