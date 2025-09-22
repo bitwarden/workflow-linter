@@ -17,3 +17,4 @@ paths:
       # Ignore the specific error from shellcheck
       - 'shellcheck reported issue in this script: .+'
       - 'property "(secret_no_env_one|secret_one)" is not defined in object type.*' # Needed for sm-action tests with dynamic output
+      - 'invalid runner name "node24" at runs.using in ".*" action defined at ".*". valid runners are "composite", "docker", and "node20"' # Temporarily until actionlint support for node24 is released'
