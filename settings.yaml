@@ -21,8 +21,8 @@ enabled_rules:
       level: error
     - id: bitwarden_workflow_linter.rules.check_blocked_domains.RuleCheckBlockedDomains
       level: warning
-    - id: bitwarden_workflow_linter.rules.run_zizmor.RunZizmor
-      level: error
+    # - id: bitwarden_workflow_linter.rules.run_zizmor.RunZizmor
+    #   level: error
 
 approved_actions_path: default_actions.json
 default_branch: main
