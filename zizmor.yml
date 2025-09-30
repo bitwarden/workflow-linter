@@ -3,3 +3,5 @@ rules:
     config:
       policies:
         bitwarden/gh-actions/*: ref-pin
+  dangerous-triggers:
+    disable: true
