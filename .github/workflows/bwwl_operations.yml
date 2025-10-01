@@ -151,7 +151,7 @@ jobs:
 
       - name: Generate GH App token
         if: ${{ steps.new-changes.outputs.new_changes == 'TRUE' }}
-        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1.12.0
+        uses: actions/create-github-app-token@67018539274d69449ef7c02e8e71183d1719ab42 # v2.1.4
         id: app-token
         with:
           app-id: ${{ steps.get-kv-secrets.outputs.BW-GHAPP-ID }}
