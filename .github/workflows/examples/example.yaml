@@ -57,8 +57,6 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
         name: First Job Name
         uses: ./.github/workflows/examples/example-references/_version.yml # Path to an existing github action
         if: github.event.pull_request.draft == false # prevent part of a job from running on a draft PR
-        secrets: inherit # When called by another workflow, pass all the calling workflow's secrets to the called workflow
-        # "secrets" is only available for a reusable workflow call with "uses"
         strategy: # Create multiple job runs for each of a set of variables
             fail-fast: false # If true, cancel entire run if any job in the matrix fails
             matrix: # Matrix of variables used to define multiple job runs
@@ -99,17 +97,17 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
             - name: Log in to Azure
               uses: bitwarden/gh-actions/azure-login@main
               with:
-                subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-                tenant_id: ${{ secrets.AZURE_TENANT_ID }}
-                client_id: ${{ secrets.AZURE_CLIENT_ID }}
+                  subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+                  tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+                  client_id: ${{ secrets.AZURE_CLIENT_ID }}
 
             # Obtain the Key Vault secrets and use them later via GitHub outputs
             - name: Get Azure Key Vault secrets
               id: get-kv-secrets
               uses: bitwarden/gh-actions/get-keyvault-secrets@main
               with:
-                keyvault: gh-REPOSITORY_NAME_EXAMPLE # The name of the Azure Key Vault created for this repossitory
-                secrets: "SECRETS-OR-CREDENTIALS,ANOTHER-SECRET" # Comma-separated list of secrets to retrieve from Azure Key Vault
+                  keyvault: gh-REPOSITORY_NAME_EXAMPLE # The name of the Azure Key Vault created for this repossitory
+                  secrets: "SECRETS-OR-CREDENTIALS,ANOTHER-SECRET" # Comma-separated list of secrets to retrieve from Azure Key Vault
 
             # Logout to remove access to Azure Key Vault secrets
             - name: Log out from Azure
@@ -121,6 +119,7 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
               # if: '!cancelled()'  # run even if previous steps failed
               uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2 Always pin a public action version to a full git SHA, followed by the version number in a comment.  Version pins are insecure and can introduce vulnerabilities into workflows.
               with: # Parameters specific to this action that need to be defined in order for the step to be completed
+                  persist-credentials: false # Do not persist the token used to fetch the repository, more secure
                   fetch-depth: 0 # Full git history for actions that rely on whether a change has occurred
                   ref: ${{ github.event.pull_request.head.sha }}
                   creds: ${{ steps.get-kv-secrets.outputs.SECRETS-OR-CREDENTIALS }} # Use the secrets retrieved from Azure Key Vault in the previous step

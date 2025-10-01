@@ -1,6 +1,6 @@
 # https://taskfile.dev
 
-version: '3'
+version: "3"
 
 tasks:
   fmt:
@@ -68,6 +68,16 @@ tasks:
   test:e2e:actions:update:
     cmds:
       - pipenv run bwwl actions --output test.json update
+
+  zizmor:
+    desc: "Run zizmor directly on GitHub workflows"
+    cmds:
+      - zizmor {{.CLI_ARGS | default ".github/workflows"}}
+
+  zizmor:install:
+    desc: "Install zizmor via pip"
+    cmds:
+      - pip install zizmor
 
   dist:
     silent: true

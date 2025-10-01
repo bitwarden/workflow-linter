@@ -7,11 +7,11 @@
 name: Build Thing on PR Target
 
 permissions:
-  checks: read 
+  checks: read
   contents: read
 
 on:
-  pull_request_target:
+  pull_request_target: # zizmor: ignore[dangerous-triggers]
     types: [opened, synchronize, reopened]
     branches:
       - main
@@ -30,4 +30,3 @@ jobs:
     needs: check-run
     if: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
     uses: ./.github/workflows/examples/ci.yaml
-    secrets: inherit
