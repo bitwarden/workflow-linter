@@ -163,11 +163,11 @@ jobs:
                   # Additional scripts to run outside of a Github Action
               run: |
                   dotnet-sonarscanner begin /k:" \
-                  $REPOSITORY_OWNER_$REPOSITORY_NAME" \
-                  /d:sonar.test.inclusions=test/,bitwarden_license/test/ \
-                  /d:sonar.exclusions=test/,bitwarden_license/test/ \
-                  /o:"$_REPOSITORY_OWNER" \
-                  /d:sonar.token="$SONAR_TOKEN" \
-                  /d:sonar.host.url="https://sonarcloud.io"
-                  dotnet build
-                  dotnet-sonarscanner end /d:sonar.token="$SONAR_TOKEN"
+                    ${_REPOSITORY_OWNER}_${_REPOSITORY_NAME}" \
+                    /d:sonar.test.inclusions=test/,bitwarden_license/test/ \
+                    /d:sonar.exclusions=test/,bitwarden_license/test/ \
+                    /o:"$_REPOSITORY_OWNER" \
+                    /d:sonar.token="$SONAR_TOKEN" \
+                    /d:sonar.host.url="https://sonarcloud.io"
+                    dotnet build
+                    dotnet-sonarscanner end /d:sonar.token="$SONAR_TOKEN"

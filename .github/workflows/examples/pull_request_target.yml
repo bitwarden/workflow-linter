@@ -12,13 +12,13 @@ permissions:
 
 on:
   pull_request_target: # zizmor: ignore[dangerous-triggers]
-    types: [opened, synchronize, reopened]
-    branches:
-      - main
+  types: [opened, synchronize, reopened]
+  branches:
+    - main
 
 defaults:
   run:
-    shell: bash
+  shell: bash
 
 jobs:
   check-run:
