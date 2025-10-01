@@ -11,3 +11,9 @@
 src/bitwarden_workflow_linter/default_actions.json @bitwarden/team-appsec
 src/bitwarden_workflow_linter/actionlint_version.yaml @bitwarden/team-appsec
 
+
+# Docker-related files
+**/Dockerfile @bitwarden/team-appsec @bitwarden/dept-bre
+**/*.dockerignore @bitwarden/team-appsec @bitwarden/dept-bre
+**/entrypoint.sh @bitwarden/team-appsec @bitwarden/dept-bre
+**/docker-compose.yml @bitwarden/team-appsec @bitwarden/dept-bre
