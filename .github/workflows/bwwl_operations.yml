@@ -83,6 +83,8 @@ jobs:
 
       - name: Checkout Branch
         uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+        with:
+          persist-credentials: true
 
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@e89d40939c28e39f97cf32126055eeae86ba74ec # v6.3.0
@@ -147,7 +149,7 @@ jobs:
         if: ${{ steps.new-changes.outputs.new_changes == 'TRUE' }}
         run: |
           git commit -m "Update approved actions" -a
-          git push origin "${{ env.BRANCH_NAME }}"
+          git push origin "${BRANCH_NAME}"
 
       - name: Generate GH App token
         if: ${{ steps.new-changes.outputs.new_changes == 'TRUE' }}
@@ -167,7 +169,7 @@ jobs:
         run: |
           PR_URL=$(gh pr create --title "$TITLE" \
             --base "main" \
-            --head "${{ env.BRANCH_NAME }}" \
+            --head "${BRANCH_NAME}" \
             --label "version:patch" \
             --label "automated pr" \
             --body "
@@ -179,8 +181,8 @@ jobs:
               - [ ] Other
 
               ## Initiated by
-              ${{ github.actor }}
+              ${GITHUB_ACTOR}
               $ARTIFACT
               ## Description
               - This PR updates the approved actions for the Bitwarden Workflow Linter.")
-          echo "### PR created: $PR_URL" >> $GITHUB_STEP_SUMMARY
+          echo "### PR created: $PR_URL" >> "$GITHUB_STEP_SUMMARY"
