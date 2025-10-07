@@ -294,6 +294,11 @@
     "sha": "3096afedf9873361b2b2f65e1445b13272c83eb8",
     "version": "codeql-bundle-v2.20.0"
   },
+  "golangci/golangci-lint-action": {
+    "name": "golangci/golangci-lint-action",
+    "sha": "4afd733a84b1f43292c63897423277bb7f4313a9",
+    "version": "v8.0.0"
+  },
   "goto-bus-stop/setup-zig": {
     "name": "goto-bus-stop/setup-zig",
     "sha": "abea47f85e598557f500fa1fd2ab7464fcb39406",
