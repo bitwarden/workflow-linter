@@ -404,6 +404,11 @@
     "sha": "ff45666b9427631e3450c54a1bcbee4d9ff4d7c0",
     "version": "v3.0.0"
   },
+  "pypa/gh-action-pypi-publish": {
+    "name": "pypa/gh-action-pypi-publish",
+    "sha": "ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e",
+    "version": "v1.13.0"
+  },
   "reactivecircus/android-emulator-runner": {
     "name": "reactivecircus/android-emulator-runner",
     "sha": "62dbb605bba737720e10b196cb4220d374026a6d",
