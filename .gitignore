@@ -38,3 +38,6 @@ flake.*
 .venv/
 .pytest_cache
 .pytype
+
+download-actionlint.bash
+actionlint

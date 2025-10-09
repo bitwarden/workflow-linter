@@ -113,6 +113,8 @@ class Settings:
     enabled_rules: list[dict[str, str]]
     approved_actions: dict[str, Action]
     actionlint_version: str
+    zizmor_version: str
+    zizmor_config_url: Optional[str]
     default_branch: Optional[str]
     blocked_domains: Optional[list[str]]
 
@@ -121,6 +123,8 @@ class Settings:
         enabled_rules: Optional[list[dict[str, str]]] = None,
         approved_actions: Optional[dict[str, dict[str, str]]] = None,
         actionlint_version: Optional[str] = None,
+        zizmor_version: Optional[str] = None,
+        zizmor_config_url: Optional[str] = None,
         default_branch: Optional[str] = None,
         blocked_domains: Optional[list[str]] = None,
     ) -> None:
@@ -139,15 +143,27 @@ class Settings:
 
         if approved_actions is None:
             approved_actions = {}
-        
+
         if actionlint_version is None:
             actionlint_version = ""
 
+        if zizmor_version is None:
+            zizmor_version = ""
+
         self.actionlint_version = actionlint_version
+        self.zizmor_version = zizmor_version
+        self.zizmor_config_url = zizmor_config_url
         self.enabled_rules = enabled_rules
-        self.approved_actions = {
-            name: Action(**action) for name, action in approved_actions.items()
-        }
+        # Handle both dict[str, dict] and dict[str, Action]
+        # for approved_actions for testing help
+        self.approved_actions = {}
+        for name, action in approved_actions.items():
+            if isinstance(action, Action):
+                # Already an Action object, use it directly
+                self.approved_actions[name] = action
+            else:
+                # Dictionary, create Action object
+                self.approved_actions[name] = Action(**action)
         self.default_branch = default_branch
         self.blocked_domains = blocked_domains or []
 
@@ -169,6 +185,15 @@ class Settings:
         ):
             version_data = yaml.load(version_file)
             actionlint_version = version_data["actionlint_version"]
+
+        # load zizmor version
+        with (
+            importlib.resources.files("bitwarden_workflow_linter")
+            .joinpath("zizmor_version.yaml")
+            .open("r", encoding="utf-8") as version_file
+        ):
+            version_data = yaml.load(version_file)
+            zizmor_version = version_data["zizmor_version"]
 
         # load override settings
         settings_filename = "settings.yaml"
@@ -197,12 +222,14 @@ class Settings:
 
         default_branch = settings.get("default_branch")
         if default_branch is None or len(default_branch) == 0:
-            raise Exception("The default_branch is not set in the default_settings.yaml file")        
+            raise Exception("The default_branch is not set in the default_settings.yaml file")
 
         return Settings(
             enabled_rules=settings["enabled_rules"],
             approved_actions=settings["approved_actions"],
             actionlint_version=actionlint_version,
+            zizmor_version=zizmor_version,
+            zizmor_config_url=settings.get("zizmor_config_url"),
             default_branch=default_branch,
             blocked_domains=settings.get("blocked_domains", []),
         )
