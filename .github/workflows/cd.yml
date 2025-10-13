@@ -1,4 +1,5 @@
 name: CD
+run-name: ${{ inputs.test == true && 'CD - Test' || 'CD' }}
 
 on:
   pull_request:
@@ -7,6 +8,12 @@ on:
     branches:
       - "main"
   workflow_dispatch:
+    inputs:
+      test:
+        description: "Publish to Test PyPI for testing (Does not create a release)"
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   version-type:
@@ -121,6 +128,7 @@ jobs:
 
   release:
     name: GitHub release
+    if: inputs.test == false
     runs-on: ubuntu-22.04
     needs: version-bump
     permissions:
@@ -144,7 +152,7 @@ jobs:
     name: Deploy workflow-linter (v2)
     runs-on: ubuntu-22.04
     needs: version-bump
-    environment: PyPI
+    environment: ${{ inputs.test == true && 'Test PyPI' || 'PyPI' }}
     permissions:
       contents: read
       id-token: write
@@ -167,8 +175,12 @@ jobs:
       - name: Build
         run: hatch build
 
-      - name: Publish
-        env:
-          HATCH_INDEX_USER: __token__
-          HATCH_INDEX_AUTH: ${{ steps.retrieve-secret.outputs.pypi-api-token }}
-        run: hatch publish
+      - name: Publish - Test PyPI
+        if: inputs.test == true
+        uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # v1.13.0
+        with:
+          repository-url: https://test.pypi.org/legacy/
+
+      - name: Publish - PyPI
+        if: inputs.test == false
+        uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # v1.13.0
