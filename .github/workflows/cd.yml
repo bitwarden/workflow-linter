@@ -27,7 +27,7 @@ jobs:
 
   version-bump:
     name: Version bump
-    if: inputs.test == true || needs.version-type.outputs.version_bump_type != 'skip'
+    if: needs.version-type.outputs.version_bump_type != 'skip'
     runs-on: ubuntu-24.04
     needs: version-type
     permissions:
@@ -128,7 +128,6 @@ jobs:
 
   release:
     name: GitHub release
-    if: inputs.test == false
     runs-on: ubuntu-22.04
     needs: version-bump
     permissions:
@@ -150,9 +149,41 @@ jobs:
 
   deploy:
     name: Deploy workflow-linter (v2)
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: version-bump
-    environment: ${{ inputs.test == true && 'Test PyPI' || 'PyPI' }}
+    environment: "PyPI"
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.version-bump.outputs.commit_hash }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version-file: ".python-version"
+
+      - name: Install hatch
+        run: pip install hatch
+
+      - name: Build
+        run: hatch build
+
+      - name: Publish - PyPI
+        if: inputs.test == false
+        uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # v1.13.0
+
+  deploy-test:
+    name: Deploy workflow-linter (Test PyPI)
+    if: inputs.test == true
+    runs-on: ubuntu-24.04
+    needs: version-bump
+    environment: "Test PyPI"
     permissions:
       contents: read
       id-token: write
@@ -176,11 +207,6 @@ jobs:
         run: hatch build
 
       - name: Publish - Test PyPI
-        if: inputs.test == true
         uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # v1.13.0
         with:
           repository-url: https://test.pypi.org/legacy/
-
-      - name: Publish - PyPI
-        if: inputs.test == false
-        uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # v1.13.0
