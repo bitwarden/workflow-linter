@@ -182,7 +182,6 @@ jobs:
     name: Deploy workflow-linter (Test PyPI)
     if: inputs.test == true
     runs-on: ubuntu-24.04
-    needs: version-bump
     environment: "Test PyPI"
     permissions:
       contents: read
