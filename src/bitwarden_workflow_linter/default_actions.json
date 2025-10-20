@@ -384,6 +384,11 @@
     "sha": "826660b82addbef3abff5fa871492ebad618c9e1",
     "version": "v4.3.3"
   },
+  "nuget/login": {
+    "name": "nuget/login",
+    "sha": "d22cc5f58ff5b88bf9bd452535b4335137e24544",
+    "version": "v1"
+  },
   "nuget/setup-nuget": {
     "name": "nuget/setup-nuget",
     "sha": "a21f25cd3998bf370fde17e3f1b4c12c175172f9",
