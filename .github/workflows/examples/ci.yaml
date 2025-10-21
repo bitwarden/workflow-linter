@@ -5,32 +5,35 @@
 name: CI
 
 on:
-  workflow_dispatch:  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
   workflow_call: # Allows this workflow to be called from another workflow
-  pull_request:  # When a pull request event occurs
+  pull_request: # When a pull request event occurs
 
-permissions:  # Sets permissions of the GITHUB_TOKEN
-  checks: write  # Permits an action to create a check run
-  contents: read  # For actions to fetch code and list commits
-  packages: read  # For actions to fetch packages
-  id-token: write  # Required to fetch an OpenID Connect (OIDC) token
-  pull-requests: write  # Permits an action to add a label to a pull request
+permissions: {} # Sets default permissions of the GITHUB_TOKEN
 
 jobs:
   version:
     name: Calculate version
-    uses: ./.github/workflows/examples/example-references/_version.yml  # Path to an existing github action
+    permissions:
+      contents: read # For actions/checkout to fetch code
+    uses: ./.github/workflows/examples/example-references/_version.yml # Path to an existing github action
 
   test:
     name: Run test
+    permissions:
+      checks: write
+      contents: read
+      pull-requests: write
     uses: ./.github/workflows/examples/example-references/_test.yml
-    with:  # Parameters specific to this action that need to be defined in order for the step to be completed
+    with: # Parameters specific to this action that need to be defined in order for the step to be completed
       project-name: Billing.Test
       project-path: ./test/Billing.Test
 
   build:
     name: Run build
-    needs:  # This job will not run until test and version jobs are complete
+    permissions:
+      contents: read
+    needs: # This job will not run until test and version jobs are complete
       - test
       - version
     uses: ./.github/workflows/examples/example-references/_build.yml
@@ -41,6 +44,9 @@ jobs:
 
   build-push-docker:
     name: Build Docker image
+    permissions:
+      contents: read
+      id-token: write
     needs:
       - test
       - version
