@@ -199,6 +199,11 @@
     "sha": "e90c5a5e3bc2eb3b8e110d606f56a0f44fa47700",
     "version": "v1"
   },
+  "clechasseur/rs-cargo": {
+    "name": "clechasseur/rs-cargo",
+    "sha": "bbcc0f43bb19de578aed0eaf1211970155d0fbcd",
+    "version": "v4.0.0"
+  },
   "cloudflare/pages-action": {
     "name": "cloudflare/pages-action",
     "sha": "f0a1cd58cd66095dee69bfa18fa5efd1dde93bca",
