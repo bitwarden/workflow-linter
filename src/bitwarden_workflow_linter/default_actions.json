@@ -54,6 +54,11 @@
     "sha": "956b2e73cdfe3bcb819bb7225e490cb3b18fd76e",
     "version": "v2.2.1"
   },
+  "actions-rust-lang/setup-rust-toolchain": {
+    "name": "actions-rust-lang/setup-rust-toolchain",
+    "sha": "1780873c7b576612439a134613cc4cc74ce5538c",
+    "version": "v1.15.2"
+  },
   "actions/cache": {
     "name": "actions/cache",
     "sha": "1bd1e32a3bdc45362d1e726936510720a7c30a57",
