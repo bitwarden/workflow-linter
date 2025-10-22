@@ -54,6 +54,11 @@
     "sha": "956b2e73cdfe3bcb819bb7225e490cb3b18fd76e",
     "version": "v2.2.1"
   },
+  "actions-rs/toolchain": {
+    "name": "actions-rs/toolchain",
+    "sha": "b2417cde72dcf67f306c0ae8e0828a81bf0b189f",
+    "version": "v1.0.6"
+  },
   "actions/cache": {
     "name": "actions/cache",
     "sha": "1bd1e32a3bdc45362d1e726936510720a7c30a57",
@@ -188,6 +193,11 @@
     "name": "chromaui/action",
     "sha": "e90c5a5e3bc2eb3b8e110d606f56a0f44fa47700",
     "version": "v1"
+  },
+  "clechasseur/rs-cargo": {
+    "name": "clechasseur/rs-cargo",
+    "sha": "bbcc0f43bb19de578aed0eaf1211970155d0fbcd",
+    "version": "v4.0.0"
   },
   "cloudflare/pages-action": {
     "name": "cloudflare/pages-action",
