@@ -59,6 +59,11 @@
     "sha": "1780873c7b576612439a134613cc4cc74ce5538c",
     "version": "v1.15.2"
   },
+  "actions-rs/toolchain": {
+    "name": "actions-rs/toolchain",
+    "sha": "b2417cde72dcf67f306c0ae8e0828a81bf0b189f",
+    "version": "v1.0.6"
+  },
   "actions/cache": {
     "name": "actions/cache",
     "sha": "1bd1e32a3bdc45362d1e726936510720a7c30a57",
