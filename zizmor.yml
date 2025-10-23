@@ -3,5 +3,7 @@ rules:
     config:
       policies:
         bitwarden/gh-actions/*: ref-pin
+        bitwarden/ios/*: ref-pin
+        bitwarden/mobile-learning-sandbox/*: ref-pin
   dangerous-triggers:
     disable: true
