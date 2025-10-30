@@ -1,4 +1,4 @@
-# Bitwarden Workflow Linter - Copilot Instructions
+# Bitwarden Workflow Linter - Claude Instructions
 
 ## Repository Overview
 
