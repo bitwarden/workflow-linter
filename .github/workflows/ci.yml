@@ -91,7 +91,7 @@ jobs:
         id: invalid-file
 
         env:
-          files: ".github/workflows/examples .github/workflows/ci.yml"
+          files: ".github/workflows/---does-not-exist.yml"
         shell: bash
         run: |
           echo "$files"
