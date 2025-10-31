@@ -37,9 +37,7 @@ def main(input_args: Optional[List[str]] = None) -> int:
 
     args = parser.parse_args(input_args)
     if args.command == "lint":
-        if len(args.files) > 1:
-            raise parser.error("Only one -f / --files flag must be specified")
-        return linter_cmd.run(args.files[0], args.strict)
+        return linter_cmd.run([file for file_list in args.files for file in file_list], args.strict)
 
     if args.command == "actions":
         print(f"{'-'*50}\n!!bwwl actions is in BETA!!\n{'-'*50}")

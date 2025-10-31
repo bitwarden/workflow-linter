@@ -144,6 +144,8 @@ class LinterCmd:
                         filepath = dirpath + os.sep + file
                         if filepath.endswith((".yml", ".yaml")):
                             workflow_files.append(filepath)
+            else:
+                raise FileNotFoundError(f"Path '{path}' is neither a file nor a directory")
 
         return sorted(set(workflow_files))
 
