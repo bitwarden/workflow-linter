@@ -69,26 +69,20 @@ jobs:
       - name: Install bwwl binary
         run: python -m pip install --upgrade .
 
-      - name: Lint
+      - name: Test against example workflows
+        # run notes:
+        # - Changing directories will help catch any repo specific paths in the linter
+        #   that would not work in a different repository
+        # - Changing directories utilizes the default_settings.yaml rather than this repos
+        #   settings.yaml, which better simulates running from another repository
+        # - Using strict to ensure that our examples pass all checks including warnings
+        working-directory: .github/workflows
         env:
           files: ".github/workflows/examples .github/workflows/ci.yml"
         shell: bash
         run: |
           echo "$files"
-          bwwl lint -f $files
-
-      # - name: Lint - Invalid workflow file
-      #   env:
-      #     files: ".github/workflows/examples .github/workflows/ci.yml"
-      #   shell: bash
-      #   run: |
-      #     echo "$files"
-      #     set +e
-      #     bwwl lint -f $files
-      #     if [ $? -eq 0 ]; then
-      #       echo "Linting was expected to fail but did not."
-      #       exit 1
-      #     fi
+          bwwl lint --strict -f $files
 
       - name: Lint - Non-existent file
         id: non-existent-file
@@ -124,3 +118,14 @@ jobs:
             exit 1
           fi
 
+      - name: Test bwwl actions - add
+        env:
+          _ACTION: bitwarden/gh-actions
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Avoid rate limiting
+        run: bwwl actions add -o src/bitwarden_workflow_linter/default_actions.json "$_ACTION"
+
+      # TODO: Add this test back in and added related error logging to fix the underlying issue
+      # - name: Test bwwl actions - update
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Avoid rate limiting
+      #   run: bwwl actions update -o src/bitwarden_workflow_linter/default_actions.json
