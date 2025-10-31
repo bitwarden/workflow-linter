@@ -52,6 +52,9 @@ jobs:
           - os: ubuntu-24.04
           - os: windows-2022
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Check out repo
         uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
@@ -92,7 +95,6 @@ jobs:
 
         env:
           files: ".github/workflows/---does-not-exist.yml"
-        shell: bash
         run: |
           echo "$files"
           bwwl lint -f $files
@@ -100,9 +102,9 @@ jobs:
 
       - name: Verify lint failure on invalid workflow
         env:
-          CONCLUSION: ${{ steps.invalid-file.conclusion }}
+          OUTCOME: ${{ steps.invalid-file.outcome }}
         run: |
-          if [ "$CONCLUSION" != "failure" ]; then
+          if [ "$OUTCOME" != "failure" ]; then
             echo "Linting was expected to fail but did not."
             exit 1
           fi
