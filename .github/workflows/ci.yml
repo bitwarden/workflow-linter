@@ -70,5 +70,8 @@ jobs:
         env:
           files: ".github/workflows/examples .github/workflows/ci.yml"
         run: |
+          if ($${{ runner.os }} -eq 'Windows') {
+            $files=$env:files
+          }
           echo "$files"
           bwwl lint -f $files
