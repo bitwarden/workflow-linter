@@ -4,7 +4,8 @@ on:
   pull_request:
   workflow_dispatch:
 
-permissions: read-all
+permissions:
+  contents: read
 
 jobs:
   test-unit:
@@ -78,7 +79,7 @@ jobs:
         # - Using strict to ensure that our examples pass all checks including warnings
         working-directory: .github/workflows
         env:
-          files: "examples/ ci.yml"
+          files: "examples/ examples/example.yaml"
         run: |
           echo "$files"
           bwwl lint --strict -f $files
