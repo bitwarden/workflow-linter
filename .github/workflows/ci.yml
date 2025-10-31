@@ -81,7 +81,7 @@ jobs:
           files: "examples/ ci.yml"
         run: |
           echo "$files"
-          bwwl lint --strict -f "$files"
+          bwwl lint --strict -f $files
 
       - name: Lint - Non-existent file
         id: non-existent-file
@@ -90,7 +90,7 @@ jobs:
           files: ".github/workflows/---does-not-exist.yml"
         run: |
           echo "$files"
-          bwwl lint -f "$files"
+          bwwl lint -f $files
         continue-on-error: true
 
       - name: Lint - Invalid file
@@ -100,7 +100,7 @@ jobs:
           files: "tests/fixtures/test_workflow_incorrect.yaml"
         run: |
           echo "$files"
-          bwwl lint -f "$files"
+          bwwl lint -f $files
         continue-on-error: true
 
       - name: Verify failures are detected
