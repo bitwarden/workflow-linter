@@ -27,8 +27,6 @@ on:
     types: [opened, synchronize] # Options include labeled, unlabeled, reopened
     branches: "main"
 
-permissions: {}
-
 # A workflow run is made up of one or more jobs that can run sequentially or in
 # parallel
 jobs:
@@ -47,12 +45,6 @@ jobs:
     name: SAST scan
     runs-on: ubuntu-22.04 # The type of runner that the job will run on
     needs: check-run # This job will wait until check-run completes
-    permissions: # Sets permissions of the GITHUB_TOKEN
-      contents: read # For actions/checkout to fetch code
-      pull-requests: write # For github actions to upload feedback to PR
-      # For github/codeql-action/upload-sarif to upload SARIF results
-      security-events: write
-      id-token: write # For bitwarden/gh-actions/azure-login to get an ID token
 
     # Steps represent a sequence of tasks executed as part of the job
     steps:
