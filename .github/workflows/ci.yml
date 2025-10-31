@@ -73,3 +73,36 @@ jobs:
         run: |
           echo "$files"
           bwwl lint -f $files
+
+      # - name: Lint - Invalid workflow file
+      #   env:
+      #     files: ".github/workflows/examples .github/workflows/ci.yml"
+      #   shell: bash
+      #   run: |
+      #     echo "$files"
+      #     set +e
+      #     bwwl lint -f $files
+      #     if [ $? -eq 0 ]; then
+      #       echo "Linting was expected to fail but did not."
+      #       exit 1
+      #     fi
+
+      - name: Lint - Invalid workflow file
+        id: invalid-file
+
+        env:
+          files: ".github/workflows/examples .github/workflows/ci.yml"
+        shell: bash
+        run: |
+          echo "$files"
+          bwwl lint -f $files
+        continue-on-error: true
+
+      - name: Verify lint failure on invalid workflow
+        env:
+          CONCLUSION: ${{ steps.invalid-file.conclusion }}
+        run: |
+          if [ "$CONCLUSION" != "failure" ]; then
+            echo "Linting was expected to fail but did not."
+            exit 1
+          fi
