@@ -78,7 +78,7 @@ jobs:
         # - Using strict to ensure that our examples pass all checks including warnings
         working-directory: .github/workflows
         env:
-          files: ".github/workflows/examples .github/workflows/ci.yml"
+          files: "examples/ ci.yml"
         shell: bash
         run: |
           echo "$files"
