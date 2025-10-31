@@ -34,13 +34,11 @@ jobs:
           https://raw.githubusercontent.com/bitwarden/workflow-linter/refs/heads/main/.github/actionlint.yml
 
       - name: Set up Python 3.13
-        if: steps.changed-workflows.outputs.changed_files_count != '0'
         uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
         with:
           python-version: "3.13.7"
 
       - name: Install bwwl binary
-        if: steps.changed-workflows.outputs.changed_files_count != '0'
         run: python -m pip install --upgrade bitwarden_workflow_linter
 
       - name: Lint
