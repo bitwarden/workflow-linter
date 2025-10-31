@@ -90,8 +90,8 @@ jobs:
       #       exit 1
       #     fi
 
-      - name: Lint - Invalid workflow file
-        id: invalid-file
+      - name: Lint - Non-existent file
+        id: non-existent-file
 
         env:
           files: ".github/workflows/---does-not-exist.yml"
@@ -100,11 +100,27 @@ jobs:
           bwwl lint -f $files
         continue-on-error: true
 
-      - name: Verify lint failure on invalid workflow
+      - name: Lint - Invalid file
+        id: invalid-file
+
         env:
-          OUTCOME: ${{ steps.invalid-file.outcome }}
+          files: "tests/fixtures/test_workflow_incorrect.yaml"
         run: |
-          if [ "$OUTCOME" != "failure" ]; then
-            echo "Linting was expected to fail but did not."
+          echo "$files"
+          bwwl lint -f $files
+        continue-on-error: true
+
+      - name: Verify failures are detected
+        env:
+          OUTCOME_NON_EXISTENT_FILE: ${{ steps.non-existent-file.outcome }}
+          OUTCOME_INVALID_FILE: ${{ steps.invalid-file.outcome }}
+        run: |
+          if [ "$OUTCOME_NON_EXISTENT_FILE" != "failure" ]; then
+            echo "Linting did not correctly fail on non-existent file."
             exit 1
           fi
+          if [ "$OUTCOME_INVALID_FILE" != "failure" ]; then
+            echo "Linting did not correctly fail on invalid file."
+            exit 1
+          fi
+
