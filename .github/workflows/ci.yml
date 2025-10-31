@@ -52,8 +52,6 @@ jobs:
           - os: ubuntu-24.04
           - os: windows-2022
     runs-on: ${{ matrix.os }}
-    env:
-      _TEST_FILES: ".github/workflows/examples .github/workflows/ci.yml"
     steps:
       - name: Check out repo
         uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
@@ -68,18 +66,10 @@ jobs:
       - name: Install bwwl binary
         run: python -m pip install --upgrade .
 
-      - name: Lint - Ubuntu
-        if: startsWith(matrix.os, 'ubuntu')
+      - name: Lint
         env:
-          files: "${{env._TEST_FILES}}"
+          files: ".github/workflows/examples .github/workflows/ci.yml"
+        shell: bash
         run: |
           echo "$files"
           bwwl lint -f $files
-
-      - name: Lint - Windows
-        if: startsWith(matrix.os, 'windows')
-        env:
-          files: "${{env._TEST_FILES}}"
-        run: |
-          echo "$env:files"
-          bwwl lint -f $env:files
