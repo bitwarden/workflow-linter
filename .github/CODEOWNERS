@@ -7,9 +7,10 @@
 # Default file owners
 * @bitwarden/dept-bre
 
-# AppSec owns default_actions and actionlint_version files
+# AppSec owns default_actions, actionlint_version, and zizmor config files
 src/bitwarden_workflow_linter/default_actions.json @bitwarden/team-appsec
 src/bitwarden_workflow_linter/actionlint_version.yaml @bitwarden/team-appsec
+zizmor.yaml @bitwarden/team-appsec
 
 
 # Docker-related files
