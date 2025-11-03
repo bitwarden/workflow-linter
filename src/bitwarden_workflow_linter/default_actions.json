@@ -179,6 +179,11 @@
     "sha": "92d1d6a4f26a89a8191c83ab531a53544578f182",
     "version": "v2.0.0"
   },
+  "browser-actions/setup-chrome": {
+    "name": "browser-actions/setup-chrome",
+    "sha": "b94431e051d1c52dcbe9a7092a4f10f827795416",
+    "version": "v2.1.0"
+  },
   "checkmarx/ast-github-action": {
     "name": "checkmarx/ast-github-action",
     "sha": "b74e8d514feae4ad5ad2b43e72590935bd2daf5f",
