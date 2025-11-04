@@ -429,6 +429,11 @@
     "sha": "ff45666b9427631e3450c54a1bcbee4d9ff4d7c0",
     "version": "v3.0.0"
   },
+  "pnpm/action-setup": {
+    "name": "pnpm/action-setup",
+    "sha": "41ff72655975bd51cab0327fa583b6e92b6d3061",
+    "version": "v4.2.0"
+  },
   "pypa/gh-action-pypi-publish": {
     "name": "pypa/gh-action-pypi-publish",
     "sha": "ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e",
