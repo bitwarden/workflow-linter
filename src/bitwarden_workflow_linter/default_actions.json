@@ -504,6 +504,11 @@
     "sha": "81ecf985428d5c2ea81dbf079bceca32bc9604ab",
     "version": "v2.62.43"
   },
+  "tjcorr/pipelines": {
+    "name": "tjcorr/pipelines",
+    "sha": "decb6fac5f1d9ddb93d67fd8579bedb289b299f2",
+    "version": "v1.4"
+  },
   "tyrrrz/action-http-request": {
     "name": "tyrrrz/action-http-request",
     "sha": "64c70c67f5ebc54d4c7ea09cbe3553322778afd5",
