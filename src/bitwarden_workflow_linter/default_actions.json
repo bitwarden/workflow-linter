@@ -74,6 +74,11 @@
     "sha": "11bd71901bbe5b1630ceea73d27597364c9af683",
     "version": "v4.2.2"
   },
+  "actions/configure-pages": {
+    "name": "actions/configure-pages",
+    "sha": "983d7736d9b0ae728b81ab479565c72886d7745b",
+    "version": "v5.0.0"
+  },
   "actions/create-github-app-token": {
     "name": "actions/create-github-app-token",
     "sha": "5d869da34e18e7287c1daad50e0b8ea0f506ce69",
