@@ -4,7 +4,7 @@
     "sha": "affc72d57bac733d864d4189ed69a9cbd61a9e4f",
     "version": "v1.3"
   },
-   "Azure/container-apps-deploy-action": {
+  "Azure/container-apps-deploy-action": {
     "name": "Azure/container-apps-deploy-action",
     "sha": "8dff69dac3367c32ceb2690d8f13adbeab462703",
     "version": "v2"
