@@ -4,6 +4,11 @@
     "sha": "affc72d57bac733d864d4189ed69a9cbd61a9e4f",
     "version": "v1.3"
   },
+   "Azure/container-apps-deploy-action": {
+    "name": "Azure/container-apps-deploy-action",
+    "sha": "8dff69dac3367c32ceb2690d8f13adbeab462703",
+    "version": "v2"
+  },
   "Azure/functions-action": {
     "name": "Azure/functions-action",
     "sha": "fd80521afbba9a2a76a99ba1acc07aff8d733d11",
@@ -173,11 +178,6 @@
     "name": "astral-sh/setup-uv",
     "sha": "bd01e18f51369d5a26f1651c3cb451d3417e3bba",
     "version": "v6.3.1"
-  },
-  "azure/container-apps-deploy-action": {
-    "name": "azure/container-apps-deploy-action",
-    "sha": "8dff69dac3367c32ceb2690d8f13adbeab462703",
-    "version": "v2"
   },
   "azure/webapps-deploy": {
     "name": "azure/webapps-deploy",
