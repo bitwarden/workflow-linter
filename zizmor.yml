@@ -11,7 +11,7 @@ rules:
     disable: true
 
   # The following items are ones we should address in time, but are not blocking issues for now
-  use-trusted-publishing:
+  use-trusted-publishing: # This is a security best practice that we should adopt, but not critical yet
     disable: true
-  cache-poisoning:
+  cache-poisoning: # This may no longer be an issue with the updated cache action doing key-based caching by default
     disable: true
