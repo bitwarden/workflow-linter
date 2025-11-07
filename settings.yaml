@@ -22,7 +22,7 @@ enabled_rules:
     - id: bitwarden_workflow_linter.rules.check_blocked_domains.RuleCheckBlockedDomains
       level: warning
     - id: bitwarden_workflow_linter.rules.run_zizmor.RunZizmor
-      level: warning
+      level: error
 
 approved_actions_path: default_actions.json
 default_branch: main
@@ -30,5 +30,5 @@ default_branch: main
 # List of domains that should trigger an error if found in workflows
 blocked_domains:
     - ghrc.io
-# Optional: URL to shared base zizmor configuration file
+# Optional: URL to zizmor configuration file
 zizmor_config_url: https://raw.githubusercontent.com/bitwarden/workflow-linter/refs/heads/main/zizmor.yml
