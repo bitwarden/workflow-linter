@@ -5,6 +5,7 @@ rules:
         bitwarden/gh-actions/*: ref-pin
         bitwarden/ios/*: ref-pin
         bitwarden/mobile-learning-sandbox/*: ref-pin
+        bitwarden/android/*: ref-pin
   dangerous-triggers: # Often caused by our pull_request_target usage that we scrutinize manually
     disable: true
   secrets-inherit: # With our use of AKV for secrets, this is less relevant
