@@ -16,7 +16,7 @@ jobs:
 
   test-normal-action:
     name: Download Latest
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
@@ -26,7 +26,7 @@ jobs:
 
   test-local-action:
     name: Testing a local action call
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: local-action
         uses: ./version-bump
