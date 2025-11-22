@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>bitwarden/renovate-config"],
-  "enabledManagers": ["github-actions", "npm", "pipenv"],
+  "enabledManagers": ["github-actions", "npm", "pipenv", "regex"],
   "labels": ["version:patch"],
   "packageRules": [
     {
@@ -23,10 +23,8 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^actionlint_version\\.yaml$"],
-      "matchStrings": [
-        "\"actionlint_version\":\\s*\"(?<currentValue>[^\"]+)\""
-      ],
+      "fileMatch": [".*/actionlint_version.yaml"],
+      "matchStrings": ["actionlint_version:\\s*\"(?<currentValue>[^\"]+)\""],
       "depNameTemplate": "rhysd/actionlint",
       "datasourceTemplate": "github-releases",
       "versioningTemplate": "semver"
