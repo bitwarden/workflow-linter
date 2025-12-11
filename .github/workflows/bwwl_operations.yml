@@ -18,6 +18,8 @@ on:
   schedule:
     - cron: "0 0 * * 1"
 
+permissions: {}
+
 jobs:
   actions-operation:
     name: "Approved actions operations"
@@ -25,7 +27,6 @@ jobs:
     permissions:
       contents: write
       id-token: write
-      pull-requests: write
     env:
       _ACTION: ${{ inputs.action }}
       _ARTIFACT: ${{ inputs.artifact }}
@@ -158,6 +159,7 @@ jobs:
         with:
           app-id: ${{ steps.get-kv-secrets.outputs.BW-GHAPP-ID }}
           private-key: ${{ steps.get-kv-secrets.outputs.BW-GHAPP-KEY }}
+          permission-pull-requests: write
 
       - name: Create PR
         if: ${{ steps.new-changes.outputs.new_changes == 'TRUE' }}
