@@ -14,5 +14,7 @@ paths:
     ignore:
       # Ignore the specific error from shellcheck
       - 'shellcheck reported issue in this script: .+'
-      - 'property "(secret_no_env_one|secret_one)" is not defined in object type.*' # Needed for sm-action tests with dynamic output
+      - 'property "secret_[^"]+" is not defined in object type.*' # Needed for sm-action tests with dynamic output
       - 'invalid runner name "node24" at runs.using in ".*" action defined at ".*". valid runners are "composite", "docker", and "node20"' # Temporary workaround until actionlint support for node24 is released
+      - 'maximum number of inputs for "workflow_dispatch" event is 10 but \d+ inputs are provided.*' # Temporary - fix has been merged to main in actionlint repo but new version not released yet
+      

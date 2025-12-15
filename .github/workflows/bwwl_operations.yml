@@ -18,6 +18,8 @@ on:
   schedule:
     - cron: "0 0 * * 1"
 
+permissions: {}
+
 jobs:
   actions-operation:
     name: "Approved actions operations"
@@ -25,7 +27,6 @@ jobs:
     permissions:
       contents: write
       id-token: write
-      pull-requests: write
     env:
       _ACTION: ${{ inputs.action }}
       _ARTIFACT: ${{ inputs.artifact }}
@@ -82,7 +83,7 @@ jobs:
         uses: bitwarden/gh-actions/azure-logout@main
 
       - name: Checkout Branch
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: true
 
@@ -158,6 +159,7 @@ jobs:
         with:
           app-id: ${{ steps.get-kv-secrets.outputs.BW-GHAPP-ID }}
           private-key: ${{ steps.get-kv-secrets.outputs.BW-GHAPP-KEY }}
+          permission-pull-requests: write
 
       - name: Create PR
         if: ${{ steps.new-changes.outputs.new_changes == 'TRUE' }}
