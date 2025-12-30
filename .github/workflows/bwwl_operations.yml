@@ -46,10 +46,10 @@ jobs:
           fi
 
           owner=$(echo "$_ACTION" | cut -d'/' -f1)
-          repository=$(echo "$_ACTION" | cut -d'/' -f2)
+          repo=$(echo "$_ACTION" | cut -d'/' -f2-)
           slash_count=$(echo "$_ACTION" | awk -F'/' '{print NF-1}')
-          if [ "$slash_count" -ne 1 ] || [ -z "$owner" ] || [ -z "$repository" ]; then
-            echo "Action input must be in the format 'owner/repo': $_ACTION"
+          if [ "$slash_count" -lt 1 ] || [ -z "$owner" ] || [ -z "$repo" ]; then
+            echo "Action input must be in the format 'owner/repo[/path]': $_ACTION"
             exit 1
           fi
 
