@@ -85,7 +85,7 @@ class ActionsCmd:
         headers = {"user-agent": "bw-linter"}
 
         if os.getenv("GITHUB_TOKEN", None):
-            headers["Authorization"] = f"Token {os.environ['GITHUB_TOKEN']}"
+            headers["Authorization"] = f'Token {os.environ["GITHUB_TOKEN"]}'
 
         response = http.request("GET", url, headers=headers)
 
@@ -136,10 +136,11 @@ class ActionsCmd:
                 tag_name = json.loads(response.data)["tag_name"]
 
                 # Get the URL to the commit for the tag
-                response = self.get_github_api_response(
-                    f"https://api.github.com/repos/{action.name}/git/ref/tags/{tag_name}",
-                    action.name,
+                url = (
+                    f"https://api.github.com/repos/{action.name}"
+                    f"/git/ref/tags/{tag_name}"
                 )
+                response = self.get_github_api_response(url, action.name)
 
                 if response is None or response.status != 200:
                     return None
@@ -194,20 +195,25 @@ class ActionsCmd:
         """
         print("Actions: add")
         updated_actions = self.settings.approved_actions
-        proposed_action = Action(name=new_action_name)
 
-        # Remove the action directory if the action is in a multi-actions repo
-        if len(new_action_name.split("/")) > 2:
-            modified_action = "/".join(new_action_name.split("/")[:-1])
-            print(
-                f" - {new_action_name} \033[{Colors.yellow}modified\033[0m to {modified_action}"
-            )
-            proposed_action = Action(name=modified_action)
+        # For actions in subdirectories (multi-action repos), we need to check
+        # the repository at owner/repo level, but store the full path
+        repo_path_parts = new_action_name.split("/")
+        if len(repo_path_parts) > 2:
+            # Extract owner/repo for API calls
+            repo_name = "/".join(repo_path_parts[:2])
+            print(f" - {new_action_name} (checking repository: {repo_name})")
+            repo_action = Action(name=repo_name)
+        else:
+            repo_action = Action(name=new_action_name)
 
-        if self.exists(proposed_action):
-            latest = self.get_latest_version(proposed_action)
+        if self.exists(repo_action):
+            latest = self.get_latest_version(repo_action)
             if latest:
-                updated_actions[latest.name] = latest
+                # Store with the full action path, not just the repo path
+                updated_actions[new_action_name] = Action(
+                    name=new_action_name, version=latest.version, sha=latest.sha
+                )
         else:
             print(f" - {new_action_name} \033[{Colors.red}not found\033[0m")
 
@@ -224,9 +230,25 @@ class ActionsCmd:
         print("Actions: update")
         updated_actions = {}
         for action in self.settings.approved_actions.values():
-            if self.exists(action):
-                latest_release = self.get_latest_version(action)
-                if action != latest_release:
+            # For actions in subdirectories (multi-action repos), we need to check
+            # the repository at owner/repo level, but store the full path
+            repo_path_parts = action.name.split("/")
+            if len(repo_path_parts) > 2:
+                # Extract owner/repo for API calls
+                repo_name = "/".join(repo_path_parts[:2])
+                repo_action = Action(name=repo_name)
+            else:
+                repo_action = action
+
+            if self.exists(repo_action):
+                latest_release = self.get_latest_version(repo_action)
+                # Create Action with original full path for comparison
+                latest_with_full_path = Action(
+                    name=action.name,  # Use original full path
+                    version=latest_release.version,
+                    sha=latest_release.sha,
+                )
+                if action != latest_with_full_path:
                     print(
                         (
                             f" - {action.name} \033[{Colors.yellow}changed\033[0m: "
@@ -236,7 +258,12 @@ class ActionsCmd:
                     )
                 else:
                     print(f" - {action.name} \033[{Colors.green}ok\033[0m")
-                updated_actions[action.name] = latest_release
+                # Store with the original full action path
+                updated_actions[action.name] = Action(
+                    name=action.name,
+                    version=latest_release.version,
+                    sha=latest_release.sha,
+                )
 
         self.save_actions(updated_actions, filename)
         return 0

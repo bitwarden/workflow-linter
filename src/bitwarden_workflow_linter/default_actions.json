@@ -324,6 +324,11 @@
     "sha": "3096afedf9873361b2b2f65e1445b13272c83eb8",
     "version": "codeql-bundle-v2.20.0"
   },
+  "github/codeql-action/upload-sarif": {
+    "name": "github/codeql-action/upload-sarif",
+    "sha": "c43362b91a940600cde2ebae39ec7a35ad66bdc0",
+    "version": "codeql-bundle-v2.23.8"
+  },
   "golangci/golangci-lint-action": {
     "name": "golangci/golangci-lint-action",
     "sha": "4afd733a84b1f43292c63897423277bb7f4313a9",
