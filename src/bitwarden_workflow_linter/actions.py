@@ -242,7 +242,13 @@ class ActionsCmd:
 
             if self.exists(repo_action):
                 latest_release = self.get_latest_version(repo_action)
-                if action != latest_release:
+                # Create Action with original full path for comparison
+                latest_with_full_path = Action(
+                    name=action.name,  # Use original full path
+                    version=latest_release.version,
+                    sha=latest_release.sha,
+                )
+                if action != latest_with_full_path:
                     print(
                         (
                             f" - {action.name} \033[{Colors.yellow}changed\033[0m: "

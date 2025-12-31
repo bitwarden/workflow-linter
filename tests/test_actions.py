@@ -395,3 +395,133 @@ class TestActionsUpdate:
                 assert "actions/checkout" in actions
                 assert "docker/build-push-action" in actions
                 assert "oxsecurity/megalinter/flavors/dotnetweb" in actions
+
+    def test_update_multi_segment_unchanged_shows_ok(
+        self, mock_settings, mock_github_api_response, tmp_path, capsys
+    ):
+        """Test that multi-segment actions show 'ok' when unchanged, not 'changed'."""
+        actions_cmd = ActionsCmd(settings=mock_settings)
+        output_file = tmp_path / "actions.json"
+
+        with patch.object(actions_cmd, "get_github_api_response") as mock_api:
+            # Mock responses: multi-segment action with IDENTICAL version/sha
+            mock_api.side_effect = [
+                # actions/checkout (unchanged)
+                mock_github_api_response(200, {}),
+                mock_github_api_response(200, {"tag_name": "v4.2.2"}),
+                mock_github_api_response(
+                    200,
+                    {
+                        "object": {
+                            "type": "commit",
+                            "sha": "11bd71901bbe5b1630ceea73d27597364c9af683",
+                        }
+                    },
+                ),
+                # docker/build-push-action (unchanged)
+                mock_github_api_response(200, {}),
+                mock_github_api_response(200, {"tag_name": "v6.12.0"}),
+                mock_github_api_response(
+                    200,
+                    {
+                        "object": {
+                            "type": "commit",
+                            "sha": "67a2d409c0a876cbe6b11854e3e25193efe4e62d",
+                        }
+                    },
+                ),
+                # oxsecurity/megalinter/flavors/dotnetweb (UNCHANGED - same version/sha)
+                mock_github_api_response(200, {}),
+                mock_github_api_response(200, {"tag_name": "v9.2.0"}),
+                mock_github_api_response(
+                    200,
+                    {
+                        "object": {
+                            "type": "commit",
+                            "sha": "55a59b24a441e0e1943080d4a512d827710d4a9d",
+                        }
+                    },
+                ),
+            ]
+
+            result = actions_cmd.update(str(output_file))
+            captured = capsys.readouterr()
+
+            assert result == 0
+
+            # Verify the multi-segment action shows as 'ok', not 'changed'
+            # This is the bug test: with the current bug, this would show 'changed'
+            assert "oxsecurity/megalinter/flavors/dotnetweb" in captured.out
+            assert "ok" in captured.out.lower()
+
+            # Should NOT show 'changed' for this action since version/sha are identical
+            lines = captured.out.split("\n")
+            megalinter_line = [
+                line
+                for line in lines
+                if "oxsecurity/megalinter/flavors/dotnetweb" in line
+            ][0]
+            assert "changed" not in megalinter_line.lower()
+
+    def test_update_multi_segment_changed_shows_changed(
+        self, mock_settings, mock_github_api_response, tmp_path, capsys
+    ):
+        """Test that multi-segment actions show 'changed' when actually updated."""
+        actions_cmd = ActionsCmd(settings=mock_settings)
+        output_file = tmp_path / "actions.json"
+
+        with patch.object(actions_cmd, "get_github_api_response") as mock_api:
+            # Mock responses: multi-segment action with DIFFERENT version/sha
+            mock_api.side_effect = [
+                # actions/checkout (unchanged)
+                mock_github_api_response(200, {}),
+                mock_github_api_response(200, {"tag_name": "v4.2.2"}),
+                mock_github_api_response(
+                    200,
+                    {
+                        "object": {
+                            "type": "commit",
+                            "sha": "11bd71901bbe5b1630ceea73d27597364c9af683",
+                        }
+                    },
+                ),
+                # docker/build-push-action (unchanged)
+                mock_github_api_response(200, {}),
+                mock_github_api_response(200, {"tag_name": "v6.12.0"}),
+                mock_github_api_response(
+                    200,
+                    {
+                        "object": {
+                            "type": "commit",
+                            "sha": "67a2d409c0a876cbe6b11854e3e25193efe4e62d",
+                        }
+                    },
+                ),
+                # oxsecurity/megalinter/flavors/dotnetweb (CHANGED - new version/sha)
+                mock_github_api_response(200, {}),
+                mock_github_api_response(200, {"tag_name": "v10.0.0"}),
+                mock_github_api_response(
+                    200, {"object": {"type": "commit", "sha": "newsha12345"}}
+                ),
+            ]
+
+            result = actions_cmd.update(str(output_file))
+            captured = capsys.readouterr()
+
+            assert result == 0
+
+            # Verify the multi-segment action shows as 'changed' when actually different
+            assert "oxsecurity/megalinter/flavors/dotnetweb" in captured.out
+            lines = captured.out.split("\n")
+            megalinter_line = [
+                line
+                for line in lines
+                if "oxsecurity/megalinter/flavors/dotnetweb" in line
+            ][0]
+            assert "changed" in megalinter_line.lower()
+
+            # Should show the old and new version/sha
+            assert "v9.2.0" in megalinter_line
+            assert "v10.0.0" in megalinter_line
+            assert "55a59b24a441e0e1943080d4a512d827710d4a9d" in megalinter_line
+            assert "newsha12345" in megalinter_line
