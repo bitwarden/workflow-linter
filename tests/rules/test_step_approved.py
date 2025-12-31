@@ -114,3 +114,89 @@ def test_fail_compatibility(rule, correct_workflow):
 
     finding = rule.execute(correct_workflow.jobs["job-key"])
     assert "Job not compatible with" in finding.description
+
+
+def test_multi_segment_action_approved():
+    """Test multi-segment actions pass validation when approved."""
+    # Create settings with a multi-segment action in the approved list
+    settings = Settings(
+        approved_actions={
+            "oxsecurity/megalinter/flavors/dotnetweb": {
+                "name": "oxsecurity/megalinter/flavors/dotnetweb",
+                "version": "v9.2.0",
+                "sha": "55a59b24a441e0e1943080d4a512d827710d4a9d",
+            },
+            "aws-actions/amazon-ecr-login/outputs": {
+                "name": "aws-actions/amazon-ecr-login/outputs",
+                "version": "v2.0.1",
+                "sha": "abc123def456",
+            },
+        }
+    )
+
+    # Create a workflow that uses the multi-segment action
+    workflow = """\
+---
+on:
+  workflow_dispatch:
+
+jobs:
+  job-key:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Use MegaLinter flavor
+        uses: oxsecurity/megalinter/flavors/dotnetweb@55a59b24a441e0e1943080d4a512d827710d4a9d # v9.2.0
+
+      - name: Use AWS ECR Login with subdirectory
+        uses: aws-actions/amazon-ecr-login/outputs@abc123def456 # v2.0.1
+"""
+    workflow_obj = WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
+
+    # Create rule with the settings
+    rule = RuleStepUsesApproved(settings=settings)
+
+    # Test first step (oxsecurity multi-segment action)
+    result, message = rule.fn(workflow_obj.jobs["job-key"].steps[0])
+    assert result is True, f"Multi-segment action should be approved but got: {message}"
+
+    # Test second step (aws-actions multi-segment action)
+    result, message = rule.fn(workflow_obj.jobs["job-key"].steps[1])
+    assert result is True, f"Multi-segment action should be approved but got: {message}"
+
+
+def test_multi_segment_action_not_approved():
+    """Test that multi-segment actions correctly fail when not in approved list."""
+    # Create settings WITHOUT the multi-segment action
+    settings = Settings(
+        approved_actions={
+            "actions/checkout": {
+                "name": "actions/checkout",
+                "version": "v4.1.1",
+                "sha": "b4ffde65f46336ab88eb53be808477a3936bae11",
+            },
+        }
+    )
+
+    # Create a workflow that uses an unapproved multi-segment action
+    workflow = """\
+---
+on:
+  workflow_dispatch:
+
+jobs:
+  job-key:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Use unapproved MegaLinter flavor
+        uses: oxsecurity/megalinter/flavors/javascript@somesha123 # v9.0.0
+"""
+    workflow_obj = WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
+
+    # Create rule with the settings
+    rule = RuleStepUsesApproved(settings=settings)
+
+    # Test that it fails validation
+    result, message = rule.fn(workflow_obj.jobs["job-key"].steps[0])
+    assert result is False, "Unapproved multi-segment action should fail validation"
+    assert "New Action detected" in message
+    assert "oxsecurity/megalinter/flavors/javascript" in message
