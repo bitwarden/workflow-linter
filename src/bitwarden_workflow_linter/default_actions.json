@@ -434,6 +434,11 @@
     "sha": "592200bd4b9bbf4772ace78f887668b1aee8f716",
     "version": "v1.0.5"
   },
+  "oxsecurity/megalinter/flavors/dotnetweb": {
+    "name": "oxsecurity/megalinter/flavors/dotnetweb",
+    "sha": "42bb470545e359597e7f12156947c436e4e3fb9a",
+    "version": "v9.3.0"
+  },
   "peter-evans/close-issue": {
     "name": "peter-evans/close-issue",
     "sha": "276d7966e389d888f011539a86c8920025ea0626",
