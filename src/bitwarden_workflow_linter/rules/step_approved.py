@@ -15,7 +15,11 @@ class RuleStepUsesApproved(Rule):
     check against.
     """
 
-    def __init__(self, settings: Optional[Settings] = None, lint_level: Optional[LintLevels] = LintLevels.NONE) -> None:
+    def __init__(
+        self,
+        settings: Optional[Settings] = None,
+        lint_level: Optional[LintLevels] = LintLevels.NONE,
+    ) -> None:
         """Constructor for RuleStepUsesApproved to override Rule class.
 
         Args:
@@ -85,10 +89,6 @@ class RuleStepUsesApproved(Rule):
             return True, ""
 
         obj_path = obj.uses_path
-
-        # Remove the action directory if the action is in a multi-actions repo
-        if len(obj.uses_path.split("/")) > 2:
-            obj_path = "/".join(obj.uses_path.split("/")[:-1])
 
         # Actions in bitwarden/ are auto-approved
         if obj.uses and not obj_path in self.settings.approved_actions:
