@@ -314,6 +314,11 @@
     "sha": "ca26cccf1fa541576c6fbdf50d62feb6db6ba181",
     "version": "v10"
   },
+  "fastly/compute-actions/setup": {
+    "name": "fastly/compute-actions/setup",
+    "sha": "3b4355cb74cc7428a92dad1194bd564898372d55",
+    "version": "v12"
+  },
   "futureware-tech/simulator-action": {
     "name": "futureware-tech/simulator-action",
     "sha": "dab10d813144ef59b48d401cd95da151222ef8cd",
