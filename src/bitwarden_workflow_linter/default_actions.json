@@ -354,11 +354,6 @@
     "sha": "4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2",
     "version": "v5.0.0"
   },
-  "gradle/wrapper-validation-action": {
-    "name": "gradle/wrapper-validation-action",
-    "sha": "f9c9c575b8b21b6485636a91ffecd10e558c62f6",
-    "version": "v3.5.0"
-  },
   "grafana/run-k6-action": {
     "name": "grafana/run-k6-action",
     "sha": "c6b79182b9b666aa4f630f4a6be9158ead62536e",
