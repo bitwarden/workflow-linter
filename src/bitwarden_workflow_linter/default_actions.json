@@ -399,6 +399,11 @@
     "sha": "e3e9da201b87ada54eb4c550c14fb783385c5c8a",
     "version": "v2.13.0"
   },
+  "lukaszraczylo/git-velocity": {
+    "name": "lukaszraczylo/git-velocity",
+    "sha": "4dc9dc3d07cd4f6dd569867eb1a40d0cb4da9444",
+    "version": "v0.3.6"
+  },
   "macauley/action-homebrew-bump-cask": {
     "name": "macauley/action-homebrew-bump-cask",
     "sha": "445c42390d790569d938f9068d01af39ca030feb",
