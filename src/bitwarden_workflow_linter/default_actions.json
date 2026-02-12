@@ -294,6 +294,11 @@
     "sha": "49b3bc8e6bdd4a60e6116a5414239cba5943d3cf",
     "version": "v3.2.0"
   },
+  "docker/metadata-action": {
+    "name": "docker/metadata-action",
+    "sha": "c299e40c65443455700f0fdfc63efafe5b349051",
+    "version": "v5.10.0"
+  },
   "dorny/paths-filter": {
     "name": "dorny/paths-filter",
     "sha": "de90cc6fb38fc0963ad72b210f1f284cd68cea36",
