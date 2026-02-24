@@ -274,6 +274,11 @@
     "sha": "9780b0c442fbb1117ed29e0efdff1e18412f7567",
     "version": "v3.3.0"
   },
+  "docker/metadata-action": {
+    "name": "docker/metadata-action",
+    "sha": "c299e40c65443455700f0fdfc63efafe5b349051",
+    "version": "v5.10.0"
+  },
   "docker/setup-buildx-action": {
     "name": "docker/setup-buildx-action",
     "sha": "c47758b77c9736f4b2ef4073d4d51994fabfe349",
@@ -393,6 +398,11 @@
     "name": "launchdarkly/find-code-references",
     "sha": "e3e9da201b87ada54eb4c550c14fb783385c5c8a",
     "version": "v2.13.0"
+  },
+  "lukaszraczylo/git-velocity": {
+    "name": "lukaszraczylo/git-velocity",
+    "sha": "4dc9dc3d07cd4f6dd569867eb1a40d0cb4da9444",
+    "version": "v0.3.6"
   },
   "macauley/action-homebrew-bump-cask": {
     "name": "macauley/action-homebrew-bump-cask",
