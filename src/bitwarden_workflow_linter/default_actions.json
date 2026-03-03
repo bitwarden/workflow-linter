@@ -424,6 +424,11 @@
     "sha": "6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce",
     "version": "v2"
   },
+  "microsoft/store-submission": {
+    "name": "microsoft/store-submission",
+    "sha": "1dbdf522fd5e751104cf3b325073b47f6f2fc09c",
+    "version": "v1"
+  },
   "mlugg/setup-zig": {
     "name": "mlugg/setup-zig",
     "sha": "8d6198c65fb0feaa111df26e6b467fea8345e46f",
