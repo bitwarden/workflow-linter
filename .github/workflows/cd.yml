@@ -102,8 +102,10 @@ jobs:
 
       - name: Output version bump commit hash
         id: version-commit
+        env:
+          COMMIT_HASH: ${{ steps.api-commit.outputs.commit_sha }}
         run: |
-          echo "commit_hash=${{ steps.api-commit.outputs.commit_sha }}" >> $GITHUB_OUTPUT
+          echo "commit_hash=$COMMIT_HASH" >> $GITHUB_OUTPUT
 
   release:
     name: GitHub release
