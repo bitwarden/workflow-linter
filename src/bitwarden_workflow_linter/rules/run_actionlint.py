@@ -4,11 +4,18 @@ from typing import Optional, Tuple
 import subprocess
 import platform
 import urllib.request
+import urllib.error
 import os
+import tarfile
+import io
+import hashlib
 
 from ..rule import Rule
 from ..models.workflow import Workflow
 from ..utils import LintLevels, Settings
+
+
+_CACHE_DIR = os.path.join(os.path.expanduser("~"), ".cache", "bwwl")
 
 
 def install_actionlint(platform_system: str, version: str) -> Tuple[bool, str]:
@@ -28,17 +35,46 @@ def install_actionlint(platform_system: str, version: str) -> Tuple[bool, str]:
             return False, f"{error} : check Choco installation"
     return False, error
 
-def install_actionlint_source(error, version) -> Tuple[bool, str]:
-    version = version
-    """Install Actionlint Binary from provided script"""
-    url = "https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash"
-    request = urllib.request.urlopen(url)
-    with open("download-actionlint.bash", "wb+") as fp:
-        fp.write(request.read())
+
+def _verify_checksum(data: bytes, filename: str, version: str) -> bool:
+    """Verify SHA256 of downloaded tarball against the published checksums file."""
+    checksum_url = f"https://github.com/rhysd/actionlint/releases/download/v{version}/actionlint_{version}_checksums.txt"
     try:
-        subprocess.run(["bash", "download-actionlint.bash", version], check=True)
-        return True, "./actionlint"
-    except (FileNotFoundError, subprocess.CalledProcessError):
+        checksums = urllib.request.urlopen(checksum_url, timeout=30).read().decode()
+    except (urllib.error.URLError, OSError):
+        return False
+    for line in checksums.splitlines():
+        parts = line.split()
+        if len(parts) == 2 and parts[1] == filename:
+            return hashlib.sha256(data).hexdigest() == parts[0]
+    return False
+
+
+def install_actionlint_source(error, version) -> Tuple[bool, str]:
+    """Download and install actionlint binary directly from GitHub releases."""
+    system = platform.system().lower()
+    arch_map = {"x86_64": "amd64", "aarch64": "arm64"}
+    arch = arch_map.get(platform.machine().lower(), platform.machine().lower())
+    filename = f"actionlint_{version}_{system}_{arch}.tar.gz"
+    url = f"https://github.com/rhysd/actionlint/releases/download/v{version}/{filename}"
+    binary_path = os.path.join(_CACHE_DIR, "actionlint")
+    os.makedirs(_CACHE_DIR, exist_ok=True)
+    try:
+        data = urllib.request.urlopen(url, timeout=30).read()
+        if not _verify_checksum(data, filename, version):
+            return False, f"{error} : checksum verification failed"
+        with tarfile.open(fileobj=io.BytesIO(data)) as tar:
+            member = next((m for m in tar.getmembers() if m.name == "actionlint"), None)
+            if member is None:
+                return False, error
+            src = tar.extractfile(member)
+            if src is None:
+                return False, error
+            with src, open(binary_path, "wb") as dst:
+                dst.write(src.read())
+        os.chmod(binary_path, 0o755)
+        return True, binary_path
+    except (urllib.error.URLError, tarfile.TarError, OSError):
         return False, error
 
 
@@ -49,9 +85,10 @@ def check_actionlint_path(platform_system: str, version: str) -> Tuple[bool, str
             ["actionlint", "--version"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
+            text=True,
             check=True,
         )
-        if version in f"{installed}":
+        if version in installed.stdout:
             return True, ""
         else:
             return install_actionlint(platform_system, version)
@@ -65,20 +102,21 @@ please check your package installer or manually install it",
         return check_actionlint_local(platform_system, version)
 
 def check_actionlint_local(platform_system: str, version: str) -> Tuple[bool, str]:
-
-        try:
-            installed = subprocess.run(
-            ["./actionlint", "--version"],
+    local_path = os.path.join(_CACHE_DIR, "actionlint")
+    try:
+        installed = subprocess.run(
+            [local_path, "--version"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
+            text=True,
             check=True,
-            )
-            if version in f"{installed}":
-                return True, "./actionlint"
-            else:
-                return install_actionlint(platform_system, version)
-        except FileNotFoundError:
-                return install_actionlint(platform_system, version)
+        )
+        if version in installed.stdout:
+            return True, local_path
+        else:
+            return install_actionlint(platform_system, version)
+    except FileNotFoundError:
+        return install_actionlint(platform_system, version)
 
 
 class RunActionlint(Rule):
@@ -116,9 +154,7 @@ class RunActionlint(Rule):
                     text=True,
                     check=False,
                 )
-            if result.returncode == 1:
-                return False, result.stdout
-            if result.returncode > 1:
+            if result.returncode != 0:
                 return False, result.stdout
             return True, ""
         else:
