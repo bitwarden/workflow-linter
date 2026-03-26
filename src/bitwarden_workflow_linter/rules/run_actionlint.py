@@ -53,7 +53,7 @@ def _verify_checksum(data: bytes, filename: str, version: str) -> bool:
 def install_actionlint_source(error, version) -> Tuple[bool, str]:
     """Download and install actionlint binary directly from GitHub releases."""
     system = platform.system().lower()
-    arch_map = {"x86_64": "amd64", "aarch64": "arm64", "arm64": "arm64"}
+    arch_map = {"x86_64": "amd64", "aarch64": "arm64"}
     arch = arch_map.get(platform.machine().lower(), platform.machine().lower())
     filename = f"actionlint_{version}_{system}_{arch}.tar.gz"
     url = f"https://github.com/rhysd/actionlint/releases/download/v{version}/{filename}"
