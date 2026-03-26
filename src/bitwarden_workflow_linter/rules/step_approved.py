@@ -91,7 +91,7 @@ class RuleStepUsesApproved(Rule):
         obj_path = obj.uses_path
 
         # Actions in bitwarden/ are auto-approved
-        if obj.uses and not obj_path in self.settings.approved_actions:
+        if obj.uses and obj_path not in self.settings.approved_actions:
             return False, (
                 f"New Action detected: {obj.uses_path}\n"
                 "For security purposes, actions must be reviewed and be on the "

@@ -2,9 +2,7 @@
 
 import pytest
 import subprocess
-import tempfile
 import urllib.request
-import os
 
 import src.bitwarden_workflow_linter.rules.run_zizmor as zizmor_module
 from src.bitwarden_workflow_linter.utils import Settings
@@ -13,7 +11,7 @@ from src.bitwarden_workflow_linter.rules.run_zizmor import (
     RunZizmor,
     install_zizmor,
     check_zizmor_path,
-    download_config_file,
+    download_config_content,
 )
 
 settings = Settings.factory()
@@ -169,7 +167,7 @@ def test_check_zizmor_path_wrong_version(monkeypatch):
 
 
 def test_download_config_file_success(monkeypatch):
-    """Test downloading config file successfully."""
+    """Test downloading config content successfully."""
     mock_config = "# zizmor config\nrules = []"
 
     class MockResponse:
@@ -182,37 +180,22 @@ def test_download_config_file_success(monkeypatch):
         def __exit__(self, *args):
             pass
 
-    def mock_urlopen(url):
-        return MockResponse()
+    monkeypatch.setattr("urllib.request.urlopen", lambda *a, **kw: MockResponse())
 
-    original_urlopen = urllib.request.urlopen
+    content = download_config_content("https://example.com/config.yaml")
+    assert content == mock_config
 
-    try:
-        urllib.request.urlopen = mock_urlopen
-        config_path = download_config_file("https://example.com/config.yaml")
-
-        assert config_path is not None
-
-        # Verify the file was created with correct content
-        with open(config_path, "r") as f:
-            content = f.read()
-            assert mock_config in content
-
-        # Clean up
-        os.unlink(config_path)
-    finally:
-        urllib.request.urlopen = original_urlopen
 
 def test_download_config_file_failure():
-    """Test downloading config file failure."""
-    config_path = download_config_file("https://invalid-url")
-    assert config_path is None
+    """Test downloading config content failure."""
+    content = download_config_content("https://invalid-url")
+    assert content is None
 
 
 def test_download_config_file_empty_url():
-    """Test downloading config file with empty URL."""
-    config_path = download_config_file("")
-    assert config_path is None
+    """Test downloading config content with empty URL."""
+    content = download_config_content("")
+    assert content is None
 
 
 def test_rule_with_config_url(rule):
@@ -235,29 +218,23 @@ def test_rule_with_config_url(rule):
     def mock_check_zizmor_path(*args, **kwargs):
         return True, ""
 
-    def mock_download_config_file(url):
-        temp_file = tempfile.NamedTemporaryFile(mode="w", suffix=".yml", delete=False)
-        temp_file.write("# mock config")
-        temp_file.close()
-        return temp_file.name
-
     def mock_run(*args, **kwargs):
         return subprocess.CompletedProcess(args, 0, stdout="")
 
     original_check = zizmor_module.check_zizmor_path
-    original_download = zizmor_module.download_config_file
+    original_download = zizmor_module.download_config_content
     original_run = subprocess.run
 
     try:
         zizmor_module.check_zizmor_path = mock_check_zizmor_path
-        zizmor_module.download_config_file = mock_download_config_file
+        zizmor_module.download_config_content = lambda url: "# mock config"
         subprocess.run = mock_run
 
         result, _ = rule.fn(workflow)
         assert result is True
     finally:
         zizmor_module.check_zizmor_path = original_check
-        zizmor_module.download_config_file = original_download
+        zizmor_module.download_config_content = original_download
         subprocess.run = original_run
 
 
