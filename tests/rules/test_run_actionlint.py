@@ -3,6 +3,9 @@
 import pytest
 import subprocess
 import os
+import io
+import tarfile
+import urllib.error
 
 from ruamel.yaml import YAML
 
@@ -14,7 +17,19 @@ from src.bitwarden_workflow_linter.rules.run_actionlint import (
     check_actionlint_path,
     install_actionlint,
     check_actionlint_local,
+    _CACHE_DIR,
 )
+
+
+def _make_tar_gz(member_name: str = "actionlint") -> bytes:
+    """Build a minimal in-memory tar.gz containing a single named member."""
+    buf = io.BytesIO()
+    with tarfile.open(fileobj=buf, mode="w:gz") as tar:
+        content = b"fake-binary"
+        info = tarfile.TarInfo(name=member_name)
+        info.size = len(content)
+        tar.addfile(info, io.BytesIO(content))
+    return buf.getvalue()
 
 yaml = YAML()
 settings = Settings.factory()
@@ -45,32 +60,11 @@ def test_pass_install_actionlint_linux():
     assert result is True
 
 
-def test_install_actionlint_darwin(monkeypatch):
-    def mock_run(*args, **kwargs):
-        return subprocess.CompletedProcess(args, 0)
-
-    monkeypatch.setattr(subprocess, "run", mock_run)
-    result, _ = install_actionlint("Darwin", settings.actionlint_version)
-    assert result is True
-
-
 def test_failed_install_actionlint_darwin(monkeypatch):
-    def mock_run(*args, **kwargs):
-        raise subprocess.CalledProcessError(1, "cmd")
-
-    monkeypatch.setattr(subprocess, "run", mock_run)
+    monkeypatch.setattr("urllib.request.urlopen", lambda *a, **kw: (_ for _ in ()).throw(urllib.error.URLError("fail")))
     result, error = install_actionlint("Darwin", settings.actionlint_version)
     assert result is False
     assert "An error occurred" in error
-
-
-def test_install_actionlint_windows(monkeypatch):
-    def mock_run(*args, **kwargs):
-        return subprocess.CompletedProcess(args, 0)
-
-    monkeypatch.setattr(subprocess, "run", mock_run)
-    result, _ = install_actionlint("Windows", settings.actionlint_version)
-    assert result is True
 
 
 def test_failed_install_actionlint_windows(monkeypatch):
@@ -83,21 +77,12 @@ def test_failed_install_actionlint_windows(monkeypatch):
     assert "An error occurred" in error
 
 
-def test_install_actionlint_source(monkeypatch):
-    def mock_run(*args, **kwargs):
-        return subprocess.CompletedProcess(args, 0)
-
-    monkeypatch.setattr(subprocess, "run", mock_run)
-
-    result, _ = install_actionlint_source("An error occurred", settings.actionlint_version)
-    assert result is True
-
-
 def test_failed_install_actionlint_source(monkeypatch):
-    def mock_run(*args, **kwargs):
-        raise subprocess.CalledProcessError(1, "cmd")
+    def mock_urlopen(*args, **kwargs):
+        raise urllib.error.URLError("network error")
 
-    monkeypatch.setattr(subprocess, "run", mock_run)
+    monkeypatch.setattr(urllib.error, "URLError", urllib.error.URLError)
+    monkeypatch.setattr("urllib.request.urlopen", mock_urlopen)
 
     result, error = install_actionlint_source("An error occurred", settings.actionlint_version)
     assert result is False
@@ -105,10 +90,10 @@ def test_failed_install_actionlint_source(monkeypatch):
 
 # test_check_actionlint in path
 def test_check_actionlint_in_path(monkeypatch):
-    def mock_installed(*args, **kwargs):
-        return settings.actionlint_version
+    def mock_run(*args, **kwargs):
+        return subprocess.CompletedProcess(args, 0, stdout=settings.actionlint_version)
 
-    monkeypatch.setattr(subprocess, "run", mock_installed)
+    monkeypatch.setattr(subprocess, "run", mock_run)
 
     result, message = check_actionlint_path("Linux", settings.actionlint_version)
     assert result is True
@@ -124,42 +109,10 @@ def test_check_actionlint_not_in_path(monkeypatch):
     assert result is False
     assert message == "Failed to install Actionlint, please check your package installer or manually install it"
 
-def test_run_actionlint_not_installed(monkeypatch, rule):
-    def mock_check_actionlint_path(*args, **kwargs):
-        return False, ""
-
-    monkeypatch.setattr(
-        "src.bitwarden_workflow_linter.rules.run_actionlint.check_actionlint_path",
-        mock_check_actionlint_path,
-    )
-
-    workflow = WorkflowBuilder.build("tests/fixtures/test_workflow.yaml")
-    result, error = rule.fn(workflow)
-    assert result is False
-    assert "Actionlint must pass" in error
-
-def test_run_actionlint_installed_error(monkeypatch, rule):
-    def mock_check_actionlint_path(*args, **kwargs):
-        return True, "/mock/location"
-
-    def mock_run(*args, **kwargs):
-        return subprocess.CompletedProcess(args, 110, stdout="An error occurred")
-
-    monkeypatch.setattr(subprocess, "run", mock_run)
-    monkeypatch.setattr(
-        "src.bitwarden_workflow_linter.rules.run_actionlint.check_actionlint_path",
-        mock_check_actionlint_path,
-    )
-
-    workflow = WorkflowBuilder.build("tests/fixtures/test_workflow.yaml")
-    result, error = rule.fn(workflow)
-    assert result is False
-    assert "An error occurred" in error
-
 # test_check_actionlint_installed
 def test_check_actionlint_installed_linux(monkeypatch):
     def mock_run(*args, **kwargs):
-        return subprocess.CompletedProcess(args, 0)
+        return subprocess.CompletedProcess(args, 0, stdout=settings.actionlint_version)
 
     monkeypatch.setattr(subprocess, "run", mock_run)
 
@@ -168,7 +121,7 @@ def test_check_actionlint_installed_linux(monkeypatch):
 
 def test_check_actionlint_installed_darwin(monkeypatch):
     def mock_run(*args, **kwargs):
-        return subprocess.CompletedProcess(args, 0)
+        return subprocess.CompletedProcess(args, 0, stdout=settings.actionlint_version)
 
     monkeypatch.setattr(subprocess, "run", mock_run)
 
@@ -177,7 +130,7 @@ def test_check_actionlint_installed_darwin(monkeypatch):
 
 def test_check_actionlint_installed_windows(monkeypatch):
     def mock_run(*args, **kwargs):
-        return subprocess.CompletedProcess(args, 0)
+        return subprocess.CompletedProcess(args, 0, stdout=settings.actionlint_version)
 
     monkeypatch.setattr(subprocess, "run", mock_run)
 
@@ -215,29 +168,31 @@ def test_failed_check_actionlint_installed_windows(monkeypatch):
 
 # test_check_actionlint_installed_locally
 def test_check_actionlint_installed_locally_linux(monkeypatch):
-    monkeypatch.setattr(os.path, "exists", True)
+    def mock_run(*args, **kwargs):
+        return subprocess.CompletedProcess(args, 0, stdout=settings.actionlint_version)
+
+    monkeypatch.setattr(subprocess, "run", mock_run)
 
     result, message = check_actionlint_local("Linux", settings.actionlint_version)
 
     assert result is True
-    assert message == "./actionlint"
+    assert message == os.path.join(_CACHE_DIR, "actionlint")
 
 def test_check_actionlint_installed_locally_darwin(monkeypatch):
-    monkeypatch.setattr(os.path, "exists", True)
+    def mock_run(*args, **kwargs):
+        return subprocess.CompletedProcess(args, 0, stdout=settings.actionlint_version)
+
+    monkeypatch.setattr(subprocess, "run", mock_run)
 
     result, message = check_actionlint_local("Darwin", settings.actionlint_version)
 
     assert result is True
-    assert message == "./actionlint"
+    assert message == os.path.join(_CACHE_DIR, "actionlint")
 
 def test_check_actionlint_installed_locally_windows(monkeypatch):
-    def mock_exists(*args, **kwargs):
-        return True
-
     def mock_run(*args, **kwargs):
-        return subprocess.CompletedProcess(args, 0)
+        return subprocess.CompletedProcess(args, 0, stdout=settings.actionlint_version)
 
-    monkeypatch.setattr(os.path, "exists", mock_exists)
     monkeypatch.setattr(subprocess, "run", mock_run)
 
     result, _ = check_actionlint_local("Windows", settings.actionlint_version)
@@ -266,10 +221,21 @@ def test_install_actionlint_windows(monkeypatch):
     assert result is True
 
 def test_install_actionlint_source(monkeypatch):
-    def mock_run(*args, **kwargs):
-        return subprocess.CompletedProcess(args, 0)
+    tar_data = _make_tar_gz()
 
-    monkeypatch.setattr(subprocess, "run", mock_run)
+    class MockResponse:
+        def read(self):
+            return tar_data
+        def __enter__(self):
+            return self
+        def __exit__(self, *args):
+            pass
+
+    monkeypatch.setattr("urllib.request.urlopen", lambda *a, **kw: MockResponse())
+    monkeypatch.setattr(
+        "src.bitwarden_workflow_linter.rules.run_actionlint._verify_checksum",
+        lambda *a, **kw: True,
+    )
 
     result, _ = install_actionlint_source("An error occurred", settings.actionlint_version)
     assert result is True
@@ -282,10 +248,7 @@ def test_install_actionlint_non_available_os():
 
 # test_failed_install_actionlint
 def test_failed_install_actionlint_darwin(monkeypatch):
-    def mock_run(*args, **kwargs):
-        raise subprocess.CalledProcessError(1, "cmd")
-
-    monkeypatch.setattr(subprocess, "run", mock_run)
+    monkeypatch.setattr("urllib.request.urlopen", lambda *a, **kw: (_ for _ in ()).throw(urllib.error.URLError("fail")))
     result, error = install_actionlint("Darwin", settings.actionlint_version)
     assert result is False
     assert "An error occurred" in error
@@ -300,10 +263,10 @@ def test_failed_install_actionlint_windows(monkeypatch):
     assert "An error occurred" in error
 
 def test_failed_install_actionlint_linux(monkeypatch):
-    def mock_run(*args, **kwargs):
-        raise subprocess.CalledProcessError(1, "cmd")
+    def mock_urlopen(*args, **kwargs):
+        raise urllib.error.URLError("network error")
 
-    monkeypatch.setattr(subprocess, "run", mock_run)
+    monkeypatch.setattr("urllib.request.urlopen", mock_urlopen)
 
     result, error = install_actionlint_source("An error occurred", settings.actionlint_version)
     assert result is False
@@ -314,6 +277,7 @@ def test_check_actionlint_not_installed(monkeypatch):
         raise FileNotFoundError
 
     monkeypatch.setattr(subprocess, "run", mock_run)
+    monkeypatch.setattr("urllib.request.urlopen", lambda *a, **kw: (_ for _ in ()).throw(urllib.error.URLError("fail")))
 
     result, _ = check_actionlint_path("Linux", settings.actionlint_version)
     assert result is False

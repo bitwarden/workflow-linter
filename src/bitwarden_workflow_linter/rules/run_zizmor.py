@@ -4,6 +4,7 @@ from typing import Optional, Tuple
 import subprocess
 import platform
 import urllib.request
+import urllib.error
 import tempfile
 import os
 
@@ -51,21 +52,14 @@ def check_zizmor_path(platform_system: str, version: str) -> Tuple[bool, str]:
         return install_zizmor(platform_system, version)
 
 
-def download_config_file(config_url: str) -> Optional[str]:
-    """Download zizmor config file from remote URL."""
+def download_config_content(config_url: str) -> Optional[str]:
+    """Download zizmor config file content from remote URL."""
     if not config_url:
         return None
 
     try:
-        with urllib.request.urlopen(config_url) as response:
-            config_content = response.read()
-
-        # Create temporary file for config
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".yml", delete=False
-        ) as temp_file:
-            temp_file.write(config_content.decode("utf-8"))
-            return temp_file.name
+        with urllib.request.urlopen(config_url, timeout=30) as response:
+            return response.read().decode("utf-8")
     except (urllib.error.URLError, IOError):
         return None
 
@@ -99,47 +93,30 @@ class RunZizmor(Rule):
         if not installed:
             return False, error
 
-        # Build zizmor command
         cmd = ["zizmor", "--format", "plain"]
 
-        # Add config file if specified
-        config_file = None
-        if self.settings.zizmor_config_url:
-            config_file = download_config_file(self.settings.zizmor_config_url)
-            if config_file:
-                cmd.extend(["--config", config_file])
+        with tempfile.TemporaryDirectory() as tmpdir:
+            if self.settings.zizmor_config_url:
+                config_content = download_config_content(self.settings.zizmor_config_url)
+                if config_content:
+                    config_file = os.path.join(tmpdir, "zizmor.yml")
+                    with open(config_file, "w") as f:
+                        f.write(config_content)
+                    cmd.extend(["--config", config_file])
 
-        # Add the workflow file
-        cmd.append(obj.filename)
+            cmd.append(obj.filename)
 
-        try:
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                check=False,
-            )
+            try:
+                result = subprocess.run(
+                    cmd,
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+            except (FileNotFoundError, OSError) as e:
+                return False, f"Error running zizmor: {str(e)}"
 
-            # Clean up temporary config file if created
-            if config_file:
-                try:
-                    os.unlink(config_file)
-                except OSError:
-                    pass
-
-            # zizmor returns 0 for success, non-zero for findings or errors
-            if result.returncode == 0:
-                return True, ""
-            else:
-                # Return the findings/errors from zizmor
-                output = result.stdout if result.stdout else result.stderr
-                return False, output
-
-        except (subprocess.CalledProcessError, FileNotFoundError, OSError) as e:
-            # Clean up temporary config file if created
-            if config_file:
-                try:
-                    os.unlink(config_file)
-                except OSError:
-                    pass
-            return False, f"Error running zizmor: {str(e)}"
+        if result.returncode == 0:
+            return True, ""
+        output = result.stdout if result.stdout else result.stderr
+        return False, output

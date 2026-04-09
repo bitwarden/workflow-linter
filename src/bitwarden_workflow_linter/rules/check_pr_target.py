@@ -53,24 +53,24 @@ class RuleCheckPrTarget(Rule):
         return missing_jobs
 
     def fn(self, obj: Workflow) -> Tuple[bool, str]:
-        Errors = []
+        errors = []
         if obj.on.get("pull_request_target"):
             result, check_job = self.has_check_run(obj)
             main_branch_only = self.targets_main_branch(obj)
             if not main_branch_only:
                 default_branch = self.settings.default_branch
-                Errors.append(f"Workflows using pull_request_target can only target the '{default_branch}' branch")
+                errors.append(f"Workflows using pull_request_target can only target the '{default_branch}' branch")
             if result:
                 missing_jobs = self.check_run_required(obj, check_job)
                 if missing_jobs:
                     job_list = ', '.join(missing_jobs)
                     message = f"Check-run is missing from the following jobs in the workflow: {job_list}"
-                    Errors.append(message)
+                    errors.append(message)
             else:
                 message = f"A check-run job must be included as a direct job dependency when pull_request_target is used"
-                Errors.append(message)
-            if Errors:
-                self.message = "\n".join(Errors)
+                errors.append(message)
+            if errors:
+                self.message = "\n".join(errors)
                 return False, f"{self.message}"
             else:
                 return True, ""
