@@ -7,7 +7,7 @@ import os
 from typing import Optional
 
 from .load import WorkflowBuilder, Rules
-from .utils import LintFinding, Settings
+from .utils import LintFinding, LintLevels, Settings
 
 
 class LinterCmd:
@@ -45,11 +45,19 @@ class LinterCmd:
             "lint",
             help="Verify that a GitHub Action Workflow follows all of the Rules.",
         )
-        parser_lint.add_argument(
+        exclusive = parser_lint.add_mutually_exclusive_group()
+        exclusive.add_argument(
             "-s",
             "--strict",
             action="store_true",
             help="return non-zero exit code on warnings as well as errors",
+        )
+        exclusive.add_argument(
+            "-e",
+            "--errors-only",
+            action="store_true",
+            default=False,
+            help="only show and fail on errors; warnings are suppressed from output and do not affect the exit code",
         )
         parser_lint.add_argument("-f", "--files", nargs="+", action="append", required=True, help="files to lint")
         parser_lint.add_argument(
@@ -78,7 +86,7 @@ class LinterCmd:
             return 0
         return max(findings, key=lambda finding: finding.level.code).level.code
 
-    def lint_file(self, filename: str) -> int:
+    def lint_file(self, filename: str, errors_only: bool) -> int:
         """Lint a single workflow.
 
         Run all of the Workflow, Job, and Step level rules that have been enabled.
@@ -110,6 +118,9 @@ class LinterCmd:
                         findings.append(rule.execute(step))
 
         findings = list(filter(lambda a: a is not None, findings))
+
+        if errors_only:
+            findings = list(filter(lambda f: f.level == LintLevels.ERROR, findings))
 
         if len(findings) > 0:
             for finding in findings:
@@ -149,7 +160,7 @@ class LinterCmd:
 
         return sorted(set(workflow_files))
 
-    def run(self, input_files: list[str], strict: bool = False) -> int:
+    def run(self, input_files: list[str], strict: bool = False, errors_only: bool = False) -> int:
         """Execute the LinterCmd.
 
         Args:
@@ -157,6 +168,8 @@ class LinterCmd:
             list of file names or directory names.
           strict:
             fail on WARNING instead of succeed
+          errors_only:
+            only show errors, not warning level findings
 
         Returns
           The return_code for the entire CLI to indicate success/failure
@@ -167,7 +180,7 @@ class LinterCmd:
             files_with_issues = []
             return_code = 0
             for file in files:
-                return_value = self.lint_file(file)
+                return_value = self.lint_file(file, errors_only)
                 if return_value > 0:
                     files_with_issues.append(file)
                     return_code = max(return_code, return_value)
