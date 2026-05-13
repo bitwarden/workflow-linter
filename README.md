@@ -138,6 +138,22 @@ options:
   -h, --help      show this help message and exit
   -v, --verbose
 ```
+
+#### lint subcommand
+
+```bash
+usage: bwwl lint [-h] [-s | -e] -f FILES [FILES ...] [-o OUTPUT]
+
+options:
+  -h, --help            show this help message and exit
+  -s, --strict          return non-zero exit code on warnings as well as errors
+  -e, --errors-only     only show and fail on errors; warnings are suppressed
+                        from output and do not affect the exit code
+  -f, --files FILES     files or directories to lint
+  -o, --output OUTPUT   output format: [stdout|json|md] (default: stdout)
+```
+
+> **Note:** `--strict` and `--errors-only` are mutually exclusive.
 ## Pre-commit Hook Setup
 
 ### Navigate to the `.git/hooks` directory in the repository you wish to lint:
