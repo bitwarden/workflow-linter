@@ -49,6 +49,11 @@
     "sha": "f935ebfe524a0ff27bda07dadc3662e3e45b5125",
     "version": "1.0.0-rc.1"
   },
+  "Zxilly/setup-binaryen": {
+    "name": "Zxilly/setup-binaryen",
+    "sha": "3cda60f50c9575dff0dc7a1d27cdf1306333a7c5",
+    "version": "v1.1.0"
+  },
   "act10ns/slack": {
     "name": "act10ns/slack",
     "sha": "44541246747a30eb3102d87f7a4cc5471b0ffb7d",
