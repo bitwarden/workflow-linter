@@ -2,11 +2,14 @@ name: CD
 run-name: ${{ inputs.test == true && 'CD - Test' || 'CD' }}
 
 on:
-  pull_request:
-    types:
-      - closed
+  push:
     branches:
-      - "main"
+      - main
+    # The version-bump commit produced by the deploy repo's publish workflow
+    # modifies src/bitwarden_workflow_linter/__about__.py. Ignoring that path
+    # here prevents cd.yml from re-triggering on its own bump commit.
+    paths-ignore:
+      - src/bitwarden_workflow_linter/__about__.py
   workflow_dispatch:
     inputs:
       test:
@@ -14,17 +17,38 @@ on:
         required: false
         default: false
         type: boolean
+      version_bump_type:
+        description: "Bump type override. Default 'skip' so manual runs don't accidentally publish."
+        required: false
+        default: skip
+        type: choice
+        options:
+          - skip
+          - patch
+          - minor
+          - major
 
 permissions: {}
 
 jobs:
   deploy:
     name: Trigger publish via deploy repo
-    if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     permissions:
       id-token: write
     steps:
+      - name: Build trigger data
+        id: data
+        env:
+          TEST: ${{ inputs.test || false }}
+          BUMP_TYPE: ${{ inputs.version_bump_type || '' }}
+        run: |
+          JSON=$(jq -nc \
+            --argjson test "$TEST" \
+            --arg bump_type "$BUMP_TYPE" \
+            '{test: $test, version_bump_type: $bump_type}')
+          echo "json=$JSON" >> "$GITHUB_OUTPUT"
+
       - name: Trigger publish
         uses: bitwarden/gh-actions/trigger-actions@main
         with:
@@ -32,3 +56,4 @@ jobs:
           azure_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
           azure_client_id: ${{ secrets.AZURE_CLIENT_ID }}
           task: publish-workflow-linter
+          data: ${{ steps.data.outputs.json }}
