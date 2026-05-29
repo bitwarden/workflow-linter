@@ -15,176 +15,20 @@ on:
         default: false
         type: boolean
 
+permissions: {}
+
 jobs:
-  version-type:
-    name: Get version type
-    if: github.event.pull_request.merged == true
-    uses: ./.github/workflows/_version_type.yml
-    permissions:
-      contents: read
-      issues: read
-      pull-requests: read
-
-  version-bump:
-    name: Version bump
-    if: needs.version-type.outputs.version_bump_type != 'skip'
-    runs-on: ubuntu-24.04
-    needs: version-type
-    permissions:
-      contents: write
-      id-token: write
-    outputs:
-      version: ${{ steps.get-version.outputs.version }}
-      commit_hash: ${{ steps.version-commit.outputs.commit_hash }}
-    steps:
-      - name: Log in to Azure
-        uses: bitwarden/gh-actions/azure-login@main
-        with:
-          subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          tenant_id: ${{ secrets.AZURE_TENANT_ID }}
-          client_id: ${{ secrets.AZURE_CLIENT_ID }}
-
-      - name: Get Azure Key Vault secrets
-        id: get-kv-secrets
-        uses: bitwarden/gh-actions/get-keyvault-secrets@main
-        with:
-          keyvault: gh-org-bitwarden
-          secrets: "BW-GHAPP-ID,BW-GHAPP-KEY"
-
-      - name: Log out from Azure
-        uses: bitwarden/gh-actions/azure-logout@main
-
-      - name: Generate GH App token
-        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
-        id: app-token
-        with:
-          app-id: ${{ steps.get-kv-secrets.outputs.BW-GHAPP-ID }}
-          private-key: ${{ steps.get-kv-secrets.outputs.BW-GHAPP-KEY }}
-          permission-contents: write
-
-      - name: Check out repo
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-        with:
-          fetch-depth: 0
-          token: ${{ steps.app-token.outputs.token }}
-          persist-credentials: true
-
-      - name: Set up Python
-        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
-        with:
-          python-version-file: ".python-version"
-
-      - name: Install hatch
-        run: pip install hatch
-
-      - name: Get current version
-        run: echo "OLD_VERSION=$(hatch version)" >> $GITHUB_ENV
-
-      - name: Bump version
-        env:
-          BUMP_TYPE: ${{ needs.version-type.outputs.version_bump_type }}
-        run: hatch version "$BUMP_TYPE"
-
-      - name: Get bumped version
-        id: get-version
-        run: |
-          VERSION=$(hatch version)
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-
-      - name: Commit version bump
-        id: api-commit
-        uses: bitwarden/gh-actions/api-commit@main
-        with:
-          message: "Bump version from ${{ env.OLD_VERSION }} to ${{ steps.get-version.outputs.version }}"
-          branch: main
-          token: ${{ steps.app-token.outputs.token }}
-          tag_name: v${{ steps.get-version.outputs.version }} # Create tag for resulting version bump commit
-
-      - name: Output version bump commit hash
-        id: version-commit
-        env:
-          COMMIT_HASH: ${{ steps.api-commit.outputs.commit_sha }}
-        run: |
-          echo "commit_hash=$COMMIT_HASH" >> $GITHUB_OUTPUT
-
-  release:
-    name: GitHub release
-    runs-on: ubuntu-22.04
-    needs: version-bump
-    permissions:
-      contents: write
-    steps:
-      - name: Check out repo
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-        with:
-          persist-credentials: false
-
-      - name: Create GitHub release
-        uses: ncipollo/release-action@b7eabc95ff50cbeeedec83973935c8f306dfcd0b # v1.20.0
-        with:
-          commit: ${{ github.sha }}
-          tag: v${{ needs.version-bump.outputs.version }}
-          name: v${{ needs.version-bump.outputs.version }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          draft: false
-
   deploy:
-    name: Deploy workflow-linter (v2)
+    name: Trigger publish via deploy repo
+    if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
-    needs: version-bump
-    environment: "PyPI"
     permissions:
-      contents: read
       id-token: write
     steps:
-      - name: Check out repo
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - name: Trigger publish
+        uses: bitwarden/gh-actions/trigger-actions@main
         with:
-          fetch-depth: 0
-          ref: ${{ needs.version-bump.outputs.commit_hash }}
-          persist-credentials: false
-
-      - name: Set up Python
-        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
-        with:
-          python-version-file: ".python-version"
-
-      - name: Install hatch
-        run: pip install hatch
-
-      - name: Build
-        run: hatch build
-
-      - name: Publish - PyPI
-        uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # v1.13.0
-
-  deploy-test:
-    name: Deploy workflow-linter (Test PyPI)
-    if: inputs.test == true
-    runs-on: ubuntu-24.04
-    environment: "Test PyPI"
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - name: Check out repo
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-
-      - name: Set up Python
-        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
-        with:
-          python-version-file: ".python-version"
-
-      - name: Install hatch
-        run: pip install hatch
-
-      - name: Build
-        run: hatch build
-
-      - name: Publish - Test PyPI
-        uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # v1.13.0
-        with:
-          repository-url: https://test.pypi.org/legacy/
+          azure_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          azure_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+          azure_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+          task: publish-workflow-linter
