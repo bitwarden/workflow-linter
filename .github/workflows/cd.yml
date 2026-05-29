@@ -1,5 +1,4 @@
 name: CD
-run-name: ${{ inputs.test == true && 'CD - Test' || 'CD' }}
 
 on:
   push:
@@ -12,11 +11,6 @@ on:
       - src/bitwarden_workflow_linter/__about__.py
   workflow_dispatch:
     inputs:
-      test:
-        description: "Publish to Test PyPI for testing (Does not create a release)"
-        required: false
-        default: false
-        type: boolean
       version_bump_type:
         description: "Bump type override. Default 'skip' so manual runs don't accidentally publish."
         required: false
@@ -37,18 +31,6 @@ jobs:
     permissions:
       id-token: write
     steps:
-      - name: Build trigger data
-        id: data
-        env:
-          TEST: ${{ inputs.test || false }}
-          BUMP_TYPE: ${{ inputs.version_bump_type || '' }}
-        run: |
-          JSON=$(jq -nc \
-            --argjson test "$TEST" \
-            --arg bump_type "$BUMP_TYPE" \
-            '{test: $test, version_bump_type: $bump_type}')
-          echo "json=$JSON" >> "$GITHUB_OUTPUT"
-
       - name: Trigger publish
         uses: bitwarden/gh-actions/trigger-actions@main
         with:
@@ -56,4 +38,4 @@ jobs:
           azure_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
           azure_client_id: ${{ secrets.AZURE_CLIENT_ID }}
           task: publish-workflow-linter
-          data: ${{ steps.data.outputs.json }}
+          data: '{"version_bump_type": "${{ inputs.version_bump_type || '''' }}"}'
