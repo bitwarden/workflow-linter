@@ -9,18 +9,6 @@ on:
     # here prevents cd.yml from re-triggering on its own bump commit.
     paths-ignore:
       - src/bitwarden_workflow_linter/__about__.py
-  workflow_dispatch:
-    inputs:
-      version_bump_type:
-        description: "Bump type override. Default 'skip' so manual runs don't accidentally publish."
-        required: false
-        default: skip
-        type: choice
-        options:
-          - skip
-          - patch
-          - minor
-          - major
 
 permissions: {}
 
@@ -38,4 +26,3 @@ jobs:
           azure_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
           azure_client_id: ${{ secrets.AZURE_CLIENT_ID }}
           task: publish-workflow-linter
-          data: '{"version_bump_type": "${{ inputs.version_bump_type || '''' }}"}'
