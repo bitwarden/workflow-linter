@@ -41,12 +41,10 @@ def main(input_args: Optional[List[str]] = None) -> int:
 
     args = parser.parse_args(input_args)
     if args.command == "lint":
-        return linter_cmd.run(
-            [file for file_list in args.files for file in file_list], args.strict
-        )
+        return linter_cmd.run([file for file_list in args.files for file in file_list], args.strict, args.errors_only)
 
     if args.command == "actions":
-        print(f"{"-"*50}\n!!bwwl actions is in BETA!!\n{"-"*50}")
+        print(f'{"-"*50}\n!!bwwl actions is in BETA!!\n{"-"*50}')
         if args.actions_command == "add":
             return actions_cmd.add(args.name, args.output)
         if args.actions_command == "update":

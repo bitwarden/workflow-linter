@@ -4,6 +4,8 @@ self-hosted-runner:
   labels:
     - terraform-provider-bitwarden-sm-linux
     - qa-ubuntu-24.04-TSD-1534
+    - tsd-993-bitwarden-test
+    - QA-TSD-2849-Ubuntu-24.04
 
 # Path-specific configurations.
 paths:
