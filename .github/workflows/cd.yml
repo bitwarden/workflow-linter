@@ -1,26 +1,24 @@
 name: CD
-run-name: ${{ inputs.test == true && 'CD - Test' || 'CD' }}
 
 on:
-  pull_request:
-    types:
-      - closed
+  push:
     branches:
-      - "main"
-  workflow_dispatch:
-    inputs:
-      test:
-        description: "Publish to Test PyPI for testing (Does not create a release)"
-        required: false
-        default: false
-        type: boolean
+      - main
+    # The version-bump commit produced by the deploy repo's publish workflow
+    # modifies src/bitwarden_workflow_linter/__about__.py. Ignoring that path
+    # here prevents cd.yml from re-triggering on its own bump commit.
+    paths-ignore:
+      - src/bitwarden_workflow_linter/__about__.py
 
 permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
 
 jobs:
   deploy:
     name: Trigger publish via deploy repo
-    if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     permissions:
       id-token: write
