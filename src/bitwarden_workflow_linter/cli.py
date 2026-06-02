@@ -8,6 +8,7 @@ from typing import List, Optional
 from .actions import ActionsCmd
 from .lint import LinterCmd
 from .utils import Settings
+from .__about__ import __version__
 
 local_settings = Settings.factory()
 
@@ -24,6 +25,9 @@ def main(input_args: Optional[List[str]] = None) -> int:
 
     # Read arguments from command line.
     parser = argparse.ArgumentParser(prog="bwwl")
+    parser.add_argument(
+        "--version", action="version", version=f"%(prog)s {__version__}"
+    )
     parser.add_argument("-v", "--verbose", action="store_true", default=False)
     subparsers = parser.add_subparsers(required=True, dest="command")
 
@@ -40,7 +44,7 @@ def main(input_args: Optional[List[str]] = None) -> int:
         return linter_cmd.run([file for file_list in args.files for file in file_list], args.strict, args.errors_only)
 
     if args.command == "actions":
-        print(f"{'-'*50}\n!!bwwl actions is in BETA!!\n{'-'*50}")
+        print(f'{"-"*50}\n!!bwwl actions is in BETA!!\n{"-"*50}')
         if args.actions_command == "add":
             return actions_cmd.add(args.name, args.output)
         if args.actions_command == "update":
