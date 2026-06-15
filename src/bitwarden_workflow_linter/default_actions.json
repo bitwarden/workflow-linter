@@ -144,6 +144,11 @@
     "sha": "65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08",
     "version": "v4.6.0"
   },
+  "actions/upload-code-coverage": {
+    "name": "actions/upload-code-coverage",
+    "sha": "b51da2c3c1b23e04d2d6477cfc34350b1f5cd3e9",
+    "version": "v1.2.0"
+  },
   "actions/upload-pages-artifact": {
     "name": "actions/upload-pages-artifact",
     "sha": "56afc609e74202658d3ffba0e8f6dda462b719fa",
