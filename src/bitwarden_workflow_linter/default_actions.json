@@ -54,6 +54,11 @@
     "sha": "44541246747a30eb3102d87f7a4cc5471b0ffb7d",
     "version": "v2.1.0"
   },
+  "actions-cool/check-user-permission": {
+    "name": "actions-cool/check-user-permission",
+    "sha": "956b2e73cdfe3bcb819bb7225e490cb3b18fd76e",
+    "version": "v2.2.1"
+  },
   "actions-rs/toolchain": {
     "name": "actions-rs/toolchain",
     "sha": "b2417cde72dcf67f306c0ae8e0828a81bf0b189f",
@@ -68,6 +73,11 @@
     "name": "actions/cache",
     "sha": "1bd1e32a3bdc45362d1e726936510720a7c30a57",
     "version": "v4.2.0"
+  },
+  "actions/cache/restore": {
+    "name": "actions/cache/restore",
+    "sha": "27d5ce7f107fe9357f9df03efb73ab90386fccae",
+    "version": "v5.0.5"
   },
   "actions/checkout": {
     "name": "actions/checkout",
