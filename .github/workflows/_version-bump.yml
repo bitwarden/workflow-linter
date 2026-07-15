@@ -12,6 +12,9 @@ on:
       version:
         description: "Target version that was bumped to (empty when skipped)."
         value: ${{ jobs.resolve.outputs.version }}
+      sha:
+        description: "Merged bump commit SHA on main (empty when skipped)."
+        value: ${{ jobs.bump-and-update.outputs.merged_sha }}
 
 permissions: {}
 
@@ -95,6 +98,8 @@ jobs:
     permissions:
       contents: read
       id-token: write          # Azure OIDC for the trigger-actions composite
+    outputs:
+      merged_sha: ${{ steps.merged.outputs.sha }}
     steps:
       - name: Check out repo
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
@@ -131,3 +136,11 @@ jobs:
           # the bump PR; the bump touches only __about__.py so it never re-triggers CD.
           # wait_for_merge defaults true, so this blocks until the bump PR merges.
           data: '{"artifact_name": "${{ steps.upload.outputs.artifact_name }}", "target_branch": "main", "pr_labels": "version:skip"}'
+
+      # The trigger-actions step above blocks until the bump PR merges, so main HEAD is now
+      # the merged bump commit. Resolve it here and hand it back so publish builds/tags it.
+      - name: Resolve merged commit
+        id: merged
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: echo "sha=$(gh api repos/bitwarden/workflow-linter/commits/main --jq .sha)" >> "$GITHUB_OUTPUT"

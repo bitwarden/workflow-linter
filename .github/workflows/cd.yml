@@ -32,15 +32,8 @@ jobs:
     if: needs.version-bump.outputs.bump_type != 'skip'
     runs-on: ubuntu-24.04
     permissions:
-      contents: read
       id-token: write
     steps:
-      - name: Resolve merged commit
-        id: sha
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: echo "sha=$(gh api repos/bitwarden/workflow-linter/commits/main --jq .sha)" >> "$GITHUB_OUTPUT"
-
       - name: Publish
         uses: bitwarden/gh-actions/trigger-actions@main
         with:
@@ -48,4 +41,4 @@ jobs:
           azure_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
           azure_client_id: ${{ secrets.AZURE_CLIENT_ID }}
           task: publish-workflow-linter
-          data: '{"version": "${{ needs.version-bump.outputs.version }}", "sha": "${{ steps.sha.outputs.sha }}"}'
+          data: '{"version": "${{ needs.version-bump.outputs.version }}", "sha": "${{ needs.version-bump.outputs.sha }}"}'
