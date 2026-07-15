@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-    # The version bump lands as a merged PR that touches only this file. That merge is a
+    # The version bump is merged as a PR that touches only this file. That merge is a
     # push to main; ignoring the path here stops cd.yml re-triggering on its own bump PR.
     paths-ignore:
       - src/bitwarden_workflow_linter/__about__.py
@@ -18,7 +18,7 @@ concurrency:
 jobs:
   version-bump:
     name: Version bump
-    # Resolve bump type + idempotency, then land the bump on main via update-repository.
+    # Resolve bump type + idempotency, then merge the bump to main via update-repository.
     uses: ./.github/workflows/_version-bump.yml
     permissions:
       contents: read

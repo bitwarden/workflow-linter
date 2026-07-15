@@ -1,6 +1,6 @@
 name: Version Bump
 
-# Reusable: resolve the bump type + gate idempotency, then land the version bump on main
+# Reusable: resolve the bump type + gate idempotency, then merge the version bump to main
 # via the generic update-repository task. Called by cd.yml. Outputs the resolved bump_type
 # ('skip' when nothing to do) and target version so the caller can gate + publish.
 on:
@@ -91,7 +91,7 @@ jobs:
           fi
 
   bump-and-update:
-    name: Bump version and land it on main
+    name: Bump version and merge it to main
     needs: resolve
     if: needs.resolve.outputs.bump_type != 'skip'
     runs-on: ubuntu-24.04
@@ -125,7 +125,7 @@ jobs:
         with:
           artifact_name: modified-files
 
-      - name: Land the bump on main
+      - name: Merge the bump to main
         uses: bitwarden/gh-actions/trigger-actions@main
         with:
           azure_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
