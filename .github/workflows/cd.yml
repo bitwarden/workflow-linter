@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - main
-    # The version-bump commit produced by the deploy repo's publish workflow
-    # modifies src/bitwarden_workflow_linter/__about__.py. Ignoring that path
-    # here prevents cd.yml from re-triggering on its own bump commit.
+    # The version bump is merged as a PR that touches only this file. That merge is a
+    # push to main; ignoring the path here stops cd.yml re-triggering on its own bump PR.
     paths-ignore:
       - src/bitwarden_workflow_linter/__about__.py
 
@@ -17,16 +16,29 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    name: Trigger publish via deploy repo
+  version-bump:
+    name: Version bump
+    # Resolve bump type + idempotency, then merge the bump to main via update-repository.
+    uses: ./.github/workflows/_version-bump.yml
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: read
+    secrets: inherit
+
+  publish:
+    name: Publish via deploy repo
+    needs: version-bump
+    if: needs.version-bump.outputs.bump_type != 'skip'
     runs-on: ubuntu-24.04
     permissions:
       id-token: write
     steps:
-      - name: Trigger publish
+      - name: Publish
         uses: bitwarden/gh-actions/trigger-actions@main
         with:
           azure_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           azure_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
           azure_client_id: ${{ secrets.AZURE_CLIENT_ID }}
           task: publish-workflow-linter
+          data: '{"version": "${{ needs.version-bump.outputs.version }}", "sha": "${{ needs.version-bump.outputs.sha }}"}'

@@ -1,0 +1,146 @@
+name: Version Bump
+
+# Reusable: resolve the bump type + gate idempotency, then merge the version bump to main
+# via the generic update-repository task. Called by cd.yml. Outputs the resolved bump_type
+# ('skip' when nothing to do) and target version so the caller can gate + publish.
+on:
+  workflow_call:
+    outputs:
+      bump_type:
+        description: "Resolved bump type (major/minor/patch), or 'skip' when no bump was made."
+        value: ${{ jobs.resolve.outputs.bump_type }}
+      version:
+        description: "Target version that was bumped to (empty when skipped)."
+        value: ${{ jobs.resolve.outputs.version }}
+      sha:
+        description: "Merged bump commit SHA on main (empty when skipped)."
+        value: ${{ jobs.bump-and-update.outputs.merged_sha }}
+
+permissions: {}
+
+jobs:
+  resolve:
+    name: Resolve bump type
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      bump_type: ${{ steps.gate.outputs.bump_type }}
+      version: ${{ steps.gate.outputs.version }}
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
+
+      - name: Resolve bump type and gate idempotency
+        id: gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          _SHA: ${{ github.sha }}
+        run: |
+          # Resolution: PR label on the merge commit > patch fallback. version:skip exits clean.
+          PR_JSON=$(gh api "repos/bitwarden/workflow-linter/commits/${_SHA}/pulls")
+          PR_NUMBER=$(echo "$PR_JSON" | jq -r '.[0].number // empty')
+          if [[ -z "$PR_NUMBER" ]]; then
+            echo "No PR found for [${_SHA}]; defaulting to patch" | tee -a "$GITHUB_STEP_SUMMARY"
+            BUMP_TYPE="patch"
+          else
+            LABEL=$(echo "$PR_JSON" | jq -r '[.[0].labels[].name | select(startswith("version:"))][0] // empty')
+            if [[ -z "$LABEL" ]]; then
+              echo "::error::PR #$PR_NUMBER for [${_SHA}] has no version:* label" | tee -a "$GITHUB_STEP_SUMMARY"
+              exit 1
+            fi
+            BUMP_TYPE="${LABEL#version:}"
+            echo "Using PR #$PR_NUMBER label: $BUMP_TYPE" | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
+
+          if [[ "$BUMP_TYPE" == "skip" ]]; then
+            echo "bump_type=skip" >> "$GITHUB_OUTPUT"
+            echo "Resolved to skip; no bump or publish." | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          # Idempotency gate: compute the target version and skip if its release tag exists.
+          CURRENT=$(grep -oE '__version__ = "[^"]+"' src/bitwarden_workflow_linter/__about__.py | cut -d'"' -f2)
+          if [[ -z "$CURRENT" ]]; then
+            echo "::error::Could not parse __version__ from __about__.py" | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT"
+          case "$BUMP_TYPE" in
+            major) TARGET="$((MAJOR + 1)).0.0" ;;
+            minor) TARGET="$MAJOR.$((MINOR + 1)).0" ;;
+            patch) TARGET="$MAJOR.$MINOR.$((PATCH + 1))" ;;
+            *)
+              echo "::error::Unknown bump type: '$BUMP_TYPE' (expected major/minor/patch/skip)" | tee -a "$GITHUB_STEP_SUMMARY"
+              exit 1
+              ;;
+          esac
+          echo "Current version: $CURRENT → target: v$TARGET" | tee -a "$GITHUB_STEP_SUMMARY"
+
+          if gh release view "v$TARGET" --repo bitwarden/workflow-linter > /dev/null 2>&1; then
+            echo "Release v$TARGET already exists — skipping." | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "bump_type=skip" >> "$GITHUB_OUTPUT"
+          else
+            {
+              echo "bump_type=$BUMP_TYPE"
+              echo "version=$TARGET"
+            } >> "$GITHUB_OUTPUT"
+          fi
+
+  bump-and-update:
+    name: Bump version and merge it to main
+    needs: resolve
+    if: needs.resolve.outputs.bump_type != 'skip'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      id-token: write          # Azure OIDC for the trigger-actions composite
+    outputs:
+      merged_sha: ${{ steps.merged.outputs.sha }}
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
+        with:
+          python-version-file: ".python-version"
+
+      - name: Install hatch
+        run: pip install hatch
+
+      - name: Bump version
+        env:
+          BUMP_TYPE: ${{ needs.resolve.outputs.bump_type }}
+        run: hatch version "$BUMP_TYPE"
+
+      - name: Upload modified files
+        id: upload
+        uses: bitwarden/gh-actions/upload-modified-files@main
+        with:
+          artifact_name: modified-files
+
+      - name: Merge the bump to main
+        uses: bitwarden/gh-actions/trigger-actions@main
+        with:
+          azure_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          azure_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+          azure_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+          task: update-repository
+          # pr_labels: version:skip satisfies the required "Enforce version label" check on
+          # the bump PR; the bump touches only __about__.py so it never re-triggers CD.
+          # wait_for_merge defaults true, so this blocks until the bump PR merges.
+          data: '{"artifact_name": "${{ steps.upload.outputs.artifact_name }}", "target_branch": "main", "pr_labels": "version:skip"}'
+
+      # The trigger-actions step above blocks until the bump PR merges, so main HEAD is now
+      # the merged bump commit. Resolve it here and hand it back so publish builds/tags it.
+      - name: Resolve merged commit
+        id: merged
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: echo "sha=$(gh api repos/bitwarden/workflow-linter/commits/main --jq .sha)" >> "$GITHUB_OUTPUT"
