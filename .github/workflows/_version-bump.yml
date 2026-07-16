@@ -80,14 +80,21 @@ jobs:
           esac
           echo "Current version: $CURRENT → target: v$TARGET" | tee -a "$GITHUB_STEP_SUMMARY"
 
-          if gh release view "v$TARGET" --repo bitwarden/workflow-linter > /dev/null 2>&1; then
+          # Idempotency gate. Distinguish a genuine "release not found" (→ proceed with the
+          # bump) from a transient API error (→ fail closed). Swallowing every non-zero exit
+          # as "absent" would let a network blip trigger a duplicate bump/publish and defeat
+          # idempotency, so only a real not-found result proceeds.
+          if RELEASE_OUT=$(gh release view "v$TARGET" --repo bitwarden/workflow-linter 2>&1); then
             echo "Release v$TARGET already exists — skipping." | tee -a "$GITHUB_STEP_SUMMARY"
             echo "bump_type=skip" >> "$GITHUB_OUTPUT"
-          else
+          elif grep -qiE 'not found|404' <<< "$RELEASE_OUT"; then
             {
               echo "bump_type=$BUMP_TYPE"
               echo "version=$TARGET"
             } >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::Could not determine whether release v$TARGET exists (transient API error?): $RELEASE_OUT" | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 1
           fi
 
   bump-and-update:
@@ -135,7 +142,7 @@ jobs:
           # pr_labels: version:skip satisfies the required "Enforce version label" check on
           # the bump PR; the bump touches only __about__.py so it never re-triggers CD.
           # wait_for_merge defaults true, so this blocks until the bump PR merges.
-          data: '{"artifact_name": "${{ steps.upload.outputs.artifact_name }}", "target_branch": "main", "pr_labels": "version:skip"}'
+          data: '{"artifact_name": "${{ steps.upload.outputs.artifact_name }}", "target_branch": "main", "pr_labels": "version:skip", "pr_title": "Bump version to ${{ needs.resolve.outputs.version }}"}'
 
       # The trigger-actions step above blocks until the bump PR merges, so main HEAD is now
       # the merged bump commit. Resolve it here and hand it back so publish builds/tags it.
@@ -143,4 +150,13 @@ jobs:
         id: merged
         env:
           GH_TOKEN: ${{ github.token }}
-        run: echo "sha=$(gh api repos/bitwarden/workflow-linter/commits/main --jq .sha)" >> "$GITHUB_OUTPUT"
+        run: |
+          # Standalone assignment so `bash -e` aborts on a failed fetch (a command
+          # substitution inside `echo` would not), plus a non-empty guard — never emit an
+          # empty sha that publish would then build/tag at a bad ref.
+          SHA=$(gh api repos/bitwarden/workflow-linter/commits/main --jq .sha)
+          if [[ -z "$SHA" ]]; then
+            echo "::error::Failed to resolve merged commit on main"
+            exit 1
+          fi
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
