@@ -4,10 +4,9 @@ on:
   push:
     branches:
       - main
-    # The version bump is merged as a PR that touches only this file. That merge is a
-    # push to main; ignoring the path here stops cd.yml re-triggering on its own bump PR.
-    paths-ignore:
-      - src/bitwarden_workflow_linter/__about__.py
+    # No paths-ignore: the bump PR's own merge re-triggers CD, and `resolve` skips it via the
+    # PR's version:skip label. This keeps the pattern uniform for repos whose version lives in
+    # a file with other content (e.g. Chart.yaml), which can't be path-ignored.
 
 permissions: {}
 

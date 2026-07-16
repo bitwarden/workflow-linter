@@ -40,27 +40,43 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           _SHA: ${{ github.sha }}
         run: |
-          # Resolution: PR label on the merge commit > patch fallback. version:skip exits clean.
-          PR_JSON=$(gh api "repos/bitwarden/workflow-linter/commits/${_SHA}/pulls")
-          PR_NUMBER=$(echo "$PR_JSON" | jq -r '.[0].number // empty')
+          # Resolve the bump from the merged PR's version label. This label is enforced on PRs,
+          # so a merge to main must carry exactly one of version:{major,minor,patch,skip}:
+          #   major|minor|patch → bump; skip → exit clean (this is also what stops the bump PR's
+          #   own merge from looping CD, so no paths-ignore is needed); anything else → fail.
+          # The commit→PR association can lag briefly after a squash merge, so retry the lookup
+          # before concluding there's no PR (a persistent miss is a real misconfiguration → fail).
+          PR_JSON=""
+          PR_NUMBER=""
+          for i in 1 2 3 4 5; do
+            PR_JSON=$(gh api "repos/bitwarden/workflow-linter/commits/${_SHA}/pulls" 2>/dev/null || true)
+            PR_NUMBER=$(jq -r '.[0].number // empty' <<< "$PR_JSON" 2>/dev/null || true)
+            [[ -n "$PR_NUMBER" ]] && break
+            echo "PR for [${_SHA}] not resolved yet (attempt $i); retrying..." | tee -a "$GITHUB_STEP_SUMMARY"
+            sleep $((i * 3))
+          done
+
           if [[ -z "$PR_NUMBER" ]]; then
-            echo "No PR found for [${_SHA}]; defaulting to patch" | tee -a "$GITHUB_STEP_SUMMARY"
-            BUMP_TYPE="patch"
-          else
-            LABEL=$(echo "$PR_JSON" | jq -r '[.[0].labels[].name | select(startswith("version:"))][0] // empty')
-            if [[ -z "$LABEL" ]]; then
-              echo "::error::PR #$PR_NUMBER for [${_SHA}] has no version:* label" | tee -a "$GITHUB_STEP_SUMMARY"
-              exit 1
-            fi
-            BUMP_TYPE="${LABEL#version:}"
-            echo "Using PR #$PR_NUMBER label: $BUMP_TYPE" | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "::error::No PR found for [${_SHA}] after retries. CD requires a merged PR carrying a version:{major,minor,patch,skip} label — verify the repo's version-label enforcement is configured." | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 1
           fi
 
-          if [[ "$BUMP_TYPE" == "skip" ]]; then
-            echo "bump_type=skip" >> "$GITHUB_OUTPUT"
-            echo "Resolved to skip; no bump or publish." | tee -a "$GITHUB_STEP_SUMMARY"
-            exit 0
-          fi
+          LABEL=$(jq -r '[.[0].labels[].name | select(startswith("version:"))][0] // empty' <<< "$PR_JSON")
+          BUMP_TYPE="${LABEL#version:}"
+          case "$BUMP_TYPE" in
+            major|minor|patch)
+              echo "PR #$PR_NUMBER label: version:$BUMP_TYPE" | tee -a "$GITHUB_STEP_SUMMARY"
+              ;;
+            skip)
+              echo "bump_type=skip" >> "$GITHUB_OUTPUT"
+              echo "PR #$PR_NUMBER labeled version:skip; no bump or publish." | tee -a "$GITHUB_STEP_SUMMARY"
+              exit 0
+              ;;
+            *)
+              echo "::error::PR #$PR_NUMBER for [${_SHA}] has no valid version:{major,minor,patch,skip} label (found: '${LABEL:-none}'). This label is enforced on PRs — verify the repo's version-label check is configured." | tee -a "$GITHUB_STEP_SUMMARY"
+              exit 1
+              ;;
+          esac
 
           # Idempotency gate: compute the target version and skip if its release tag exists.
           CURRENT=$(grep -oE '__version__ = "[^"]+"' src/bitwarden_workflow_linter/__about__.py | cut -d'"' -f2)
