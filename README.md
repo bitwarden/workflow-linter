@@ -2,7 +2,7 @@
 
 Bitwarden's Workflow Linter is an extensible linter to apply opinionated organization-specific GitHub Action standards. It was designed to be used alongside [yamllint](https://github.com/adrienverge/yamllint) to enforce specific YAML standards.
 
-To see an example of Workflow Linter in practice in GitHub Action, see the [composite Action](https://github.com/bitwarden/gh-actions/tree/main/lint-workflow).
+To see an example of Workflow Linter in practice in GitHub Actions, see the [composite Action](https://github.com/bitwarden/gh-actions/tree/main/lint-workflow).
 
 ## Prerequisites
 
