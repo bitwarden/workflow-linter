@@ -524,11 +524,6 @@
     "sha": "7b4da11513bf3f43f9999e90eabced41ab8bb048",
     "version": "v2.2.0"
   },
-  "sonarsource/sonarqube-scan-action": {
-    "name": "sonarsource/sonarqube-scan-action",
-    "sha": "bfd4e558cda28cda6b5defafb9232d191be8c203",
-    "version": "v4.2.1"
-  },
   "sravinet/toml-select": {
     "name": "sravinet/toml-select",
     "sha": "fe2e680f88a09851a0cd887dba0bbd19d3babe11",
