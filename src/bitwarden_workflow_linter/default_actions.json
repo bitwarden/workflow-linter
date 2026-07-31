@@ -204,11 +204,6 @@
     "sha": "b94431e051d1c52dcbe9a7092a4f10f827795416",
     "version": "v2.1.0"
   },
-  "checkmarx/ast-github-action": {
-    "name": "checkmarx/ast-github-action",
-    "sha": "b74e8d514feae4ad5ad2b43e72590935bd2daf5f",
-    "version": "2.0.39"
-  },
   "chrnorm/deployment-action": {
     "name": "chrnorm/deployment-action",
     "sha": "55729fcebec3d284f60f5bcabbd8376437d696b1",
