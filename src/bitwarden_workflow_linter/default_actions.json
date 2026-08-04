@@ -204,11 +204,6 @@
     "sha": "b94431e051d1c52dcbe9a7092a4f10f827795416",
     "version": "v2.1.0"
   },
-  "checkmarx/ast-github-action": {
-    "name": "checkmarx/ast-github-action",
-    "sha": "b74e8d514feae4ad5ad2b43e72590935bd2daf5f",
-    "version": "2.0.39"
-  },
   "chrnorm/deployment-action": {
     "name": "chrnorm/deployment-action",
     "sha": "55729fcebec3d284f60f5bcabbd8376437d696b1",
@@ -528,11 +523,6 @@
     "name": "softprops/action-gh-release",
     "sha": "7b4da11513bf3f43f9999e90eabced41ab8bb048",
     "version": "v2.2.0"
-  },
-  "sonarsource/sonarqube-scan-action": {
-    "name": "sonarsource/sonarqube-scan-action",
-    "sha": "bfd4e558cda28cda6b5defafb9232d191be8c203",
-    "version": "v4.2.1"
   },
   "sravinet/toml-select": {
     "name": "sravinet/toml-select",
