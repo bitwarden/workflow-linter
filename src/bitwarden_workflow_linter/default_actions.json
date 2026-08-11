@@ -164,11 +164,6 @@
     "sha": "56afc609e74202658d3ffba0e8f6dda462b719fa",
     "version": "v3.0.1"
   },
-  "anchore/scan-action": {
-    "name": "anchore/scan-action",
-    "sha": "869c549e657a088dc0441b08ce4fc0ecdac2bb65",
-    "version": "v5.3.0"
-  },
   "android-actions/setup-android": {
     "name": "android-actions/setup-android",
     "sha": "9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407",
