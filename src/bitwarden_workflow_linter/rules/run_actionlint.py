@@ -122,7 +122,7 @@ def check_actionlint_local(platform_system: str, version: str) -> Tuple[bool, st
 class RunActionlint(Rule):
     """Rule to run actionlint as part of workflow linter V2."""
 
-    def __init__(self, settings: Optional[Settings] = None, lint_level: Optional[LintLevels] = LintLevels.NONE) -> None:
+    def __init__(self, settings: Optional[Settings] = None, lint_level: LintLevels = LintLevels.NONE) -> None:
         self.message = "Actionlint must pass without errors"
         self.on_fail = lint_level
         self.compatibility = [Workflow]

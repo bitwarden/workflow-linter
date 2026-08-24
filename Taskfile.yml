@@ -21,7 +21,7 @@ tasks:
   type:
     silent: true
     cmds:
-      - pipenv run pytype src
+      - pipenv run mypy src
 
   update:
     silent: true
