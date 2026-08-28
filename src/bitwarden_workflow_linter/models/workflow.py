@@ -30,7 +30,7 @@ class Workflow:
     permissions: Optional[object] = None  # This can be a CommentedMap or a string
 
     @classmethod
-    def init(cls: Self, key: str, filename: str, data: CommentedMap) -> Self:
+    def init(cls, key: str, filename: str, data: CommentedMap) -> Self:
         init_data = {
             "key": key,
             "filename": filename,

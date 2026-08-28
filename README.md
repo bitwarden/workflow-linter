@@ -6,20 +6,20 @@ To see an example of Workflow Linter in practice in GitHub Actions, see the [com
 
 ## Prerequisites
 
-- Python 3.13
+- Python 3.14
 - pipenv
 - Windows systems: Chocolatey package manager
 - Mac OS systems: Homebrew package manager
 - pipx
 
 > [!NOTE]
-> Python 3.12 is compatible but Python 3.13 is encouraged.
+> The package declares `requires-python = ">=3.11"`, so it will install on Python 3.11 and later. Only Python 3.14 is exercised in CI, and Python 3.11 and 3.12 are in security-only maintenance upstream, so 3.14 is the recommended version.
 
 ## Setup
 
 1. **Create the virtual environment:**
    ```bash
-   python3.13 -m venv /Users/$USER/bitwarden_workflow_linter_venv
+   python3.14 -m venv /Users/$USER/bitwarden_workflow_linter_venv
    ```
 
 2. **Activate the virtual environment:**
@@ -48,7 +48,7 @@ Alternatively, you can install `bwwl` globally using `pipx` to keep it isolated:
 
 1. **Install Bitwarden Workflow Linter:**
    ```bash
-   pipx install bitwarden_workflow_linter --python python3.13
+   pipx install bitwarden_workflow_linter --python python3.14
    ```
 
 This method is ideal for running `bwwl` as a standalone CLI tool without managing a virtual environment manually.

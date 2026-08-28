@@ -37,7 +37,11 @@ def main(input_args: Optional[List[str]] = None) -> int:
     # Pull the arguments from the command line
     input_args = sys.argv[1:]
     if not input_args:
-        raise SystemExit(parser.print_help())
+        parser.print_help()
+        # print_help() returns None, so the original SystemExit(parser.print_help())
+        # was really SystemExit(None). A bare SystemExit() also exits 0, so this
+        # keeps the same exit code.
+        raise SystemExit()
 
     args = parser.parse_args(input_args)
     if args.command == "lint":
