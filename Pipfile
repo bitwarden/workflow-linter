@@ -16,9 +16,10 @@ pytest = "*"
 coverage = "*"
 pytest-cov = "*"
 pylint = "*"
-pytype = {version = "*", sys_platform = "!= 'win32'"}
+mypy = "*"
+types-pyyaml = "*"
 hatchling = "*"
 build = "*"
 
 [requires]
-python_version = "3.12"
+python_version = "3.14"
