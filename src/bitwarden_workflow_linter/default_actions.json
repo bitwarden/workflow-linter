@@ -164,6 +164,11 @@
     "sha": "56afc609e74202658d3ffba0e8f6dda462b719fa",
     "version": "v3.0.1"
   },
+  "anchore/scan-action": {
+    "name": "anchore/scan-action",
+    "sha": "869c549e657a088dc0441b08ce4fc0ecdac2bb65",
+    "version": "v5.3.0"
+  },
   "android-actions/setup-android": {
     "name": "android-actions/setup-android",
     "sha": "9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407",
@@ -184,6 +189,11 @@
     "sha": "bd01e18f51369d5a26f1651c3cb451d3417e3bba",
     "version": "v6.3.1"
   },
+  "astronomer/setup-astro-cli": {
+    "name": "astronomer/setup-astro-cli",
+    "sha": "d8de1c738a79b83c057d185202557c894e33d2f7",
+    "version": "v0.0.1"
+  },
   "azure/webapps-deploy": {
     "name": "azure/webapps-deploy",
     "sha": "de617f46172a906d0617bb0e50d81e9e3aec24c8",
@@ -198,6 +208,11 @@
     "name": "browser-actions/setup-chrome",
     "sha": "b94431e051d1c52dcbe9a7092a4f10f827795416",
     "version": "v2.1.0"
+  },
+  "checkmarx/ast-github-action": {
+    "name": "checkmarx/ast-github-action",
+    "sha": "b74e8d514feae4ad5ad2b43e72590935bd2daf5f",
+    "version": "2.0.39"
   },
   "chrnorm/deployment-action": {
     "name": "chrnorm/deployment-action",
@@ -518,6 +533,11 @@
     "name": "softprops/action-gh-release",
     "sha": "7b4da11513bf3f43f9999e90eabced41ab8bb048",
     "version": "v2.2.0"
+  },
+  "sonarsource/sonarqube-scan-action": {
+    "name": "sonarsource/sonarqube-scan-action",
+    "sha": "bfd4e558cda28cda6b5defafb9232d191be8c203",
+    "version": "v4.2.1"
   },
   "sravinet/toml-select": {
     "name": "sravinet/toml-select",
