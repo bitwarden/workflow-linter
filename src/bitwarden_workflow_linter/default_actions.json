@@ -184,6 +184,11 @@
     "sha": "bd01e18f51369d5a26f1651c3cb451d3417e3bba",
     "version": "v6.3.1"
   },
+  "astronomer/setup-astro-cli": {
+    "name": "astronomer/setup-astro-cli",
+    "sha": "d8de1c738a79b83c057d185202557c894e33d2f7",
+    "version": "v0.0.1"
+  },
   "azure/webapps-deploy": {
     "name": "azure/webapps-deploy",
     "sha": "de617f46172a906d0617bb0e50d81e9e3aec24c8",
