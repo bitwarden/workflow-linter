@@ -20,6 +20,7 @@ jobs:
     # Resolve bump type + idempotency, then merge the bump to main via update-repository.
     uses: ./.github/workflows/_version-bump.yml
     permissions:
+      actions: write           # resolve cancels the run when there's nothing to release
       contents: read
       id-token: write
       pull-requests: read
