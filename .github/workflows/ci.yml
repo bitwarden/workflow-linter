@@ -42,7 +42,7 @@ jobs:
 
       - name: Check type hinting
         if: startsWith(matrix.os, 'ubuntu')
-        run: pipenv run pytype src
+        run: pipenv run mypy src
 
   test-integration:
     name: Integration Tests
