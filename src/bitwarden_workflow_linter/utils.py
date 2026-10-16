@@ -168,7 +168,7 @@ class Settings:
         self.blocked_domains = blocked_domains or []
 
     @staticmethod
-    def factory() -> SettingsFromFactory:
+    def factory() -> "Settings":
         # load default settings
         with (
             importlib.resources.files("bitwarden_workflow_linter")

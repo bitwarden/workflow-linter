@@ -35,14 +35,14 @@ class Job:
     permissions: Optional[object] = None  # This can be a CommentedMap or a string
 
     @classmethod
-    def parse_needs(cls: Self, value):
+    def parse_needs(cls, value):
         """Parser to make all needs values lists that can be searched by linter."""
         if isinstance(value, str):
             return [value]
         return value
 
     @classmethod
-    def init(cls: Self, key: str, data: CommentedMap) -> Self:
+    def init(cls, key: str, data: CommentedMap) -> Self:
         """Custom dataclass constructor to map job data to a Job."""
         init_data = {
             "key": key,
