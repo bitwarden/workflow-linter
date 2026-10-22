@@ -18,3 +18,5 @@ paths:
       - 'shellcheck reported issue in this script: .+'
       # Temporary workaround until upstream is aware of xcode-27 runner labels (rhysd/actionlint#739)
       - '^label "xcode-27(-xlarge)?" is unknown\.'
+      # Temporary workaround until actionlint supports concurrency.queue (rhysd/actionlint#654)
+      - "unexpected key \"queue\" for \"concurrency\" section"
