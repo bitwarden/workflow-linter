@@ -128,8 +128,8 @@ class Rules:
         # [TODO]: data resiliency
         for rule in settings.enabled_rules:
             rule_id = rule["id"]
-            module_name = rule_id.split(".")
-            module_name = ".".join(module_name[:-1])
+            module_parts = rule_id.split(".")
+            module_name = ".".join(module_parts[:-1])
             rule_name = rule_id.split(".")[-1]
 
             try:
