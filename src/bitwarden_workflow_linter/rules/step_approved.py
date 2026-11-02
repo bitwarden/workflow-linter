@@ -18,7 +18,7 @@ class RuleStepUsesApproved(Rule):
     def __init__(
         self,
         settings: Optional[Settings] = None,
-        lint_level: Optional[LintLevels] = LintLevels.NONE,
+        lint_level: LintLevels = LintLevels.NONE,
     ) -> None:
         """Constructor for RuleStepUsesApproved to override Rule class.
 

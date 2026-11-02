@@ -70,7 +70,7 @@ class RunZizmor(Rule):
     def __init__(
         self,
         settings: Optional[Settings] = None,
-        lint_level: Optional[LintLevels] = LintLevels.WARNING,
+        lint_level: LintLevels = LintLevels.WARNING,
     ) -> None:
         self.message = "Zizmor must pass without errors"
         self.on_fail = lint_level

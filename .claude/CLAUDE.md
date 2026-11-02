@@ -9,7 +9,7 @@
 ### High-Level Details
 
 -   **Type**: Python CLI application and library (~86 Python files)
--   **Language**: Python 3.13.5 (minimum 3.11 supported)
+-   **Language**: Python 3.14.6 (minimum 3.11 supported)
 -   **Package Manager**: pipenv for dependencies, hatch for building/publishing
 -   **Distribution**: Published to PyPI as `bitwarden_workflow_linter`
 -   **CLI Command**: `bwwl`
@@ -32,9 +32,18 @@ pytest tests --cov=src
 black .
 pylint --rcfile pylintrc src/ tests/
 
-# Type checking (Linux only)
-pytype src
+# Type checking (Linux only in CI, runs anywhere locally)
+mypy src
 ```
+
+> **Type checking uses mypy, not pytype.** pytype's final release is `2024.10.11` and upstream
+> has stated Python 3.12 is the last version it will ever support, so it could not follow this
+> project onto Python 3.14. Configuration lives in `mypy.ini` (standalone, because
+> `pyproject.toml` is generated from `pyproject.toml.tpl` by `task update` and any `[tool.mypy]`
+> section there would be overwritten). The config is a pragmatic baseline with `strict_optional`
+> and the `override` error code relaxed. Both relaxations are documented inline in `mypy.ini`
+> with the reason they exist. Tightening `strict_optional` is worthwhile follow-up work and
+> surfaces roughly 30 genuine Optional-handling gaps.
 
 ### Task Runner Shortcuts
 

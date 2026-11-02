@@ -8,7 +8,7 @@ from ..utils import LintLevels, Settings
 
 
 class RuleCheckPrTarget(Rule):
-    def __init__(self, settings: Optional[Settings] = None, lint_level: Optional[LintLevels] = LintLevels.NONE) -> None:
+    def __init__(self, settings: Optional[Settings] = None, lint_level: LintLevels = LintLevels.NONE) -> None:
         """
         To ensure pull_request_target is safe to use, the check-run step is added
         to all jobs as a dependency.

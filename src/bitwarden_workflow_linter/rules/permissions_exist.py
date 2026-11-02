@@ -24,7 +24,7 @@ class RulePermissionsExist(Rule):
     def __init__(
         self,
         settings: Optional[Settings] = None,
-        lint_level: Optional[LintLevels] = LintLevels.NONE,
+        lint_level: LintLevels = LintLevels.NONE,
     ) -> None:
         self.message = (
             "All workflows must specify permissions on either workflow or job level"
@@ -45,6 +45,6 @@ class RulePermissionsExist(Rule):
         return True
 
     def fn(self, obj: Workflow) -> Tuple[bool, str]:
-        if not self.permissions_exist_on_workflow(obj) and not self.permissions_exist_on_jobs(obj.jobs.values()):
+        if not self.permissions_exist_on_workflow(obj) and not self.permissions_exist_on_jobs(list(obj.jobs.values())):
             return False, f"{self.message}"
         return True, ""
