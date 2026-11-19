@@ -194,6 +194,11 @@
     "sha": "d8de1c738a79b83c057d185202557c894e33d2f7",
     "version": "v0.0.1"
   },
+  "aws-actions/configure-aws-credentials": {
+    "name": "aws-actions/configure-aws-credentials",
+    "sha": "e1253824e5c10ff9df46874f81ed3ec929e19cfd",
+    "version": "v6.3.0"
+  },
   "azure/webapps-deploy": {
     "name": "azure/webapps-deploy",
     "sha": "de617f46172a906d0617bb0e50d81e9e3aec24c8",
